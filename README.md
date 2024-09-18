@@ -11,7 +11,6 @@ pip install -r /path/to/requirements.txt
 ```
 ### 3. Run the pip requirement manager to make sure requirements file is always up to date
 ``` shell
-pip install pipreqs
-pipreqs /path/to/project
+pip3 freeze > requirements.txt
 ```
 
