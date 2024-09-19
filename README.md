@@ -1,16 +1,7 @@
 # Setup
-## Frontend:
-TBD
-## Backend:
-### 1. Make venv in Python:
-- Follow [These Steps](https://realpython.com/python-virtual-environments-a-primer/)
-- Add ``venv/`` to your .gitignore. Punishment for failing to follow instructions pending.
-### 2. Install packages based on requirements file
-``` shell
-pip install -r /path/to/requirements.txt
-```
-### 3. Run the pip requirement manager to make sure requirements file is always up to date
-``` shell
-pip3 freeze > requirements.txt
-```
+Run the docker compose file at the root of the directory.
+``docker-compose.yml``
+Frontend runs on port 3000
+Backend runs on port 8000
+Database runs on port 27017
 
