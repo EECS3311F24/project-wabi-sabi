@@ -1,7 +1,8 @@
-FROM node:22-alpine3.19
-WORKDIR /Docker_Compose/frontend
+FROM oven/bun:latest
+WORKDIR /frontend
 COPY package.json .
-RUN npm install
+COPY bun.lockb ./
 COPY . .
+RUN bun install
 EXPOSE 3000
-CMD ["npm", "run", "dev"]
+CMD ["bun", "run", "dev"]

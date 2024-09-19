@@ -1,16 +1,34 @@
+version: "3.8"
 services:
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+    command: bun start dev
     ports:
       - "3000:3000"
+    develop:
+      watch:
+        - action: sync
+          path: ./frontend/src
+          target: /frontend/src
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: package.json
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
     ports:
     - "8000:8000"
+    develop:
+      watch:
+        - action: sync
+          path: ./backend
+          target: /backend
+        - action: rebuild
+          path: requirements.txt
     depends_on:
     - db
   db:
@@ -21,3 +39,4 @@ services:
       - "27017:27017"
 volumes:
   wabisabi_db:
+    
