@@ -93,12 +93,12 @@ to explore the database through sshing into the docker container, or though mong
 ## Frontend:
 
 This project uses:
-**Bun**: Javascript runtime environment
-**React**: UI
-**TypeScript**: Javascript with static typing
-**TailwindCSS**: CSS preprocessor
-**Vite**: Javascript package bundler
-**Eslint & Prettier**: Javascript linter
+- **Bun**: Javascript runtime environment
+- **React**: UI
+- **TypeScript**: Javascript with static typing
+- **TailwindCSS**: CSS preprocessor
+- **Vite**: Javascript package bundler
+- **Eslint & Prettier**: Javascript linter
 
 ## Backend:
 
