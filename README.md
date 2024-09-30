@@ -103,9 +103,9 @@ This project uses:
 ## Backend:
 
 This project uses:
-**Python**: Programming Language
-**Flask**: Web Server framework for python
-**Ruff**: Python Linter
+- **Python**: Programming Language
+- **Flask**: Web Server framework for python
+- **Ruff**: Python Linter
 
 ## Database:
 
@@ -114,7 +114,7 @@ This project uses:
 
 ## Contributing
 
-Look to our Jira board to find tickets that need to be worked on.
+Look to our Trello board to find tickets that need to be worked on.
 
 Branch off of `main`, with the name of your branch being the ticket number.
 
