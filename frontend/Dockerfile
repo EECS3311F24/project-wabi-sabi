@@ -1,7 +1,7 @@
-FROM node:22-alpine3.19
+FROM oven/bun:latest
 WORKDIR /Docker_Compose/frontend
 COPY package.json .
-RUN npm install
+RUN bun install
 COPY . .
 EXPOSE 3000
-CMD ["npm", "run", "dev"]
+CMD ["bun", "run", "dev"]
