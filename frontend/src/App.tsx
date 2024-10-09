@@ -3,7 +3,7 @@ import MsgForm from './components/MsgForm';
 import './App.css';
 
 function App() {
-  const [hello] = useState('hi');
+  const [hello] = useState('write something, will ya!?');
 
   return (
     <>

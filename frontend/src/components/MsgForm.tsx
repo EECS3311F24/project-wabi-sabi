@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 const MessageForm = () => {
   const [message, setMessage] = useState('');
@@ -6,9 +7,12 @@ const MessageForm = () => {
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     if (message) {
-      console.log(message);
-      await fetch(`/addmsg/${encodeURIComponent(message)}/`);
-      setMessage('');
+      try {
+        const response = await axios.post('http://localhost:5000/api/data', { message: message });
+        console.log(response.data);
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
 
