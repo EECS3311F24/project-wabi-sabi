@@ -3,5 +3,5 @@ WORKDIR /Docker_Compose/frontend
 COPY package.json .
 RUN bun install
 COPY . .
-EXPOSE 3000
+EXPOSE 4000
 CMD ["bun", "run", "dev"]

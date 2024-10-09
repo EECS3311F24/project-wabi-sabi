@@ -1,14 +1,14 @@
 import { useState } from 'react';
+import MsgForm from './components/MsgForm';
 import './App.css';
-import axios from 'axios';
 
 function App() {
-  const [hello, setHello] = useState('hi');
+  const [hello] = useState('hi');
 
   return (
     <>
       <h1 className="text-4x1 text-blue-500">{hello}</h1>
-      <button onClick={() => setHello('Amogus')}>Click me</button>
+      <MsgForm />
     </>
   );
 }

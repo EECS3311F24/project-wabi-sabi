@@ -18,8 +18,9 @@ git clone git@github.com:EECS3311F24/project-wabi-sabi.git
 
 Wabisabi is Containerized with **Docker**, so running it is easy:
 
-1. Install: 
-- [Docker](https://docs.docker.com/engine/install/) 
+1. Install:
+
+- [Docker](https://docs.docker.com/engine/install/)
 - [Docker Compose](https://docs.docker.com/compose/install/).
 
 2. Clone the repo.
@@ -36,17 +37,17 @@ docker-compose up
 
 #### Ports
 
-- Frontend runs on port ``3000``
-- Backend runs on port ``8000``
-- Database runs on port ``27017``
-- Database Admin Panel runs on port ``8081``
+- Frontend runs on port `3000`
+- Backend runs on port `8000`
+- Database runs on port `27017`
+- Database Admin Panel runs on port `8081`
 
 ## Running on your machine:
 
 ### Frontend
 
+1. Install
 
-1. Install 
 - [bun](https://bun.sh/)
 
 2. Then install dependencies
@@ -65,7 +66,8 @@ bun run dev
 
 ### Backend:
 
-2. Install 
+2. Install
+
 - [python3.12](https://www.python.org/downloads/release/python-3120/)
 - [venv](https://realpython.com/python-virtual-environments-a-primer/)
 
@@ -96,6 +98,7 @@ Password: Pass123
 ## Frontend:
 
 This project uses:
+
 - **Bun**: Javascript runtime environment
 - **React**: UI
 - **TypeScript**: Javascript with static typing
@@ -106,6 +109,7 @@ This project uses:
 ## Backend:
 
 This project uses:
+
 - **Python**: Programming Language
 - **Flask**: Web Server framework for python
 - **Ruff**: Python Linter
@@ -113,6 +117,7 @@ This project uses:
 ## Database:
 
 This project uses:
+
 - **MongoDB**: NO SQL/BSON database
 - **Mongo-Express**: Web-based database admin panel
 
@@ -127,8 +132,12 @@ Submit a pull request to contribute your ticket changes back into main, await ap
 Ensure the following linters are ran before pushing work:
 
 ```
-bun lint
-bun format
+# ensure you're in /backend
+pip freeze > requirements.txt
 ruff check
 ruff format
+
+# ensure you're in /frontend
+bun lint
+bun format
 ```
