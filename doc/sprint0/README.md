@@ -71,7 +71,7 @@ bun run dev
 - [python3.12](https://www.python.org/downloads/release/python-3120/)
 - [venv](https://realpython.com/python-virtual-environments-a-primer/)
 
-3. create a python virtual environment named "venv", and install packages based on `requirements.txt`. Make sure you're in the /backend directory (cd project-wabi-sabi/backend)
+3. Make sure you're in the /backend directory (cd project-wabi-sabi/backend). Then, create a python virtual environment named "venv", and install packages based on `requirements.txt`. 
 ```
 python3.12 -m venv "venv"
 source venv/bin/activate
