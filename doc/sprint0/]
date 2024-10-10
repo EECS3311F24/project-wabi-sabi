@@ -128,32 +128,7 @@ This project uses:
 - **MongoDB**: NO SQL/BSON database
 
 ## Testing everything works:
-(Make sure you've followed the steps in "quickstart" and "running on your machine")
-1. Start the local version of the frontend
-``` 
-cd frontend
-bun run dev
-```
-2. Start the backend server
-``` 
-source venv/bin/activate
-flask run
-```
-3. Verify the docker containers are running with 
-``` 
-docker ps
-```
-You should see 3 containers named "frontend", "backend", and "mongo"
-
-If you run into any issues, follow the steps listed in "quickstart" and "running on your machine"
-
-4. navigate to port 4001 to view the frontend
-
-5. Enter a line of text in the form and hit send
-
-6. You should receive a JSON string with a list of messages in the database. If you'd like to look through the database directly you could use a tool like [MongoDB Compass](https://www.mongodb.com/products/tools/compass
-
-you should be able to open the local version of the frontend enter text into the form in the frontend, and have it sent to the backend to be sent to the database.
+To test everything works, you should be able to enter text into the form in the frontend, and have it sent to the database.
 
 ## Contributing
 
