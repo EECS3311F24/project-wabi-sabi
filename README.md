@@ -156,7 +156,7 @@ you should be able to open the local version of the frontend enter text into the
 
 ## Contributing
 
-Look to our Trello board to find tickets that need to be worked on.
+Look to our [Trello Board](https://trello.com/invite/b/66eddb6910376903ff1f7fd4/ATTIcb1d460a76c0853aa443feed20988fe38035A199/wabi-sabi) to find tickets that need to be worked on.
 
 Branch off of `main`, with the name of your branch being the ticket number.
 
