@@ -318,20 +318,28 @@
 
     - Session data can also be removed
 
-21. Study Session Counting
+21. Study Session Table View
     
     **User story:**
 
-    As a student with a goal to foster consistent study habits, I want to be able to view the study sessions I’ve completed across various spans of time. So I can measure my progress towards my goals.
+    As a student with a goal to foster consistent study habits, I want to be able to view the study sessions I’ve completed in a table. So I can measure my progress towards my goals.
 
     **Criteria of satisfaction:**
 
-    - Allow data to be filtered and displayed based on day,week,month, and year.
+    - Table displays total minutes studied based on time period.
 
-    - A session will include the start and end times, as well as any tag that was applied to the session.
+    - Time period could be days, weeks, months, or a custom time span.
 
-    - Allow for custom spans of time to filter by (the length of one academic term)
+    - Sessions should have the date, start and end times, minutes, as well as any tag that was applied.
 
-    - Data is viewable as a list of individual sessions or a heatmap
+22. Task Completion Chart View
 
-    - Session data can also be removed
+    **User story:**
+
+    As a student who’d like to manage progress towards my goals, I want to be able to view the tasks I’ve completed across various spans of time. So I can measure my progress and how much work is remaining.
+
+    **Criteria of satisfaction:**
+
+    - Users can view a graph of tags completed.
+
+    - The graph displays the current tags a user has made, as well as the percentage of all tasks of that tag being completed.
