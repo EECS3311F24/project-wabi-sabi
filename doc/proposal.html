@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2024-10-19 Sat 13:57 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>&lrm;</title>
+<meta name="author" content="jaydenb" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+</head>
+<body>
+<div id="content" class="content">
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orga19e51b">1. Project organization structure</a>
+<ul>
+<li><a href="#org3756468">1.1. folder structure</a></li>
+<li><a href="#org5d913d5">1.2. elaboration</a>
+<ul>
+<li><a href="#orgf163de4">1.2.1. general blueprint structure:</a></li>
+<li><a href="#org0895cff">1.2.2. blueprints:</a></li>
+<li><a href="#org894e543">1.2.3. other directories:</a></li>
+<li><a href="#org3472dd0">1.2.4. other files:</a></li>
+</ul>
+</li>
+<li><a href="#orgce856ea">1.3. references + resources</a>
+<ul>
+<li><a href="#org3e56b32">1.3.1. about blueprints</a></li>
+<li><a href="#orge7373b3">1.3.2. about auth</a></li>
+<li><a href="#orgc024a77">1.3.3. about timers</a></li>
+<li><a href="#org2bf1731">1.3.4. database</a></li>
+<li><a href="#org9fe6e7c">1.3.5. project documentation</a></li>
+</ul>
+</li>
+<li><a href="#orgff32768">1.4. Models:</a>
+<ul>
+<li><a href="#org0ac5e22">1.4.1. Study Session:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orga19e51b" class="outline-2">
+<h2 id="orga19e51b"><span class="section-number-2">1.</span> Project organization structure</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Backend is build modularly, with each section being a flask blueprint.
+</p>
+</div>
+<div id="outline-container-org3756468" class="outline-3">
+<h3 id="org3756468"><span class="section-number-3">1.1.</span> folder structure</h3>
+<div class="outline-text-3" id="text-1-1">
+<div class="org-src-container">
+<pre class="src src-nil">/wabisabi
+    /backend
+        /app
+            __init__.py
+            /main
+                __init__.py
+                routes.py
+                forms.py
+                models.py
+                /pomodoro
+                    __init__.py
+                    routes.py
+                    forms.py
+                    models.py
+                /tasks
+                    __init__.py
+                    routes.py
+                    forms.py
+                    models.py
+                /friends
+                    __init__.py
+                    routes.py
+                    forms.py
+                    models.py
+                /stats
+                    __init__.py
+                    routes.py
+                    forms.py
+                    models.py
+            /auth
+                __init__.py
+                routes.py
+                forms.py
+            /extensions.py
+        /migrations
+        seeds.py
+        config.py
+        run.py
+        requirements.txt
+    /frontend
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org5d913d5" class="outline-3">
+<h3 id="org5d913d5"><span class="section-number-3">1.2.</span> elaboration</h3>
+<div class="outline-text-3" id="text-1-2">
+</div>
+<div id="outline-container-orgf163de4" class="outline-4">
+<h4 id="orgf163de4"><span class="section-number-4">1.2.1.</span> general blueprint structure:</h4>
+<div class="outline-text-4" id="text-1-2-1">
+<ul class="org-ul">
+<li><span class="underline"><span class="underline">init</span></span>.py: To make a blueprint.</li>
+<li>routes.py: routing for blueprint</li>
+<li>forms.py: forms for blueprint</li>
+<li>models: data models for blueprint</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org0895cff" class="outline-4">
+<h4 id="org0895cff"><span class="section-number-4">1.2.2.</span> blueprints:</h4>
+<div class="outline-text-4" id="text-1-2-2">
+<p>
+/main: not auth stuff, has sub blueprints:
+</p>
+<ul class="org-ul">
+<li>/pomodoro: timer</li>
+<li>/tasks: task management</li>
+<li>/friends: friends</li>
+<li>/stats: stats about your studying</li>
+</ul>
+<p>
+/auth: handles authentication
+</p>
+</div>
+</div>
+<div id="outline-container-org894e543" class="outline-4">
+<h4 id="org894e543"><span class="section-number-4">1.2.3.</span> other directories:</h4>
+<div class="outline-text-4" id="text-1-2-3">
+<p>
+/extensions: handles instances of plugins (db, login)
+/migrations: handles db migrations
+</p>
+</div>
+</div>
+<div id="outline-container-org3472dd0" class="outline-4">
+<h4 id="org3472dd0"><span class="section-number-4">1.2.4.</span> other files:</h4>
+<div class="outline-text-4" id="text-1-2-4">
+<p>
+seeds.py: adds sample data to the database
+config.py: configure the flask app
+run.py: runs the flask app
+requirements.txt: package management
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgce856ea" class="outline-3">
+<h3 id="orgce856ea"><span class="section-number-3">1.3.</span> references + resources</h3>
+<div class="outline-text-3" id="text-1-3">
+</div>
+<div id="outline-container-org3e56b32" class="outline-4">
+<h4 id="org3e56b32"><span class="section-number-4">1.3.1.</span> about blueprints</h4>
+<div class="outline-text-4" id="text-1-3-1">
+<ul class="org-ul">
+<li><a href="https://flask.palletsprojects.com/en/2.3.x/blueprints/">https://flask.palletsprojects.com/en/2.3.x/blueprints/</a></li>
+<li><a href="https://youtu.be/WteIH6J9v64?si=fm5luREWZUT7Gfi1">https://youtu.be/WteIH6J9v64?si=fm5luREWZUT7Gfi1</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orge7373b3" class="outline-4">
+<h4 id="orge7373b3"><span class="section-number-4">1.3.2.</span> about auth</h4>
+<div class="outline-text-4" id="text-1-3-2">
+<ul class="org-ul">
+<li><a href="https://flask-login.readthedocs.io/en/latest/">https://flask-login.readthedocs.io/en/latest/</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgc024a77" class="outline-4">
+<h4 id="orgc024a77"><span class="section-number-4">1.3.3.</span> about timers</h4>
+<div class="outline-text-4" id="text-1-3-3">
+<p>
+<a href="https://docs.python.org/3/library/sched.html">sched documentation</a>
+</p>
+</div>
+</div>
+<div id="outline-container-org2bf1731" class="outline-4">
+<h4 id="org2bf1731"><span class="section-number-4">1.3.4.</span> database</h4>
+<div class="outline-text-4" id="text-1-3-4">
+<ul class="org-ul">
+<li><a href="https://pymongo.readthedocs.io/en/stable/index.html">https://pymongo.readthedocs.io/en/stable/index.html</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org9fe6e7c" class="outline-4">
+<h4 id="org9fe6e7c"><span class="section-number-4">1.3.5.</span> project documentation</h4>
+<div class="outline-text-4" id="text-1-3-5">
+<ul class="org-ul">
+<li><a href="https://www.mkdocs.org/">https://www.mkdocs.org/</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div id="outline-container-orgff32768" class="outline-3">
+<h3 id="orgff32768"><span class="section-number-3">1.4.</span> Models:</h3>
+<div class="outline-text-3" id="text-1-4">
+</div>
+<div id="outline-container-org0ac5e22" class="outline-4">
+<h4 id="org0ac5e22"><span class="section-number-4">1.4.1.</span> Study Session:</h4>
+<div class="outline-text-4" id="text-1-4-1">
+</div>
+<ol class="org-ol">
+<li><a id="org3aa7519"></a>parameters:<br />
+<div class="outline-text-5" id="text-1-4-1-1">
+<ul class="org-ul">
+<li>the user the session belongs to</li>
+<li>session start time</li>
+<li>session end time</li>
+<li>session tag</li>
+<li>if the session is ongoing or completed (are we able to cancel sessions? i forgor)</li>
+</ul>
+</div>
+</li>
+<li><a id="org9bd6900"></a>methods<br />
+<div class="outline-text-5" id="text-1-4-1-2">
+<ul class="org-ul">
+<li>start<sub>session</sub>(): starts session and sets end<sub>session</sub> to run in now + time minutes.</li>
+<li>end<sub>session</sub>(): runs when the timer is complete. marks session as completed.</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: jaydenb</p>
+<p class="date">Created: 2024-10-19 Sat 13:57</p>
+</div>
+</body>
+</html>
