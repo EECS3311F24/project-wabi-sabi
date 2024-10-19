@@ -1,0 +1,93 @@
+
+* Project organization structure
+Backend is build modularly, with each section being a flask blueprint.
+** folder structure
+#+begin_src
+/wabisabi
+    /backend
+        /app
+            __init__.py
+            /main
+                __init__.py
+                routes.py
+                forms.py
+                models.py
+                /pomodoro
+                    __init__.py
+                    routes.py
+                    forms.py
+                    models.py
+                /tasks
+                    __init__.py
+                    routes.py
+                    forms.py
+                    models.py
+                /friends
+                    __init__.py
+                    routes.py
+                    forms.py
+                    models.py
+                /stats
+                    __init__.py
+                    routes.py
+                    forms.py
+                    models.py
+            /auth
+                __init__.py
+                routes.py
+                forms.py
+            /extensions.py
+        /migrations
+        seeds.py
+        config.py
+        run.py
+        requirements.txt
+    /frontend
+#+end_src
+** elaboration
+*** general blueprint structure:
+- __init__.py: To make a blueprint.
+- routes.py: routing for blueprint
+- forms.py: forms for blueprint
+- models: data models for blueprint
+*** blueprints:
+/main: not auth stuff, has sub blueprints:
+- /pomodoro: timer
+- /tasks: task management
+- /friends: friends
+- /stats: stats about your studying
+/auth: handles authentication
+*** other directories:
+/extensions: handles instances of plugins (db, login)
+/migrations: handles db migrations
+*** other files:
+seeds.py: adds sample data to the database
+config.py: configure the flask app
+run.py: runs the flask app
+requirements.txt: package management
+
+** references + resources
+*** about blueprints
+- https://flask.palletsprojects.com/en/2.3.x/blueprints/
+- https://youtu.be/WteIH6J9v64?si=fm5luREWZUT7Gfi1
+*** about auth
+- https://flask-login.readthedocs.io/en/latest/
+*** about timers
+[[https://docs.python.org/3/library/sched.html][sched documentation]]
+*** database
+- https://pymongo.readthedocs.io/en/stable/index.html
+*** project documentation
+- https://www.mkdocs.org/
+
+** Models:
+*** Study Session:
+**** parameters:
+- the user the session belongs to
+- session start time
+- session end time
+- session tag
+- if the session is ongoing or completed (are we able to cancel sessions? i forgor)
+**** methods
+- start_session(): starts session and sets end_session to run in now + time minutes.
+- end_session(): runs when the timer is complete. marks session as completed.
+
