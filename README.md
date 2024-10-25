@@ -161,6 +161,7 @@ Look to our [Trello Board](https://trello.com/invite/b/66eddb6910376903ff1f7fd4/
 Branch off of `main`, with the name of your branch being the ticket number.
 
 Submit a pull request to contribute your ticket changes back into main, await approval from one other developer before merging.
+(As you are creating your pull request, please add a label to categorize your request e.g. 'frontend' for front-end work, 'backend' for back-end work)
 
 Ensure the following linters are ran before pushing work:
 
