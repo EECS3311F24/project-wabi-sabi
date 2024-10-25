@@ -30,16 +30,19 @@ for _ in range(5):
     except Exception as e:
         print(f"ERROR OCCURED: {e}")
 
+import auth.routes  # import after msg_col is defined
+
 
 @app.route("/")
 def home_page():
     return "root"
 
+
 @app.route("/api/data", methods=["POST"])
 def handle_data():
     data = request.json
-    print('inside the handler I swear')
-    msg_col.insert_one({"msg": data['message'].lower()})
+    print("inside the handler I swear")
+    msg_col.insert_one({"msg": data["message"].lower()})
     return redirect(url_for("getmsgs"))
 
 
