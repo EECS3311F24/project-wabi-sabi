@@ -10,7 +10,9 @@ SECRET_KEY = "EECS3311_Wabisabi"
 # Function for generating token
 # Used for verification on subsequent requests
 def generate_token(email):
-    token = jwt.encode({"email": email}, SECRET_KEY)  # Secret Key
+    payload = {"email": email}
+
+    token = jwt.encode(payload, SECRET_KEY, algorithm="HS256")  # Secret Key
     return token
 
 
