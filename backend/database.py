@@ -1,6 +1,7 @@
 from env import DB_URI
 from mongoengine import connect
 
+
 def get_db():
     connect(DB_URI)
     try:

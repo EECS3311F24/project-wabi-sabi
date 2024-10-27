@@ -35,11 +35,12 @@ for _ in range(5):
 def home_page():
     return "root"
 
+
 @app.route("/api/data", methods=["POST"])
 def handle_data():
     data = request.json
-    print('inside the handler I swear')
-    msg_col.insert_one({"msg": data['message'].lower()})
+    print("inside the handler I swear")
+    msg_col.insert_one({"msg": data["message"].lower()})
     return redirect(url_for("getmsgs"))
 
 
