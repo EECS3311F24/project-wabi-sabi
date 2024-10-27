@@ -98,7 +98,7 @@ const Login = () => {
           </CardContent>
           <CardFooter>
             <div className="text-center">
-              <p className="text-sm">
+              <p className="text-xs">
                 Don't have an account?{' '}
                 <a href="/signup" className="text-black-500 underline">
                   Sign up
