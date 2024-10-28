@@ -70,6 +70,7 @@ bun install
 3. Run Frontend
 
 ```
+bun init
 bun run dev
 ```
 
