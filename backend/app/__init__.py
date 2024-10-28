@@ -1,9 +1,11 @@
 from flask import Flask
-
+from flask_cors import CORS, cross_origin
 
 def create_app():
     print("creating blueprint")
     app = Flask(__name__)
+    cors = CORS(app)
+    app.config["CORS_HEADERS"] = "Content-Type"
 
     # configure other blueprints
     from .auth import auth as auth_blueprint
