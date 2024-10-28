@@ -22,17 +22,6 @@ paths:
           type: "string"
           required: true
           description: "Password for new account"
-        # - in: "body"
-        #   name: "body"
-        #   description: "User sign-up data"
-        #   required: true
-        #   schema:
-        #     type: "object"
-        #     properties:
-        #       email:
-        #         type: "string"
-        #       password:
-        #         type: "string"
       responses:
         201:
           description: "User registered successfully"
@@ -54,17 +43,6 @@ paths:
           type: "string"
           required: true
           description: "Password"
-        # - in: "body"
-        #   name: "body"
-        #   description: "User login data"
-        #   required: true
-        #   schema:
-        #     type: "object"
-        #     properties:
-        #       email:
-        #         type: "string"
-        #       password:
-        #         type: "string"
       responses:
         200:
           description: "Successful login, JWT token returned"
