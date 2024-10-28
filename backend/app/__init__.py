@@ -1,7 +1,6 @@
 from flask import Flask
 from flask_cors import CORS, cross_origin
 
-
 def create_app():
     print("creating blueprint")
     app = Flask(__name__)

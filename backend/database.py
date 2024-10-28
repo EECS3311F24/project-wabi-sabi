@@ -1,7 +1,6 @@
 from env import DB_URI
 from pymongo import MongoClient
 
-
 def get_mongo_client():
     client = MongoClient(DB_URI)
     try:
