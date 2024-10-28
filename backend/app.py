@@ -1,7 +1,7 @@
-from flask import Flask, redirect, url_for, request, jsonify
+from flask import Flask, redirect, url_for, request
 from pymongo import MongoClient, errors
 from flask_swagger_ui import get_swaggerui_blueprint
-from flask_cors import CORS, cross_origin
+from flask_cors import CORS
 import json
 import time
 
