@@ -1,7 +1,6 @@
-from flask import render_template
-from . import main
+from flask import render_template, redirect, url_for, request, jsonify
 
 
-@tasks.route("/task")
+@task.route("/task/add", methods=["POST"])
 def index():
-    return "task blueprint"
+    return "TODO: Implement"

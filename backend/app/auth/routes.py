@@ -2,12 +2,13 @@ from flask import render_template, redirect, url_for, request, jsonify
 from . import auth
 import jwt
 import bcrypt
-from database import client
+from database import get_mongo_client
 
 # Temp SECRET KEY
 SECRET_KEY = "EECS3311_Wabisabi"
 
-msg_col = client["msg_db"]
+msg_col = get_mongo_client()["msg_db"]
+
 
 # Function for generating token
 # Used for verification on subsequent requests
