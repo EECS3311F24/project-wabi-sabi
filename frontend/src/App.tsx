@@ -1,7 +1,10 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './App.css';
 import { AuthProvider } from './components/AuthProvider';
-import Login from './components/Login';
+
+import ProtectedRoute from './components/ProtectedRoute';
+import TimerDashboard from './components/TimerDashboard';
+import Onboarding from './components/Onboarding';
 
 /**
  * This is the main app component that wraps the entire application.
@@ -18,8 +21,16 @@ function App() {
             <div className="left-sidebar" />
             <div className="main-panel">
               <Routes>
-                <Route path="/" element={<Login />} />
-                <Route path="/login" element={<Login />} />
+                <Route path="/login" element={<Onboarding />} />
+                <Route path="/signup" element={<Onboarding />} />
+                <Route
+                  path="/"
+                  element={
+                    <ProtectedRoute>
+                      <TimerDashboard />
+                    </ProtectedRoute>
+                  }
+                />
               </Routes>
             </div>
             <div className="right-sidebar" />
