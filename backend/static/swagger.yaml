@@ -1,0 +1,50 @@
+swagger: "2.0"
+info:
+  title: "API Documentation"
+  description: "Wabisabi APIs"
+  version: "1.0.0"
+basePath: "/"
+schemes:
+  - "http"
+paths:
+  /signup:
+    post:
+      summary: "User sign-up"
+      description: "Register a new user account."
+      parameters:
+        - in: "formData"
+          name: "email"
+          type: "string"
+          required: true
+          description: "Email address"
+        - in: "formData"
+          name: "password"
+          type: "string"
+          required: true
+          description: "Password for new account"
+      responses:
+        201:
+          description: "User registered successfully"
+        400:
+          description: "Email is already registered"
+
+  /login:
+    post:
+      summary: "User login"
+      description: "Log in a user and return a JWT token."
+      parameters:
+        - in: "formData"
+          name: "email"
+          type: "string"
+          required: true
+          description: "Email address"
+        - in: "formData"
+          name: "password"
+          type: "string"
+          required: true
+          description: "Password"
+      responses:
+        200:
+          description: "Successful login, JWT token returned"
+        401:
+          description: "Invalid email or password"
