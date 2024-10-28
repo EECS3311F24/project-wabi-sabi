@@ -1,10 +1,13 @@
-from flask import request, jsonify
+from flask import render_template, redirect, url_for, request, jsonify
+from . import auth
 import jwt
 import bcrypt
-from app import msg_col, app
+from database import get_mongo_client
 
 # Temp SECRET KEY
 SECRET_KEY = "EECS3311_Wabisabi"
+
+msg_col = get_mongo_client()["msg_db"]
 
 
 # Function for generating token
@@ -17,10 +20,18 @@ def generate_token(email):
 
 
 # Sign-Up route
-@app.route("/signup", methods=["POST"])
+@auth.route("/signup", methods=["POST"])
 def signup():
-    email = request.form.get("email")  # Use form.get to retrieve form data
-    password = request.form.get("password").encode("utf-8")
+    data = request.json
+    email = data["email"]  # Retrieve email from JSON data
+    password = data["password"].encode("utf-8")  # Retrieve password from JSON data
+    confirm_password = data["confirm_password"].encode(
+        "utf-8"
+    )  # Retrieve confirmation password from JSON data
+
+    # if passwords don't match, return code 400
+    if password != confirm_password:
+        return jsonify({"error:": "Passwords do not match!"}), 400
 
     # Hash password
     h_password = bcrypt.hashpw(password, bcrypt.gensalt())
@@ -36,10 +47,11 @@ def signup():
 
 
 # Login route
-@app.route("/login", methods=["POST"])
+@auth.route("/login", methods=["POST"])
 def login():
-    email = request.form.get("email")  # Use form.get to retrieve form data
-    password = request.form.get("password").encode("utf-8")
+    data = request.json
+    email = data["email"]
+    password = data["password"].encode("utf-8")
 
     # Retrieve user from database
     user = msg_col.find_one({"email": email})
