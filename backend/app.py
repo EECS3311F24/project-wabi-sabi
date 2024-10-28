@@ -1,22 +1,23 @@
-from flask import Flask, redirect, url_for, request
+from flask import Flask, redirect, url_for, request, jsonify
 from pymongo import MongoClient, errors
 from flask_swagger_ui import get_swaggerui_blueprint
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 import json
+import time
 
 app = Flask(__name__)
 
 # Swagger UI setup
-SWAGGER_URL = "/swagger"  # URL for accessing Swagger UI
-API_URL = "/static/swagger.yaml"  # Path to your swagger.yaml file
+SWAGGER_URL = '/swagger'  # URL for accessing Swagger UI
+API_URL = '/static/swagger.yaml'  # Path to your swagger.yaml file
 
 # Create the Swagger UI blueprint
 swaggerui_blueprint = get_swaggerui_blueprint(
     SWAGGER_URL,
     API_URL,
     config={
-        "app_name": "Documentation"  # Title for your API
-    },
+        'app_name': "Documentation"  # Title for your API
+    }
 )
 
 # Register the blueprint
