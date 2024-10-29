@@ -4,24 +4,15 @@ from ..models import User
 import jwt
 import bcrypt
 from database import get_database
-
-# Temp SECRET KEY
-SECRET_KEY = "EECS3311_Wabisabi"
+from .session import generate_token
 
 
-
-# Function for generating token
-# Used for verification on subsequent requests
-def generate_token(email):
-    payload = {"email": email}
-
-    token = jwt.encode(payload, SECRET_KEY, algorithm="HS256")  # Secret Key
-    return token
 
 
 # Sign-Up route
 @auth.route("/signup", methods=["POST"])
 def signup():
+    print('signing up')
     data = request.json
     email = data["email"]  # Retrieve email from JSON data
     password = data["password"].encode("utf-8")  # Retrieve password from JSON data
@@ -33,7 +24,7 @@ def signup():
         return jsonify({"error": "This email is already registered!"}), 400
 
     # Insert user into database
-    new_user = User(email=email, password=h_password.decode("utf-8"))
+    new_user = User(email=email, password=h_password.decode("utf-8"),tasks=[])
     try:
         new_user.save()
         return jsonify({"message": "User registered successfully! Please log in"}), 201
