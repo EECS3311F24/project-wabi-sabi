@@ -9,7 +9,6 @@ import { useState } from 'react';
 import SignupSuccess from './SignupSuccessCard';
 import { Navigate } from 'react-router-dom';
 
-
 // schema that defines the shape of the signup form
 // so if you have email, password, confirm password, you put it in here so that
 // you can validate the form data before submitting it
@@ -55,7 +54,6 @@ const Signup = () => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ email: email, password: password }),
-
     };
 
     const response = await fetch('http://localhost:5000/signup', request);
@@ -68,7 +66,7 @@ const Signup = () => {
       return data.error;
     } else {
       // what do we do if the sign up is successful?
-      <Navigate to="/confirmation" />
+      <Navigate to="/confirmation" />;
     }
   };
 

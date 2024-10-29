@@ -1,6 +1,4 @@
-
 import { Card, CardContent, CardFooter } from './ui/card';
-
 
 /**
  * The confirmation that pops up if the user signed up successfully.
@@ -9,11 +7,11 @@ import { Card, CardContent, CardFooter } from './ui/card';
 const SignupSuccess = () => {
   return (
     <>
-    <Card className="w-1/2">
-      <CardContent className="py-6">
-        <h2>You have successfuly signed up.</h2>
-      </CardContent>
-      <CardFooter>
+      <Card className="w-1/2">
+        <CardContent className="py-6">
+          <h2>You have successfully signed up.</h2>
+        </CardContent>
+        <CardFooter>
           <div className="text-center">
             <p className="text-xs">
               <a href="/login" className="text-black-500 underline">
@@ -22,10 +20,8 @@ const SignupSuccess = () => {
             </p>
           </div>
         </CardFooter>
-    </Card>
-
+      </Card>
     </>
-
   );
 };
 

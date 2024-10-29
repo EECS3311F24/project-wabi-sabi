@@ -19,8 +19,6 @@ def generate_token(email):
 # Sign-Up route
 @app.route("/signup", methods=["POST"])
 def signup():
-    # email = request.form.get("email")  # Use form.get to retrieve form data
-    # password = request.form.get("password").encode("utf-8")
     data = request.json
     email = data["email"] 
     password = data["password"].encode("utf-8")
