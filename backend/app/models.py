@@ -12,16 +12,20 @@ class User(Document):
         return self.username
 
 
-class TASK_STATUS(Enum):
-    TODO = "Todo"
-    IN_PROGRESS = "In Progress"
-    FINISHED = "Finished"
 
-class Task:
-    def __init__(description):
-        self.taskId = ""
-        self.is_sub_task = False
-        self.description = description
-        self.due_date = ""
-        self.tag = ""
-        self.status = TASK_STATUS.TODO
+class Task(Document):
+    STATUS_TODO = "Todo"
+    STATUS_IN_PROGRESS = "In Progress"
+    STATUS_FINISHED = "Finished"
+    is_sub_task = BooleanField(required=True) 
+    text = StringField(required=True)
+    due_date = DateTimeField()
+    tag = ObjectIdField()
+    status = StringField(required=True)
+    subtasks = ListField(ObjectIdField())
+
+    def update_status(new_status):
+        status = new_status
+    
+    def __str__(self):
+        return self.text

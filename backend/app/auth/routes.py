@@ -8,7 +8,6 @@ from database import get_database
 # Temp SECRET KEY
 SECRET_KEY = "EECS3311_Wabisabi"
 
-get_database()
 
 
 # Function for generating token
