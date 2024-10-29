@@ -6,6 +6,7 @@ class TASK_STATUS(Enum):
     IN_PROGRESS = "In Progress"
     FINISHED = "Finished"
 
+
 class Task:
     def __init__(description):
         self.taskId = ""

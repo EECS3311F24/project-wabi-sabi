@@ -10,6 +10,7 @@ SECRET_KEY = "EECS3311_Wabisabi"
 
 get_database()
 
+
 # Function for generating token
 # Used for verification on subsequent requests
 def generate_token(email):
@@ -22,7 +23,6 @@ def generate_token(email):
 # Sign-Up route
 @auth.route("/signup", methods=["POST"])
 def signup():
-
     data = request.json
     email = data["email"]  # Retrieve email from JSON data
     password = data["password"].encode("utf-8")  # Retrieve password from JSON data
@@ -32,17 +32,16 @@ def signup():
     # Check if user already exists with email; else, register user
     if User.objects(email=email):
         return jsonify({"error": "This email is already registered!"}), 400
-    
 
     # Insert user into database
-    new_user = User(email=email,password=h_password.decode('utf-8'))
+    new_user = User(email=email, password=h_password.decode("utf-8"))
     try:
         new_user.save()
         return jsonify({"message": "User registered successfully! Please log in"}), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
-    #msg_col.insert_one({"email": email, "password": h_password})
+    # msg_col.insert_one({"email": email, "password": h_password})
 
 
 # Login route
@@ -55,7 +54,7 @@ def login():
     # Retrieve user from database
     user = User.objects(email=email).first()
     if not user or not bcrypt.checkpw(
-        password, user.password.encode('utf-8') 
+        password, user.password.encode("utf-8")
     ):  # if user does not exist OR inputted password is incorrect
         return jsonify({"error": "Invalid email or password!"}), 401
 
