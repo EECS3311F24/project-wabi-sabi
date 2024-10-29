@@ -1,5 +1,6 @@
 import jwt
 import bcrypt
+import base64
 # Function for generating token
 # Used for verification on subsequent requests
 
@@ -14,17 +15,14 @@ def generate_token(email):
 
 def decode_token(token):
     try:
-        payload = jwt.decode(token,SECRET_KEY,algorithm="HS256")
+        payload = jwt.decode(token,SECRET_KEY,algorithms=["HS256"])
         return payload
-    except jwt.ExpiredSignatureError:
+    except jwt.ExpiredSignatureError as e:
+        print(f"ERROR:{e}")
         return None
-    except jwt.InvalidTokenError:
+    except jwt.InvalidTokenError as e:
+        print(f"ERROR:{e}")
         return None
 
 def get_user_from_token(token):
-    if not token:
-        return None
     payload = decode_token(token)
-    if not payload:
-        return None
-    return payload
