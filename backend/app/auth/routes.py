@@ -1,5 +1,6 @@
 from flask import render_template, redirect, url_for, request, jsonify
 from . import auth
+from ..models import User
 import jwt
 import bcrypt
 from database import get_database
@@ -7,10 +8,7 @@ from database import get_database
 # Temp SECRET KEY
 SECRET_KEY = "EECS3311_Wabisabi"
 
-db = get_database()
-print(db)
-msg_col = db["users"]
-print(msg_col)
+get_database()
 
 # Function for generating token
 # Used for verification on subsequent requests
@@ -32,13 +30,19 @@ def signup():
     h_password = bcrypt.hashpw(password, bcrypt.gensalt())
 
     # Check if user already exists with email; else, register user
-    user = msg_col.find_one({"email": email})
-    if user:
+    if User.objects(email=email):
         return jsonify({"error": "This email is already registered!"}), 400
+    
 
     # Insert user into database
-    msg_col.insert_one({"email": email, "password": h_password})
-    return jsonify({"message": "User registered successfully! Please log in"}), 201
+    new_user = User(email=email,password=h_password.decode('utf-8'))
+    try:
+        new_user.save()
+        return jsonify({"message": "User registered successfully! Please log in"}), 201
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+    #msg_col.insert_one({"email": email, "password": h_password})
 
 
 # Login route
@@ -49,9 +53,9 @@ def login():
     password = data["password"].encode("utf-8")
 
     # Retrieve user from database
-    user = msg_col.find_one({"email": email})
+    user = User.objects(email=email).first()
     if not user or not bcrypt.checkpw(
-        password, user["password"]
+        password, user.password.encode('utf-8') 
     ):  # if user does not exist OR inputted password is incorrect
         return jsonify({"error": "Invalid email or password!"}), 401
 
