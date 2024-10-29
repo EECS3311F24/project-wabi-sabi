@@ -2,17 +2,17 @@ from env import DB_URI
 from pymongo import MongoClient
 
 
-def get_mongo_client():
-    client = MongoClient(DB_URI)
+def get_database():
+    db = MongoClient(DB_URI)
     try:
-        client.admin.command("ping")
+        db.admin.command("ping")
         print("Pinged Deployment, Connected to Mongo!")
-        return client
+        return db.wabisabi
     except Exception as e:
         print(f"Failed to connect to Mongo: {e}")
-    return client
+    return db.wabisabi
 
 
 if __name__ == "__main__":
     # Get the database
-    client = get_mongo_client()
+    pass

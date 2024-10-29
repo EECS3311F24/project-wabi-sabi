@@ -2,13 +2,15 @@ from flask import render_template, redirect, url_for, request, jsonify
 from . import auth
 import jwt
 import bcrypt
-from database import get_mongo_client
+from database import get_database
 
 # Temp SECRET KEY
 SECRET_KEY = "EECS3311_Wabisabi"
 
-msg_col = get_mongo_client()["msg_db"]
-
+db = get_database()
+print(db)
+msg_col = db["users"]
+print(msg_col)
 
 # Function for generating token
 # Used for verification on subsequent requests
@@ -22,6 +24,7 @@ def generate_token(email):
 # Sign-Up route
 @auth.route("/signup", methods=["POST"])
 def signup():
+
     data = request.json
     email = data["email"]  # Retrieve email from JSON data
     password = data["password"].encode("utf-8")  # Retrieve password from JSON data
