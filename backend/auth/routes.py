@@ -19,8 +19,9 @@ def generate_token(email):
 # Sign-Up route
 @app.route("/signup", methods=["POST"])
 def signup():
-    email = request.form.get("email")  # Use form.get to retrieve form data
-    password = request.form.get("password").encode("utf-8")
+    data = request.json
+    email = data["email"] 
+    password = data["password"].encode("utf-8")
 
     # Hash password
     h_password = bcrypt.hashpw(password, bcrypt.gensalt())
@@ -38,8 +39,11 @@ def signup():
 # Login route
 @app.route("/login", methods=["POST"])
 def login():
-    email = request.form.get("email")  # Use form.get to retrieve form data
-    password = request.form.get("password").encode("utf-8")
+    # email = request.form.get("email")  # Use form.get to retrieve form data
+    # password = request.form.get("password").encode("utf-8")
+    data = request.json
+    email = data["email"] 
+    password = data["password"].encode("utf-8")
 
     # Retrieve user from database
     user = msg_col.find_one({"email": email})
