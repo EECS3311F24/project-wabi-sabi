@@ -5,6 +5,7 @@ import { AuthProvider } from './components/AuthProvider';
 import ProtectedRoute from './components/ProtectedRoute';
 import TimerDashboard from './components/TimerDashboard';
 import Onboarding from './components/Onboarding';
+import Logout from './components/Logout';
 
 /**
  * This is the main app component that wraps the entire application.
@@ -34,7 +35,11 @@ function App() {
                 />
               </Routes>
             </div>
-            <div className="right-sidebar" />
+            <div className="right-sidebar" >
+              <ProtectedRoute>
+                <Logout />
+              </ProtectedRoute>
+            </div>
           </div>
         </AuthProvider>
       </BrowserRouter>
