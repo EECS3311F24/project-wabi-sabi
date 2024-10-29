@@ -25,14 +25,6 @@ def signup():
     data = request.json
     email = data["email"]  # Retrieve email from JSON data
     password = data["password"].encode("utf-8")  # Retrieve password from JSON data
-    confirm_password = data["confirm_password"].encode(
-        "utf-8"
-    )  # Retrieve confirmation password from JSON data
-
-    # if passwords don't match, return code 400
-    if password != confirm_password:
-        return jsonify({"error:": "Passwords do not match!"}), 400
-
     # Hash password
     h_password = bcrypt.hashpw(password, bcrypt.gensalt())
 
