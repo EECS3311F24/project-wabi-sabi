@@ -1,4 +1,6 @@
+
 import { Card, CardContent, CardFooter } from './ui/card';
+
 
 /**
  * The confirmation that pops up if the user signed up successfully.
@@ -23,6 +25,7 @@ const SignupSuccess = () => {
     </Card>
 
     </>
+
   );
 };
 

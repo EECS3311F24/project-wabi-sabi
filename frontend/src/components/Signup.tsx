@@ -9,6 +9,7 @@ import { useState } from 'react';
 import SignupSuccess from './SignupSuccessCard';
 import { Navigate } from 'react-router-dom';
 
+
 // schema that defines the shape of the signup form
 // so if you have email, password, confirm password, you put it in here so that
 // you can validate the form data before submitting it
@@ -31,7 +32,7 @@ const Signup = () => {
   // useState is a react hook that helps us manage state
   // in this case, we are using it to manage the success state of the sign up
   const [signUpSuccess, setSignUpSuccess] = useState(false);
-  
+
   // useForm is a custom hook provided by react-hook-form that helps us manage the form state
   // we pass in the form schema to validate the form
   // the default values are the initial values of the form
@@ -54,6 +55,7 @@ const Signup = () => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ email: email, password: password }),
+
     };
 
     const response = await fetch('http://localhost:5000/signup', request);
@@ -66,8 +68,7 @@ const Signup = () => {
       return data.error;
     } else {
       // what do we do if the sign up is successful?
-      <Navigate to="/confirmation" />;
-      
+      <Navigate to="/confirmation" />
     }
   };
 
@@ -82,6 +83,7 @@ const Signup = () => {
       setSignUpSuccess(true);
       <Navigate to="/confirmation" />;
     }
+
     // remember to set setSignUpSuccess to true if the sign up is successful!
     // if there is an error however, we need to display it in the form...
   };
