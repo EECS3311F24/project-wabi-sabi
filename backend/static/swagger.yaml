@@ -12,16 +12,17 @@ paths:
       summary: "User sign-up"
       description: "Register a new user account."
       parameters:
-        - in: "formData"
-          name: "email"
-          type: "string"
+        - in: "body"
+          name: "body"
+          description: "User sign-up data"
           required: true
-          description: "Email address"
-        - in: "formData"
-          name: "password"
-          type: "string"
-          required: true
-          description: "Password for new account"
+          schema:
+            type: "object"
+            properties:
+              email:
+                type: "string"
+              password:
+                type: "string"
       responses:
         201:
           description: "User registered successfully"
@@ -33,16 +34,17 @@ paths:
       summary: "User login"
       description: "Log in a user and return a JWT token."
       parameters:
-        - in: "formData"
-          name: "email"
-          type: "string"
+        - in: "body"
+          name: "body"
+          description: "User login data"
           required: true
-          description: "Email address"
-        - in: "formData"
-          name: "password"
-          type: "string"
-          required: true
-          description: "Password"
+          schema:
+            type: "object"
+            properties:
+              email:
+                type: "string"
+              password:
+                type: "string"
       responses:
         200:
           description: "Successful login, JWT token returned"
