@@ -23,6 +23,7 @@ function App() {
               <Routes>
                 <Route path="/login" element={<Onboarding />} />
                 <Route path="/signup" element={<Onboarding />} />
+                <Route path="/confirmation" element={<Onboarding />} />
                 <Route
                   path="/"
                   element={

@@ -7,6 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from './ui/button';
 import { useState } from 'react';
 import SignupSuccess from './SignupSuccessCard';
+import { Navigate } from 'react-router-dom';
 
 // schema that defines the shape of the signup form
 // so if you have email, password, confirm password, you put it in here so that
@@ -30,7 +31,7 @@ const Signup = () => {
   // useState is a react hook that helps us manage state
   // in this case, we are using it to manage the success state of the sign up
   const [signUpSuccess, setSignUpSuccess] = useState(false);
-
+  
   // useForm is a custom hook provided by react-hook-form that helps us manage the form state
   // we pass in the form schema to validate the form
   // the default values are the initial values of the form
@@ -52,7 +53,7 @@ const Signup = () => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ email: email, password: password, confirm_password: password }),
+      body: JSON.stringify({ email: email, password: password }),
     };
 
     const response = await fetch('http://localhost:5000/signup', request);
@@ -65,16 +66,22 @@ const Signup = () => {
       return data.error;
     } else {
       // what do we do if the sign up is successful?
-      // FILL IN THE CODE HERE
-      console.log(data); // for testing purposes; remove later
+      <Navigate to="/confirmation" />;
+      
     }
   };
 
   // this is the function that is called when the form is submitted
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const { email, password } = values;
-    console.log(email, password); // this is just for testing; you can remove this
-    // -- WRITE CODE HERE TO CALL SIGN UP --
+    const errorMessage = await signup(email, password);
+    if (errorMessage) {
+      // if there is an error, display it
+      form.setError('email', { message: errorMessage });
+    } else {
+      setSignUpSuccess(true);
+      <Navigate to="/confirmation" />;
+    }
     // remember to set setSignUpSuccess to true if the sign up is successful!
     // if there is an error however, we need to display it in the form...
   };
