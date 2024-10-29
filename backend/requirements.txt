@@ -15,6 +15,7 @@ jsonschema==4.23.0
 jsonschema-specifications==2024.10.1
 MarkupSafe==2.1.5
 mistune==3.0.2
+mongoengine==0.29.1
 packaging==24.1
 pycparser==2.22
 PyJWT==2.9.0
