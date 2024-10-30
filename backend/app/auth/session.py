@@ -25,4 +25,6 @@ def decode_token(token):
         return None
 
 def get_user_from_token(token):
-    payload = decode_token(token)
+    print(token)
+    payload = decode_token(token.split(" ")[1])
+    return payload

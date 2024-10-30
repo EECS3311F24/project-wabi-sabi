@@ -10,7 +10,7 @@ class Task(Document):
     STATUS_TODO = "Todo"
     STATUS_IN_PROGRESS = "In Progress"
     STATUS_FINISHED = "Finished"
-    is_sub_task = BooleanField(required=True) 
+    is_sub_task = BooleanField(required=True)
     text = StringField(required=True)
     due_date = DateTimeField()
     tag = ObjectIdField()
@@ -19,17 +19,15 @@ class Task(Document):
 
     def update_status(new_status):
         status = new_status
-    
+
     def __str__(self):
         return self.text
-    
+
     def to_json(self):
         #sub_task_json = []
         #for task in self.sub_tasks:
             #sub_task_json.append(task.to_json())
-
-        return
-        {
+        jsonified = {
             'id': str(self.id),
             'is_sub_task':str(self.is_sub_task),
             'text':str(self.text),
@@ -38,15 +36,15 @@ class Task(Document):
             'status':str(self.status),
             #'sub_tasks': str(sub_task_json),
         }
-        
+        print(jsonified)
+        return jsonified
 
-#class TaskMap(Document):
-    #map = DictField({ReferenceField(User):ListField(ReferenceField(Task))})
+
 
 class User(Document):
     email = StringField(required=True)
     password = StringField(required=True)
-    tasks = ListField(ReferenceField(Task),required=True)
+    tasks = ListField(ReferenceField(Task))
 
     def get_tasks():
         return self.tasks
