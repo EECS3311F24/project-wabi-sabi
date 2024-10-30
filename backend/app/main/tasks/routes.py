@@ -5,6 +5,7 @@ from app.models import User
 from app.auth.session import get_user_from_token
 from ...models import Task
 
+
 @tasks.route("/tasks/add", methods=["POST"])
 def make_task():
     data = request.json
@@ -16,7 +17,7 @@ def make_task():
         return jsonify({"error": "INVALID SESSION TOKEN"}), 401
     user = User.objects(email=payload["email"]).first()
     text = data["text"]  # Retrieve email from JSON data
-    new_task = Task(is_sub_task=False,text=text,status=Task.STATUS_TODO)
+    new_task = Task(is_sub_task=False, text=text, status=Task.STATUS_TODO)
     try:
         new_task.save()
         user.tasks.append(new_task)
@@ -40,6 +41,4 @@ def return_user_tasks():
     print(f"Tasks:{tasks}")
     tasks_json = [task.to_json() for task in tasks]
     print(f"Tasks:{tasks_json}")
-    return jsonify({"tasks":tasks_json}), 201
-
-
+    return jsonify({"tasks": tasks_json}), 201

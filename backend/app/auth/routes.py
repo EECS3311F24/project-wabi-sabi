@@ -7,12 +7,10 @@ from database import get_database
 from .session import generate_token
 
 
-
-
 # Sign-Up route
 @auth.route("/signup", methods=["POST"])
 def signup():
-    print('signing up')
+    print("signing up")
     data = request.json
     email = data["email"]  # Retrieve email from JSON data
     password = data["password"].encode("utf-8")  # Retrieve password from JSON data
@@ -24,7 +22,7 @@ def signup():
         return jsonify({"error": "This email is already registered!"}), 400
 
     # Insert user into database
-    new_user = User(email=email, password=h_password.decode("utf-8"),tasks=[])
+    new_user = User(email=email, password=h_password.decode("utf-8"), tasks=[])
     try:
         new_user.save()
         return jsonify({"message": "User registered successfully! Please log in"}), 201
