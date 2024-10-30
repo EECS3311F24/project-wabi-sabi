@@ -5,7 +5,6 @@ import { AuthProvider } from './components/AuthProvider';
 import ProtectedRoute from './components/ProtectedRoute';
 import TimerDashboard from './components/TimerDashboard';
 import Onboarding from './components/Onboarding';
-import Logout from './components/Logout';
 
 /**
  * This is the main app component that wraps the entire application.
@@ -18,29 +17,19 @@ function App() {
     <>
       <BrowserRouter>
         <AuthProvider>
-          <div className="container">
-            <div className="left-sidebar" />
-            <div className="main-panel">
-              <Routes>
-                <Route path="/login" element={<Onboarding />} />
-                <Route path="/signup" element={<Onboarding />} />
-                <Route path="/confirmation" element={<Onboarding />} />
-                <Route
-                  path="/"
-                  element={
-                    <ProtectedRoute>
-                      <TimerDashboard />
-                    </ProtectedRoute>
-                  }
-                />
-              </Routes>
-            </div>
-            <div className="right-sidebar" >
-              <ProtectedRoute>
-                <Logout />
-              </ProtectedRoute>
-            </div>
-          </div>
+          <Routes>
+            <Route path="/login" element={<Onboarding />} />
+            <Route path="/signup" element={<Onboarding />} />
+            <Route path="/confirmation" element={<Onboarding />} />
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute>
+                  <TimerDashboard />
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
         </AuthProvider>
       </BrowserRouter>
     </>
