@@ -9,7 +9,11 @@ export default {
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)',
       },
-      colors: {},
+      colors: {
+        'wabi-red': '#FF7D59',
+        'wabi-btn-primary-unselected': '#E3644D',
+        'wabi-btn-hover-primary-unselected': '#CC5A45',
+      },
     },
   },
   plugins: [require('tailwindcss-animate')],
