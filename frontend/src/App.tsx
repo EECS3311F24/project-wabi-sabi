@@ -3,8 +3,10 @@ import './App.css';
 import { AuthProvider } from './components/AuthProvider';
 
 import ProtectedRoute from './components/ProtectedRoute';
-import TimerDashboard from './components/TimerDashboard';
+import DashboardContainer from './components/DashboardContainer';
 import Onboarding from './components/Onboarding';
+import TimerDashboard from './components/TimerDashboard';
+import TodoDashboard from './components/TodoDashboard';
 
 /**
  * This is the main app component that wraps the entire application.
@@ -25,10 +27,14 @@ function App() {
               path="/"
               element={
                 <ProtectedRoute>
-                  <TimerDashboard />
+                  <DashboardContainer />
                 </ProtectedRoute>
               }
-            />
+            >
+              <Route index element={<TimerDashboard />} />
+              <Route path="timer" element={<TimerDashboard />} />
+              <Route path="todo" element={<TodoDashboard />} />
+            </Route>
           </Routes>
         </AuthProvider>
       </BrowserRouter>
