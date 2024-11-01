@@ -7,6 +7,66 @@ basePath: "/"
 schemes:
   - "http"
 paths:
+  /tasks/add:
+    post:
+      summary: "Add task object"
+      description: "Adds a new task object to the task collection, as well as adds it to the user who requested"
+      Authorization: Bearer <token>
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Task data"
+          required: true
+          schema:
+            type: "object"
+            properties:
+              text:
+                type: "string"
+      responses:
+        201:
+          description: "Task created successfully"
+        400:
+          description: "Task not created successfully (includes error message)"
+        401:
+          description: "Invalid jwt session token"
+  /tasks/get:
+    get:
+      summary: "Get list of a users tasks"
+      Authorization: Bearer <token>
+      description: "Adds a new task object to the task collection, as well as adds it t"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Task data"
+          required: true
+          schema:
+            type: "object"
+            properties:
+              text:
+                type: "string"
+      responses:
+        201:
+          description: "Task created successfully"
+          schema:
+            type: array
+            properties:
+            id:
+              type: "ObjectId"
+            is_sub_task:
+              type: "boolean"
+            text:
+              type: "string"
+            due_date:
+              type: "Date"
+            tag:
+              type: "Tag"
+            status:
+              type: "String"
+
+        400:
+          description: "Error with getting Tasks"
+        401:
+          description: "Invalid jwt session token"
   /signup:
     post:
       summary: "User sign-up"
