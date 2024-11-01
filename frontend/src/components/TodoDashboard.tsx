@@ -55,7 +55,7 @@ const TodoDashboard = () => {
 
   return (
     <div className="w-full h-screen bg-lightOrangeBg flex flex-col items-center">
-      <h1 className="text-3xl text-customOrange font-bold mb-4">To do List</h1>
+      <h1 className="text-3xl text-wabi-red font-bold mb-4">To do List</h1>
       
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogTrigger asChild>
