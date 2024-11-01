@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_cors import CORS, cross_origin
 from flask_swagger_ui import get_swaggerui_blueprint
+from database import get_database
 
 
 def create_app():
@@ -19,6 +20,9 @@ def create_app():
             "app_name": "Documentation"  # Title for your API
         },
     )
+
+    # start db connection
+    get_database()
 
     # Register the blueprint
     app.register_blueprint(swaggerui_blueprint, url_prefix=SWAGGER_URL)
