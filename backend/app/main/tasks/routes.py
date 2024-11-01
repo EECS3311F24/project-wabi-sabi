@@ -55,11 +55,11 @@ def update_user_task():
 
     try:
         user = User.objects(email=payload["email"]).first()
-        task_id = data['task-id']
+        task_id = data['task_id']
         new_status = data['status']
-        task = user.get_task(task_id).set_status(new_status)
+        task = user.get_task(task_id)
+        task.set_status(new_status)
         task.save()
-        print(f"Tasks:{tasks_json}")
         return jsonify({"message": "Task edited successfully"}), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 400
@@ -80,7 +80,6 @@ def remove_user_task():
         task_id = data['task_id']
         task = user.get_task(task_id)
         task.delete()
-        print(f"Tasks:{tasks_json}")
         return jsonify({"message": "Task deleted successfully"}), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 400

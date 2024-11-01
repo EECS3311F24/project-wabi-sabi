@@ -18,8 +18,8 @@ class Task(Document):
     status = StringField(required=True)
     #sub_tasks = ListField(ReferenceField())
 
-    def update_status(new_status):
-        status = new_status
+    def set_status(self,new_status):
+        self.status = new_status
 
     def __str__(self):
         return self.text
@@ -51,7 +51,7 @@ class User(Document):
     def get_tasks():
         return self.tasks
 
-    def get_task(task_id):
+    def get_task(self,task_id):
         print(task_id)
         return Task.objects(id=ObjectId(task_id)).first()
 
