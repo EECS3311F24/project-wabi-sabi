@@ -4,6 +4,7 @@ from . import tasks
 from app.models import User
 from app.auth.session import get_user_from_token
 from ...models import Task
+from datetime import datetime
 
 
 @tasks.route("/tasks/add", methods=["POST"])
@@ -17,7 +18,11 @@ def make_task():
         return jsonify({"error": "INVALID SESSION TOKEN"}), 401
     user = User.objects(email=payload["email"]).first()
     text = data["text"]  # Retrieve email from JSON data
-    new_task = Task(is_sub_task=False, text=text, status=Task.STATUS_TODO)
+    due_date_str = data["due_date"]
+    date_object = datetime.strptime(due_date_str, "%Y-%m-%d").date()
+    new_task = Task(
+        is_sub_task=False, text=text, due_date=date_object, status=Task.STATUS_TODO
+    )
     try:
         new_task.save()
         user.tasks.append(new_task)
@@ -39,9 +44,10 @@ def return_user_tasks():
     user = User.objects(email=payload["email"]).first()
     tasks = user.get_tasks()
     print(f"Tasks: {tasks}, Type: {[type(task) for task in tasks]}")
-    tasks_json = [task.to_json() for task in tasks if isinstance(task,Task)]
+    tasks_json = [task.to_json() for task in tasks if isinstance(task, Task)]
     print(f"Tasks:{tasks_json}")
     return jsonify({"tasks": tasks_json}), 201
+
 
 @tasks.route("/tasks/edit", methods=["POST"])
 def update_user_task():
@@ -55,14 +61,15 @@ def update_user_task():
 
     try:
         user = User.objects(email=payload["email"]).first()
-        task_id = data['task_id']
-        new_status = data['status']
+        task_id = data["task_id"]
+        new_status = data["status"]
         task = user.get_task(task_id)
         task.set_status(new_status)
         task.save()
         return jsonify({"message": "Task edited successfully"}), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 400
+
 
 @tasks.route("/tasks/rm", methods=["POST"])
 def remove_user_task():
@@ -77,8 +84,9 @@ def remove_user_task():
 
     try:
         user = User.objects(email=payload["email"]).first()
-        task_id = data['task_id']
+        task_id = data["task_id"]
         task = user.get_task(task_id)
+        user.remove_task(task_id)
         task.delete()
         return jsonify({"message": "Task deleted successfully"}), 201
     except Exception as e:
