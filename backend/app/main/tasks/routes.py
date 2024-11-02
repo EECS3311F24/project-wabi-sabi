@@ -38,8 +38,8 @@ def return_user_tasks():
 
     user = User.objects(email=payload["email"]).first()
     tasks = user.tasks
-    print(f"Tasks:{tasks}")
-    tasks_json = [task.to_json() for task in tasks]
+    print(f"Tasks: {tasks}, Type: {[type(task) for task in tasks]}")
+    tasks_json = [task.to_json(task) for task in tasks]
     print(f"Tasks:{tasks_json}")
     return jsonify({"tasks": tasks_json}), 201
 

@@ -25,6 +25,7 @@ class Task(Document):
         return self.text
 
     def to_json(self):
+        print(f"jsonifying {self.text}")
         #sub_task_json = []
         #for task in self.sub_tasks:
             #sub_task_json.append(task.to_json())
@@ -46,9 +47,9 @@ class User(Document):
     email = StringField(required=True)
     password = StringField(required=True)
     tasks = ListField(ReferenceField(Task))
-    study_sessions = ListField(ReferenceField(Task))
+    study_sessions = ListField(ReferenceField())
 
-    def get_tasks():
+    def get_tasks(self):
         return self.tasks
 
     def get_task(self,task_id):
