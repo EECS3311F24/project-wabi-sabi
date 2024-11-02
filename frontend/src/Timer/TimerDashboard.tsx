@@ -108,12 +108,12 @@ const TimerDashboard = () => {
               <img src={pauseIcon} alt="Pause" className="fill-white size-6" />
             </Button>
           )}
-          <Button
+          {/* <Button
             className="bg-white border-wabi-btn-primary-unselected border-2 hover:bg-gray-100 w-[58px] h-[56px] rounded-full mt-[6px]"
             onClick={() => handleModeChange(timerState)}
           >
             <img src={skipIcon} alt="Skip" className="size-5" />
-          </Button>
+          </Button> */}
         </div>
         <div className="flex flex-row space-x-6 pt-[30px]">
           {timerState == 'pomodoro' && (
