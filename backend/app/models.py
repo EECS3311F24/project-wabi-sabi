@@ -1,5 +1,6 @@
 from mongoengine import *
 from enum import Enum
+from bson import ObjectId
 
 # all models should go here?
 
@@ -17,8 +18,8 @@ class Task(Document):
     status = StringField(required=True)
     #sub_tasks = ListField(ReferenceField())
 
-    def update_status(new_status):
-        status = new_status
+    def set_status(self,new_status):
+        self.status = new_status
 
     def __str__(self):
         return self.text
@@ -45,9 +46,14 @@ class User(Document):
     email = StringField(required=True)
     password = StringField(required=True)
     tasks = ListField(ReferenceField(Task))
+    study_sessions = ListField(ReferenceField(Task))
 
     def get_tasks():
         return self.tasks
+
+    def get_task(self,task_id):
+        print(task_id)
+        return Task.objects(id=ObjectId(task_id)).first()
 
     def __str__(self):
         return self.username
