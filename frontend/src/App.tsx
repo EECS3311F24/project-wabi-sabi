@@ -5,8 +5,8 @@ import { AuthProvider } from './components/AuthProvider';
 import ProtectedRoute from './components/ProtectedRoute';
 import DashboardContainer from './components/DashboardContainer';
 import Onboarding from './components/Onboarding';
-import TimerDashboard from './components/TimerDashboard';
 import TodoDashboard from './components/TodoDashboard';
+import TimerDashboard from './Timer/TimerDashboard';
 
 /**
  * This is the main app component that wraps the entire application.
