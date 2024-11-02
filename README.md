@@ -155,6 +155,17 @@ If you run into any issues, follow the steps listed in "quickstart" and "running
 
 you should be able to open the local version of the frontend enter text into the form in the frontend, and have it sent to the backend to be sent to the database.
 
+## Documentation
+Documentation for the application's API requests can be found in the /swagger route of your backend local port
+```
+http://localhost:5000/swagger/
+```
+You can explore all the different requests (GET, POST etc) being made by our backend, and test it out yourself using the integrated Swagger UI.
+
+Simply press 'Try it out', include the required parameters, and execute the request. A response will be sent with a code, as well as a message, indicating the
+result of your request
+
+
 ## Contributing
 
 Look to our [Trello Board](https://trello.com/invite/b/66eddb6910376903ff1f7fd4/ATTIcb1d460a76c0853aa443feed20988fe38035A199/wabi-sabi) to find tickets that need to be worked on.
