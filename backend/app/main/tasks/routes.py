@@ -49,7 +49,7 @@ def return_user_tasks():
     return jsonify({"tasks": tasks_json}), 201
 
 
-@tasks.route("/tasks/edit", methods=["POST"])
+@tasks.route("/tasks/edit", methods=["PATCH"])
 def update_user_task():
     data = request.json
     token = request.headers.get("Authorization")
@@ -71,7 +71,7 @@ def update_user_task():
         return jsonify({"error": str(e)}), 400
 
 
-@tasks.route("/tasks/rm", methods=["POST"])
+@tasks.route("/tasks/rm", methods=["DELETE"])
 def remove_user_task():
     token = request.headers.get("Authorization")
     if not token:
