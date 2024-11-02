@@ -3,6 +3,8 @@ import globals from 'globals';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 import tseslint from 'typescript-eslint';
+import { fixupPluginRules } from '@eslint/compat';
+import eslintPluginReactHooks from 'eslint-plugin-react-hooks';
 
 export default tseslint.config(
   { ignores: ['dist', 'node_modules', 'env.d.ts'] },
@@ -14,7 +16,7 @@ export default tseslint.config(
       globals: globals.browser,
     },
     plugins: {
-      'react-hooks': reactHooks,
+      'react-hooks': fixupPluginRules(eslintPluginReactHooks),
       'react-refresh': reactRefresh,
     },
     rules: {
