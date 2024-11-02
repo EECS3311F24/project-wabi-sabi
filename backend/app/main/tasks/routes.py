@@ -18,11 +18,16 @@ def make_task():
         return jsonify({"error": "INVALID SESSION TOKEN"}), 401
     user = User.objects(email=payload["email"]).first()
     text = data["text"]  # Retrieve email from JSON data
-    due_date_str = data["due_date"]
-    date_object = datetime.strptime(due_date_str, "%Y-%m-%d").date()
-    new_task = Task(
-        is_sub_task=False, text=text, due_date=date_object, status=Task.STATUS_TODO
-    )
+    try:
+        due_date_str = data["due_date"]
+        date_object = datetime.strptime(due_date_str, "%Y-%m-%d").date()
+        new_task = Task(
+            is_sub_task=False, text=text, due_date=date_object, status=Task.STATUS_TODO
+        )
+    except:
+        new_task = Task(
+            is_sub_task=False, text=text, status=Task.STATUS_TODO
+        )
     try:
         new_task.save()
         user.tasks.append(new_task)
