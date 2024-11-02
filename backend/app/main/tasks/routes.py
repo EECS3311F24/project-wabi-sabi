@@ -37,9 +37,9 @@ def return_user_tasks():
         return jsonify({"error": "INVALID SESSION TOKEN"}), 401
 
     user = User.objects(email=payload["email"]).first()
-    tasks = user.tasks
+    tasks = user.get_tasks()
     print(f"Tasks: {tasks}, Type: {[type(task) for task in tasks]}")
-    tasks_json = [task.to_json(task) for task in tasks]
+    tasks_json = [task.to_json() for task in tasks if isinstance(task,Task)]
     print(f"Tasks:{tasks_json}")
     return jsonify({"tasks": tasks_json}), 201
 
