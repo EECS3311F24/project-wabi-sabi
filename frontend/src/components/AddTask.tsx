@@ -20,14 +20,12 @@ interface AddTaskProps {
 
 const AddTask: React.FC<AddTaskProps> = ({ dialogOpen, setDialogOpen, processSubmission }) => {
   const [taskTitle, setTaskTitle] = useState('');
-  const [tag, setTag] = useState('');
   const [dueDate, setDueDate] = useState('');
 
   const handleSubmit = () => {
-    processSubmission(taskTitle, tag || undefined, dueDate || undefined);
+    processSubmission(taskTitle, undefined, dueDate || undefined); 
     setDialogOpen(false);
     setTaskTitle('');
-    setTag('');
     setDueDate('');
   };
 
@@ -56,6 +54,9 @@ const AddTask: React.FC<AddTaskProps> = ({ dialogOpen, setDialogOpen, processSub
               className="mt-1 p-2 border border-gray-200 rounded w-full"
             />
           </div>
+
+          
+          {/*
           <div className='flex items-center mb-2'>
             <label className="text-sm font-medium mr-9">Tag</label>
             <input
@@ -66,6 +67,8 @@ const AddTask: React.FC<AddTaskProps> = ({ dialogOpen, setDialogOpen, processSub
               className="mt-1 p-2 border border-gray-200 rounded w-full"
             />
           </div>
+          */}
+
           <div className='flex items-center mb-4'>
             <label className="text-sm font-medium mr-2">Due Date</label>
             <input

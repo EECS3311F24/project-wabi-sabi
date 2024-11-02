@@ -66,23 +66,27 @@ const TodoDashboard = () => {
     }
   };
 
-  const toggleCompletionCheckBox = async(id: String, isCompleted: boolean) =>{
-    try{
-    const response = await fetch("http://localhost:5000/tasks/edit", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${authToken}`,
-      },
-      body: JSON.stringify({ task_id: id, status: isCompleted ? "Finished" : "Todo" }),
-    });
-    if (response.ok) {
-      fetchTasks(); 
-    } else {
-      console.error("Error updating task:", await response.text());
-    }
+  const toggleCompletionCheckBox = async (id: string, isCompleted: boolean) => {
+    try {
+      const response = await fetch("http://localhost:5000/tasks/edit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${authToken}`, 
+        },
+        body: JSON.stringify({ task_id: id, status: isCompleted ? "Finished" : "Todo" }),  
+      });
+      if (response.ok) {
+        setTasks(prevTasks =>
+          prevTasks.map(task =>
+            task.id === id ? { ...task, completed: isCompleted } : task
+          )
+        );
+      } else {
+        console.error("Error updating task:", await response.text());
+      }
     } catch (error) {
-    console.error("Error:", error);
+      console.error("Error:", error);
     }
   };
 
