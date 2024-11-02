@@ -23,7 +23,7 @@ const AddTask: React.FC<AddTaskProps> = ({ dialogOpen, setDialogOpen, processSub
   const [dueDate, setDueDate] = useState('');
 
   const handleSubmit = () => {
-    processSubmission(taskTitle, undefined, dueDate || undefined); 
+    processSubmission(taskTitle, dueDate || undefined);
     setDialogOpen(false);
     setTaskTitle('');
     setDueDate('');

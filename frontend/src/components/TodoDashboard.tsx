@@ -21,7 +21,7 @@ interface Task {
   id: string;
   text: string;
   tag?: string;
-  dueDate?: string;
+  dueDate?: string;  // Keep as `dueDate` as backend response
   completed?: boolean;
 }
 
@@ -30,7 +30,6 @@ const TodoDashboard = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const { authToken } = useAuth();
 
-  
   const fetchTasks = async () => {
     try {
       const response = await fetch("http://localhost:5000/tasks/get", {
@@ -46,7 +45,7 @@ const TodoDashboard = () => {
     }
   };
 
-  const processSubmission = async (taskTitle: string, tag?: string, dueDate?: string) => {
+  const processSubmission = async (taskTitle: string, dueDate?: string) => {
     try {
       const response = await fetch("http://localhost:5000/tasks/add", {
         method: "POST",
@@ -54,7 +53,7 @@ const TodoDashboard = () => {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${authToken}`,
         },
-        body: JSON.stringify({ text: taskTitle, tag: tag || null, dueDate: dueDate || null }),
+        body: JSON.stringify({ text: taskTitle, dueDate: dueDate || null }),
       });
       if (response.ok) {
         fetchTasks(); 
@@ -110,7 +109,6 @@ const TodoDashboard = () => {
     }
   };
 
-  
   useEffect(() => {
     fetchTasks();
   }, []);
@@ -146,7 +144,7 @@ const TodoDashboard = () => {
                   <span className="ml-2">{task.text || "Untitled Task"}</span>
                 </TableCell>
                 <TableCell>{task.tag || ''}</TableCell>
-                <TableCell>{task.dueDate || ''}</TableCell>
+                <TableCell>{task.dueDate ? new Date(task.dueDate).toLocaleDateString() : ''}</TableCell>
                 <TableCell>{task.completed ? '100%' : '0%'}</TableCell>
                 <TableCell className="text-right">
                   <DropdownMenu>
@@ -158,7 +156,7 @@ const TodoDashboard = () => {
                     <DropdownMenuContent align="end">
                       <DropdownMenuItem
                         className="text-red-500"
-                        onClick={()=>deleteTask(task.id)}
+                        onClick={() => deleteTask(task.id)}
                       >
                         Delete
                       </DropdownMenuItem>
