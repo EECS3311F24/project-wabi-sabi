@@ -66,6 +66,46 @@ const TodoDashboard = () => {
     }
   };
 
+  const toggleCompletionCheckBox = async(id: String, isCompleted: boolean) =>{
+    try{
+    const response = await fetch("http://localhost:5000/tasks/edit", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${authToken}`,
+      },
+      body: JSON.stringify({ task_id: id, status: isCompleted ? "Finished" : "Todo" }),
+    });
+    if (response.ok) {
+      fetchTasks(); 
+    } else {
+      console.error("Error updating task:", await response.text());
+    }
+    } catch (error) {
+    console.error("Error:", error);
+    }
+  };
+
+  const deleteTask = async (id: string) => {
+    try {
+      const response = await fetch("http://localhost:5000/tasks/rm", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${authToken}`,
+        },
+        body: JSON.stringify({ task_id: id }),
+      });
+      if (response.ok) {
+        fetchTasks();
+      } else {
+        console.error("Error deleting task:", await response.text());
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   
   useEffect(() => {
     fetchTasks();
@@ -96,7 +136,7 @@ const TodoDashboard = () => {
                   <input
                     type="checkbox"
                     checked={task.completed || false} 
-                    onChange={() => console.log("Toggle functionality not implemented")}
+                    onChange={() => toggleCompletionCheckBox(task.id, !task.completed)}
                     className="accent-black"
                   />
                   <span className="ml-2">{task.text || "Untitled Task"}</span>
@@ -114,7 +154,7 @@ const TodoDashboard = () => {
                     <DropdownMenuContent align="end">
                       <DropdownMenuItem
                         className="text-red-500"
-      
+                        onClick={()=>deleteTask(task.id)}
                       >
                         Delete
                       </DropdownMenuItem>
