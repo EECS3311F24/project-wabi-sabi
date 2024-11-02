@@ -42,3 +42,44 @@ def return_user_tasks():
     tasks_json = [task.to_json() for task in tasks]
     print(f"Tasks:{tasks_json}")
     return jsonify({"tasks": tasks_json}), 201
+
+@tasks.route("/tasks/edit", methods=["POST"])
+def update_user_task():
+    data = request.json
+    token = request.headers.get("Authorization")
+    if not token:
+        return jsonify({"error": "NO SESSION TOKEN"}), 401
+    payload = get_user_from_token(token)
+    if not payload:
+        return jsonify({"error": "INVALID SESSION TOKEN"}), 401
+
+    try:
+        user = User.objects(email=payload["email"]).first()
+        task_id = data['task_id']
+        new_status = data['status']
+        task = user.get_task(task_id)
+        task.set_status(new_status)
+        task.save()
+        return jsonify({"message": "Task edited successfully"}), 201
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+@tasks.route("/tasks/rm", methods=["POST"])
+def remove_user_task():
+    token = request.headers.get("Authorization")
+    if not token:
+        return jsonify({"error": "NO SESSION TOKEN"}), 401
+    payload = get_user_from_token(token)
+    if not payload:
+        return jsonify({"error": "INVALID SESSION TOKEN"}), 401
+
+    data = request.json
+
+    try:
+        user = User.objects(email=payload["email"]).first()
+        task_id = data['task_id']
+        task = user.get_task(task_id)
+        task.delete()
+        return jsonify({"message": "Task deleted successfully"}), 201
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
