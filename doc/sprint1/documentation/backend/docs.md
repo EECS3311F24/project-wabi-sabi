@@ -1,3 +1,21 @@
+# Backend Documentation:
+
+## Table of Contents
+
+### Models
+
+1. [User](#user-documentation)
+2. [Task](#task-documentation)
+3. [Study](#study-documentation)
+4. [Tag](#tag-documentation)
+
+### Routes
+
+1. [Auth Routes](#auth-routes)
+2. [Task Routes](#task-routes)
+3. [Study Session Routes](#study-session-routes)
+4. [Tag](#tag-documentation)
+
 # User Documentation
 
 ## Overview:
