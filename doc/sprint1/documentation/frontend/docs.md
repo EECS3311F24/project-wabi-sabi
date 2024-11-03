@@ -12,6 +12,8 @@
 8. [Signup Component Documentation](#signup-component-documentation)
 9. [SignupSuccess Component Documentation](#signupsuccess-component-documentation)
 10. [TimerDashboard Component Documentation](#timerdashboard-component-documentation)
+11. [TodoDashboard Component Documentation](#tododashboard-component-documentation)
+12. [AddTask Component Documentation](#addtask-component-documentation)
 
 ---
 
@@ -447,3 +449,95 @@ This component relies on:
 ## Usage
 
 Place the `TimerDashboard` component within the application where users can interact with the Pomodoro timer. Users can start, pause, reset, and switch between modes as desired.
+
+<br><br>
+
+# TodoDashboard Component Documentation
+
+## Overview
+
+The `TodoDashboard` component is a page for displaying the users task in a table and updating the table. Each table row has a checkbox to mark completion, task title, due date(optional) and the three 
+dots icon for deletion. The page uses an button above the table that pops up another page, `AddTask` to add tasks. 
+
+## Dependencies
+
+This component relies on:
+
+- **AuthProvider**: It gets the user's authentication token.
+- **Table Components**: `Table`, `TableHeader`, `TableBody`, `TableRow`, `TableHead`, and `TableCell` for displaying the tasks in a table.
+- **Dropdown Menu Components**: For task options like deletion.
+- **Checkbox**: For toggling between completed and not completed.
+- **AddTask**: A component that displays a pop page for adding a task.
+
+## Component Structure
+
+- **State Management**:
+  - `tasks`: Tracks the currenly add task(including an empty one)
+  - `dialogOpen`: Tracks if the pop page is open or not
+.
+- **Functions**:
+  - `getTasks`: Makes a GET request to backend to get the list of tasks.
+  - `addTask`: Makes a POST request to add a new task to the list and updates the on the table.
+  - `toggleCompletionCheckBox`: Updates the completion status of a task.
+  - `deleteTask`: Deletes a task from the list and updates the table.
+
+## Usage
+
+1. **Fetching Tasks**: On load, `getTasks` is called to retrieve and render the user’s tasks from the backend.
+2. **Adding a Task**: Opens the `AddTask` dialog, where the user can add a new task. If a title is provided, it triggers `addTask` to add the task to the backend and update the UI.
+3. **Marking Tasks as Complete**: Toggles the completion status using `toggleCompletionCheckBox`.
+4. **Deleting a Task**: Deletes the task from the list and the backend using `deleteTask`.
+
+## Additional Notes
+
+- **Error Handling**:  All errors occured while make a reqeust a backend are logged to the console.
+
+
+<br><br>
+
+# AddTask Component Documentation
+
+## Overview
+
+The `AddTask` component renders a form for users to add new tasks with an optional due date. It ensures a title is provided before allowing task submission. The form opens in a dialog box, making it easy for users to focus on task input.
+
+## Dependencies
+
+This component relies on:
+
+- **Dialog Components**: `Dialog`, `DialogTrigger`, `DialogOverlay`, `DialogContent`, `DialogTitle`, and `DialogDescription` for handling the modal-style popup.
+- **Button Components**: `SelectedButton` for opening the form and `UnselectedButton` for submitting the form.
+- **ShadCN UI Components**: Provides the layout and styling for the dialog form.
+
+## Interfaces
+
+### AddTaskProps
+
+Defines the properties for the `AddTask` component:
+
+- **dialogOpen**: `boolean` - Controls the visibility of the dialog form.
+- **setDialogOpen**: `(open: boolean) => void` - A function to change the dialog's open state.
+- **addTask**: `(taskTitle: string, dueDate?: string) => void` - A function to handle task submission.
+
+## Component Structure
+
+- **State Management**:
+  - `taskTitle`: Stores the user input for the task title.
+  - `dueDate`: Stores the selected due date.
+  - `emptyTitleError`: Manages the visibility of a warning message if the title is empty.
+- **Functionality**:
+  - `handleSubmit`: Validates the title input, adds the task if valid, and resets form fields upon submission.
+
+## Functionality
+
+- **Input Validation**: Ensures that a title is provided before adding the task. If the title is missing, a warning message is displayed.
+- **Form Submission**: On form submission, the `addTask` function is triggered, passing the title and optional due date to the backend.
+
+## Usage
+
+Use the `AddTask` component within any dashboard or task list component where users need to add new tasks. Place it within a button-triggered dialog to keep the form accessible yet unobtrusive.
+
+## Additional Notes
+
+- **Customization**: The `taskTitle` and `dueDate` fields can be expanded with additional properties if needed.
+- **Error Feedback**: Customize the error message or dialog styling to match application design.
