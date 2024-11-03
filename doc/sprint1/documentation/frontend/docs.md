@@ -456,8 +456,7 @@ Place the `TimerDashboard` component within the application where users can inte
 
 ## Overview
 
-The `TodoDashboard` component is a page for displaying the users task in a table and updating the table. Each table row has a checkbox to mark completion, task title, due date(optional) and the three 
-dots icon for deletion. The page uses an button above the table that pops up another page, `AddTask` to add tasks. 
+The `TodoDashboard` component is a page for displaying the users task in a table and updating the table. Each table row has a checkbox to mark completion, task title, due date(optional) and the three dots icon for deletion. The page uses an button above the table that pops up another page, `AddTask` to add tasks. 
 
 ## Dependencies
 
@@ -483,7 +482,7 @@ This component relies on:
 
 ## Usage
 
-1. **Fetching Tasks**: On load, `getTasks` is called to retrieve and render the user’s tasks from the backend.
+1. **Fetching Tasks**: When the page loads, `getTasks` is called to retrieve and render the user’s tasks from the backend.
 2. **Adding a Task**: Opens the `AddTask` dialog, where the user can add a new task. If a title is provided, it triggers `addTask` to add the task to the backend and update the UI.
 3. **Marking Tasks as Complete**: Toggles the completion status using `toggleCompletionCheckBox`.
 4. **Deleting a Task**: Deletes the task from the list and the backend using `deleteTask`.
@@ -526,11 +525,11 @@ Defines the properties of the prop for `AddTask` component:
   - `taskTitle`: Stores the task's title.
   - `dueDate`: Stores the due date of a task. Its empty if the due date is not provided.
   - `emptyTitleError`: Manages the visibility of a warning message if the title is empty.
+
 - **Functionality**:
   - `handleSubmit`: Makes sure that the task title is provided by the user. If the task title is provided it adds the task else it returns a warning message below task title input.
 
 ## Functionality
-
 - **Input Validation**: It makes sure that a task title is provided before adding the task. If the title is missing, a warning message below task title input is displayed.
 - **Form Submission**: When the form is submitted a `addTask` is called to add the task.
 
@@ -540,5 +539,4 @@ Users can use the `AddTask` component within any dashboard or task list componen
 
 ## Additional Notes
 
-- **Customization**: The `taskTitle` and `dueDate` fields can be expanded with additional properties if needed.
 - **Error Feedback**: Customize the error message or dialog styling to match application design.
