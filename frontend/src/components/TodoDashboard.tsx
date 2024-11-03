@@ -21,16 +21,18 @@ interface Task {
   id: string;
   text: string;
   tag?: string;
-  dueDate?: string;  // Keep as `dueDate` as backend response
+  dueDate?: string; // Keep as `dueDate` as backend response
   completed?: boolean;
 }
+
+
 
 const TodoDashboard = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [dialogOpen, setDialogOpen] = useState(false);
   const { authToken } = useAuth();
 
-  const fetchTasks = async () => {
+  const fetchTasks = async () => {//gets the the list of tasks the user have
     try {
       const response = await fetch("http://localhost:5000/tasks/get", {
         method: "GET",
@@ -100,7 +102,7 @@ const TodoDashboard = () => {
         body: JSON.stringify({ task_id: id }),
       });
       if (response.ok) {
-        fetchTasks();
+        await fetchTasks();
       } else {
         console.error("Error deleting task:", await response.text());
       }
@@ -119,7 +121,7 @@ const TodoDashboard = () => {
       <AddTask dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} processSubmission={processSubmission} />
       <Table className="w-3/4 bg-white mx-auto border-2 border-wabi-btn-primary-unselected rounded-lg">
         <TableHeader>
-          <TableRow>
+          <TableRow className='pl-8'>
             <TableHead>Task</TableHead>
             <TableHead>Tag</TableHead>
             <TableHead>Due Date</TableHead>
@@ -133,8 +135,8 @@ const TodoDashboard = () => {
             </TableRow>
           ) : (
             tasks.map((task) => (
-              <TableRow key={task.id} className="text-left border-b border-gray-200">
-                <TableCell className="py-2 flex items-center">
+              <TableRow key={task.id} className="text-left border-b border-gray-200 font-medium">
+                <TableCell className="py-2 flex items-center align-middle">
                   <input
                     type="checkbox"
                     checked={task.completed || false} 
@@ -144,7 +146,9 @@ const TodoDashboard = () => {
                   <span className="ml-2">{task.text || "Untitled Task"}</span>
                 </TableCell>
                 <TableCell>{task.tag || ''}</TableCell>
-                <TableCell>{task.dueDate ? new Date(task.dueDate).toLocaleDateString() : ''}</TableCell>
+                <TableCell>
+                  <span className="ml-2">{task.dueDate ? new Date(task.dueDate).toLocaleDateString() : ''}</span>
+                </TableCell>
                 <TableCell>{task.completed ? '100%' : '0%'}</TableCell>
                 <TableCell className="text-right">
                   <DropdownMenu>
