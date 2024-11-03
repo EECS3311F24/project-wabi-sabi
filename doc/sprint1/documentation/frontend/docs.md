@@ -499,43 +499,44 @@ This component relies on:
 
 ## Overview
 
-The `AddTask` component renders a form for users to add new tasks with an optional due date. It ensures a title is provided before allowing task submission. The form opens in a dialog box, making it easy for users to focus on task input.
+The `AddTask` displays a form with two inputs and a button. The first one is for the task title, and the other one is for due date which is optional. It makes sure the user 
+enters the title of the task before making a submission.
 
 ## Dependencies
 
 This component relies on:
 
-- **Dialog Components**: `Dialog`, `DialogTrigger`, `DialogOverlay`, `DialogContent`, `DialogTitle`, and `DialogDescription` for handling the modal-style popup.
-- **Button Components**: `SelectedButton` for opening the form and `UnselectedButton` for submitting the form.
-- **ShadCN UI Components**: Provides the layout and styling for the dialog form.
+- **Dialog Components**: `Dialog`, `DialogTrigger`, `DialogOverlay`, `DialogContent`, `DialogTitle`, and `DialogDescription` for displaying the pop up page.
+- **Button Components**: `SelectedButton` to open the pop up page and `UnselectedButton` for adding a task.
+- **ShadCN UI Components**: Provides the styling and layout for the pop up page.
 
 ## Interfaces
 
 ### AddTaskProps
 
-Defines the properties for the `AddTask` component:
+Defines the properties of the prop for `AddTask` component:
 
-- **dialogOpen**: `boolean` - Controls the visibility of the dialog form.
-- **setDialogOpen**: `(open: boolean) => void` - A function to change the dialog's open state.
-- **addTask**: `(taskTitle: string, dueDate?: string) => void` - A function to handle task submission.
+- **dialogOpen**: `boolean` - Manages the visibilty of the page(Open or Closed). 
+- **setDialogOpen**: `(open: boolean) => void` - A fucntion that changes the dialog or the pop up page(Open or Closed).
+- **addTask**: `(taskTitle: string, dueDate?: string) => void` - A function that to add a task given a task title and user input.
 
 ## Component Structure
 
 - **State Management**:
-  - `taskTitle`: Stores the user input for the task title.
-  - `dueDate`: Stores the selected due date.
+  - `taskTitle`: Stores the task's title.
+  - `dueDate`: Stores the due date of a task. Its empty if the due date is not provided.
   - `emptyTitleError`: Manages the visibility of a warning message if the title is empty.
 - **Functionality**:
-  - `handleSubmit`: Validates the title input, adds the task if valid, and resets form fields upon submission.
+  - `handleSubmit`: Makes sure that the task title is provided by the user. If the task title is provided it adds the task else it returns a warning message below task title input.
 
 ## Functionality
 
-- **Input Validation**: Ensures that a title is provided before adding the task. If the title is missing, a warning message is displayed.
-- **Form Submission**: On form submission, the `addTask` function is triggered, passing the title and optional due date to the backend.
+- **Input Validation**: It makes sure that a task title is provided before adding the task. If the title is missing, a warning message below task title input is displayed.
+- **Form Submission**: When the form is submitted a `addTask` is called to add the task.
 
 ## Usage
 
-Use the `AddTask` component within any dashboard or task list component where users need to add new tasks. Place it within a button-triggered dialog to keep the form accessible yet unobtrusive.
+Users can use the `AddTask` component within any dashboard or task list component where users need to add new tasks. Place it within a button-triggered dialog to keep the form accessible yet unobtrusive.
 
 ## Additional Notes
 
