@@ -539,4 +539,4 @@ Users can use the `AddTask` component within any dashboard or task list componen
 
 ## Additional Notes
 
-- **Error Feedback**: Customize the error message or dialog styling to match application design.
+- **Error Feedback**: A warning text is displayed if the user tries to add a task without a task title.
