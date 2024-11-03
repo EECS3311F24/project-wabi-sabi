@@ -173,14 +173,14 @@ const TodoDashboard = () => {
   return (
     <div className="w-full flex flex-col items-center mt-6">
       <h1 className="text-3xl text-wabi-red font-bold mb-4">To do List</h1>
-      <AddTask dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} processSubmission={addTask} />
+      <AddTask dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} addTask={addTask} />
       <div className="rounded-md border w-3/4 mx-auto bg-white border-wabi-btn-primary-unselected">
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead className="w-10"></TableHead> 
               <TableHead className="text-left px-4 py-2">Task</TableHead>
-              {/* <TableHead className="text-center px-4 py-2">Tag</TableHead> */}
+              {/* <TableHead className="text-center px-4 py-2">Tag</TableHead> The tag is commented out for now */}
               <TableHead className="text-center px-4 py-2">Due Date</TableHead>
               <TableHead className="text-center px-4 py-2">Completion(%)</TableHead>
               <TableHead className="text-right px-4 py-2"></TableHead>
@@ -196,6 +196,7 @@ const TodoDashboard = () => {
             ) : (
               tasks.map((task) => (
                 <TableRow key={task.id}>
+                  {/* checkbox section */}
                   <TableCell className="w-10">
                     <Checkbox
                       checked={task.status === "Finished"}
@@ -203,12 +204,21 @@ const TodoDashboard = () => {
                       aria-label="Select row"
                     />
                   </TableCell>
-                  <TableCell className="text-left px-4 font-medium">{task.text || "Untitled Task"}</TableCell>
+
+                  {/* title section */}
+                  <TableCell className="text-left px-4 font-medium">{task.text}</TableCell>
+
                   {/* <TableCell className="text-center">{task.tag || ''}</TableCell>  commented out the tag section for now*/} 
+
+                  {/* Due date section */}
                   <TableCell className="text-center font-medium">
                     {task.due_date ? new Date(task.due_date).toLocaleDateString() : ''}
                   </TableCell>
+
+                  {/* Task completion section */}
                   <TableCell className="text-center font-medium">{task.status === "Finished" ? '100%' : '0%'}</TableCell>
+
+                  {/* The dropdown menu section to delete a task */}
                   <TableCell className="text-right">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
@@ -226,6 +236,8 @@ const TodoDashboard = () => {
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>
+
+
                 </TableRow>
               ))
             )}
