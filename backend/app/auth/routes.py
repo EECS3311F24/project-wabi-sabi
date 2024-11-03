@@ -22,7 +22,9 @@ def signup():
         return jsonify({"error": "This email is already registered!"}), 400
 
     # Insert user into database
-    new_user = User(email=email, password=h_password.decode("utf-8"), tasks=[], study_sessions=[])
+    new_user = User(
+        email=email, password=h_password.decode("utf-8"), tasks=[], study_sessions=[]
+    )
     try:
         new_user.save()
         return jsonify({"message": "User registered successfully! Please log in"}), 201

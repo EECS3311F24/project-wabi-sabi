@@ -2,8 +2,6 @@ from mongoengine import *
 from enum import Enum
 from bson import ObjectId
 
-# all models should go here?
-
 
 class Task(Document):
     STATUS_TODO = "Todo"
@@ -17,7 +15,7 @@ class Task(Document):
     status = StringField(required=True)
     # sub_tasks = ListField(ReferenceField())
 
-    def set_status(self,new_status):
+    def set_status(self, new_status):
         self.status = new_status
 
     def __str__(self):
@@ -25,9 +23,9 @@ class Task(Document):
 
     def to_json(self):
         print(f"jsonifying {self.text}")
-        #sub_task_json = []
-        #for task in self.sub_tasks:
-            #sub_task_json.append(task.to_json())
+        # sub_task_json = []
+        # for task in self.sub_tasks:
+        # sub_task_json.append(task.to_json())
         jsonified = {
             "id": str(self.id),
             "is_sub_task": self.is_sub_task,
@@ -70,9 +68,14 @@ class User(Document):
     def get_tasks(self):
         return self.tasks
 
-    def get_task(self,task_id):
+    def get_task(self, task_id):
         print(task_id)
         return Task.objects(id=ObjectId(task_id)).first()
+
+    def remove_task(self, task_id):
+        task_to_remove = Task.objects(id=ObjectId(task_id)).first()
+        self.tasks.remove(task_to_remove)
+        self.save()
 
     def get_study_sessions(self):
         return self.study_sessions
