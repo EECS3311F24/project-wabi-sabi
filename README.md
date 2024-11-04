@@ -102,6 +102,8 @@ flask run
 
 Connect to the MongoDB instance through port `27017`
 
+You can also run mongod locally to access the database as well.
+
 ## Frontend:
 
 This project uses:
