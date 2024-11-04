@@ -156,6 +156,8 @@ If you run into any issues, follow the steps listed in "quickstart" and "running
 you should be able to open the local version of the frontend enter text into the form in the frontend, and have it sent to the backend to be sent to the database.
 
 ## Documentation
+There is documentation for all components of the system in doc/sprint1/documentation.
+
 Documentation for the application's API requests can be found in the /swagger route of your backend local port
 ```
 http://localhost:5000/swagger/
