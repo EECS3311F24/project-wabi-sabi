@@ -3,12 +3,13 @@ import datetime
 import jwt
 from . import study
 from app.models import User
-from app.auth.session import get_user_from_token
-from ...models import Study
+from app.auth.session import get_user_from_token, user_required
+from ...models import Study, User, json_formatted
 
 
 # time formatted inYYYY-MM-DDTHH:mm:ss.sssZ Example: 2011-10-05T14:48:00.000Z
-@study.route("/study/add", methods=["POST"])
+@study.route("/", methods=["POST"])
+@user_required
 def make_study_document():
     data = request.json
     token = request.headers.get("Authorization")
@@ -39,21 +40,18 @@ def make_study_document():
         return jsonify({"error adding study session": str(e)}), 400
 
 
-@study.route("/study/get", methods=["GET"])
+@study.route("/", methods=["GET"])
+@user_required
 def get_study_sessions():
     data = request.json
     token = request.headers.get("Authorization")
-    if not token:
-        return jsonify({"error": "NO SESSION TOKEN"}), 401
     payload = get_user_from_token(token)
-    if not payload:
-        return jsonify({"error": "INVALID SESSION TOKEN"}), 401
     user = User.objects(email=payload["email"]).first()
     # get all the params of the study session
     # new session object
     try:
         study_session_json = [
-            session.to_json() for session in user.get_study_sessions()
+            json_formatted(session) for session in user.get_study_sessions()
         ]
         return jsonify(study_session_json), 201
     except Exception as e:
