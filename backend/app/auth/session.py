@@ -1,6 +1,8 @@
 import jwt
 import bcrypt
 import base64
+from flask import request, jsonify
+from ..models import User
 # Function for generating token
 # Used for verification on subsequent requests
 

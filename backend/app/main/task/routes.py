@@ -86,4 +86,4 @@ def remove_user_task(task_id):
         task.delete()
         return jsonify({"message": "Task deleted successfully"}), 201
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"error": str(e)}), 501
