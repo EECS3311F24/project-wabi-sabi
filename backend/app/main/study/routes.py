@@ -13,11 +13,7 @@ from ...models import Study, User, json_formatted
 def make_study_document():
     data = request.json
     token = request.headers.get("Authorization")
-    if not token:
-        return jsonify({"error": "NO SESSION TOKEN"}), 401
     payload = get_user_from_token(token)
-    if not payload:
-        return jsonify({"error": "INVALID SESSION TOKEN"}), 401
     user = User.objects(email=payload["email"]).first()
     # get all the params of the study session
     # new session object
@@ -35,9 +31,9 @@ def make_study_document():
         new_study_session.save()
         user.study_sessions.append(new_study_session)
         user.save()
-        return jsonify({"message": "Study Session Recorded Created"}), 201
+        return jsonify({"message": "Study Session Recorded"}), 201
     except Exception as e:
-        return jsonify({"error adding study session": str(e)}), 400
+        return jsonify({"error adding study session": str(e)}), 500
 
 
 @study.route("/", methods=["GET"])
@@ -55,4 +51,4 @@ def get_study_sessions():
         ]
         return jsonify(study_session_json), 201
     except Exception as e:
-        return jsonify({"error adding study session": str(e)}), 400
+        return jsonify({"error adding study session": str(e)}), 500
