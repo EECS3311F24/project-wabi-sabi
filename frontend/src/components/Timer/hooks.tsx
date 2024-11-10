@@ -25,7 +25,7 @@ const useCountdown = ({ initialMinutes = 0, initialSeconds = 0 }: CountdownProps
           clearInterval(interval);
           setIsActive(false);
         }
-      }, 900); // run every 100ms to SYNC time and prevent drift!!
+      }, 900); // run every 900ms
     }
 
     return () => clearInterval(interval);
