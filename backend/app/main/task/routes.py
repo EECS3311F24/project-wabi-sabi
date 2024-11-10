@@ -3,7 +3,7 @@ import jwt
 from . import task
 from app.models import User
 from app.auth.session import get_user_from_token, user_required
-from ...models import Task
+from ...models import Task, SubTask
 from datetime import datetime
 
 
@@ -28,7 +28,10 @@ def make_task():
         if due_date_str != None:
             date_object = datetime.strptime(due_date_str, "%Y-%m-%d").date()
         new_task = Task(
-            is_sub_task=False, text=text, due_date=date_object, status=Task.STATUS_TODO
+            text=text,
+            due_date=date_object,
+            tag=data.get("tag"),
+            status=Task.STATUS_TODO,
         )
         new_task.save()
         user.tasks.append(new_task)
@@ -85,5 +88,62 @@ def remove_user_task(task_id):
         user.remove_task(task_id)
         task.delete()
         return jsonify({"message": "Task deleted successfully"}), 201
+    except Exception as e:
+        return jsonify({"error": str(e)}), 501
+
+
+@task.route("/<task_id>", methods=["POST"])
+@user_required
+def add_subtask(task_id):
+    token = request.headers.get("Authorization")
+    payload = get_user_from_token(token)
+    user = User.objects(email=payload["email"]).first()
+    data = request.json
+    try:
+        task = user.get_task(task_id)
+        subtask = SubTask(text=data["text"], completed=False)
+        subtask.save()
+        task.sub_tasks.append(subtask)
+        task.save()
+        return jsonify({"message": "Subtask created successfully"}), 201
+    except Exception as e:
+        return jsonify({"error": str(e)}), 501
+
+
+@task.route("/<task_id>/<subtask_id>", methods=["DELETE"])
+@user_required
+def remove_subtask(task_id, subtask_id):
+    print(task_id, subtask_id)
+    token = request.headers.get("Authorization")
+    payload = get_user_from_token(token)
+    user = User.objects(email=payload["email"]).first()
+    data = request.json
+
+    try:
+        task = user.get_task(task_id)
+        subtask = task.get_subtask(subtask_id)
+        task.sub_tasks.remove(subtask)
+        task.save()
+        subtask.delete()
+        return jsonify({"message": "Subtask deleted successfully"}), 201
+    except Exception as e:
+        return jsonify({"error": str(e)}), 501
+
+
+@task.route("/<task_id>/<subtask_id>", methods=["PATCH"])
+@user_required
+def edit_subtask(task_id, subtask_id):
+    token = request.headers.get("Authorization")
+    payload = get_user_from_token(token)
+    user = User.objects(email=payload["email"]).first()
+    data = request.json
+
+    try:
+        task = user.get_task(task_id)
+        subtask = task.get_subtask(subtask_id)
+        subtask.text = data["text"]
+        subtask.completed = bool(data["completed"])
+        subtask.save()
+        return jsonify({"message": "Subtask edited successfully"}), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 501
