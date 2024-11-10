@@ -10,6 +10,10 @@ def json_formatted(model):
     return model_json
 
 
+class Tag(Document):
+    text = StringField(required=True)
+
+
 class Task(Document):
     STATUS_TODO = "Todo"
     STATUS_IN_PROGRESS = "In Progress"
@@ -20,6 +24,7 @@ class Task(Document):
     due_date = DateTimeField()
     tag = ObjectIdField()  # change to reference field once tag object exists
     status = StringField(required=True)
+    tag = ReferenceField(Tag)  # change to reference field once tag object exists
     # sub_tasks = ListField(ReferenceField())
 
     def set_status(self, new_status):
@@ -29,15 +34,13 @@ class Task(Document):
         return self.text
 
 
-
 class Study(Document):
     start_time = DateTimeField(required=True)
     end_time = DateTimeField(required=True)
-    tag = ObjectIdField()  # change to reference field once tag object exists
+    tag = ReferenceField(Tag)  # change to reference field once tag object exists
 
     def __str__(self):
         return self.text
-
 
 
 class User(Document):
@@ -45,6 +48,7 @@ class User(Document):
     password = StringField(required=True)
     tasks = ListField(ReferenceField(Task))
     study_sessions = ListField(ReferenceField(Study))
+    tags = ListField(ReferenceField(Tag))
 
     def get_tasks(self):
         return self.tasks
@@ -53,9 +57,20 @@ class User(Document):
         print(task_id)
         return Task.objects(id=ObjectId(task_id)).first()
 
+    def get_tags(self, tag_id):
+        return self.tags
+
+    def get_tag(self, tag_id):
+        return Tag.objects(id=ObjectId(tag_id)).first()
+
     def remove_task(self, task_id):
         task_to_remove = Task.objects(id=ObjectId(task_id)).first()
         self.tasks.remove(task_to_remove)
+        self.save()
+
+    def remove_tag(self, tag_id):
+        tag_to_remove = Tag.objects(id=ObjectId(tag_id)).first()
+        self.tags.remove(tag_to_remove)
         self.save()
 
     def get_study_sessions(self):
