@@ -13,14 +13,12 @@ def json_formatted(model):
 class Tag(Document):
     text = StringField(required=True)
 
-
 class SubTask(Document):
     text = StringField(required=True)
     completed = BooleanField(required=True)
 
     def __str__(self):
         return self.text
-
 
 class Task(Document):
     STATUS_TODO = "Todo"
@@ -36,7 +34,7 @@ class Task(Document):
     def get_subtasks(self):
         return self.sub_tasks
 
-    def get_subtask(self, subtask_id):
+    def get_subtask(self,subtask_id):
         return SubTask.objects(id=ObjectId(subtask_id)).first()
 
     def set_status(self, new_status):

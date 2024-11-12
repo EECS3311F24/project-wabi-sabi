@@ -23,6 +23,7 @@ def make_task():
     user = User.objects(email=payload["email"]).first()
     try:
         text = data["text"]  # Retrieve email from JSON data
+        subtasks = data.get("subtasks")
         due_date_str = data.get("due_date")
         date_object = None
         if due_date_str != None:
@@ -33,6 +34,12 @@ def make_task():
             tag=data.get("tag"),
             status=Task.STATUS_TODO,
         )
+        if subtasks:
+            for subtask in subtasks:
+                new_subtask = SubTask(text=subtask,completed=False)
+                new_subtask.save()
+                new_task.sub_tasks.append(new_subtask)
+
         new_task.save()
         user.tasks.append(new_task)
         user.save()
@@ -91,7 +98,7 @@ def remove_user_task(task_id):
     except Exception as e:
         return jsonify({"error": str(e)}), 501
 
-
+"""
 @task.route("/<task_id>", methods=["POST"])
 @user_required
 def add_subtask(task_id):
@@ -109,7 +116,8 @@ def add_subtask(task_id):
     except Exception as e:
         return jsonify({"error": str(e)}), 501
 
-
+"""
+"""
 @task.route("/<task_id>/<subtask_id>", methods=["DELETE"])
 @user_required
 def remove_subtask(task_id, subtask_id):
@@ -129,7 +137,8 @@ def remove_subtask(task_id, subtask_id):
     except Exception as e:
         return jsonify({"error": str(e)}), 501
 
-
+"""
+"""
 @task.route("/<task_id>/<subtask_id>", methods=["PATCH"])
 @user_required
 def edit_subtask(task_id, subtask_id):
@@ -147,3 +156,4 @@ def edit_subtask(task_id, subtask_id):
         return jsonify({"message": "Subtask edited successfully"}), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 501
+"""
