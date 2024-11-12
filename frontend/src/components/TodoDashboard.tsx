@@ -17,8 +17,10 @@ interface Task {
 }
 
 interface SubTask {
+  id: string;
   title: string;
   parentTaskId: string;
+  status: string;
 }
 
 /**
@@ -47,6 +49,12 @@ const TodoDashboard = () => {
   //it gets and stores the users authentication token
   const { authToken } = useAuth();
 
+  const [expandedTasks, setExpandedTasks] = useState<string[]>([]);
+
+  const toggleExpandTask = (taskId: string) => {
+    setExpandedTasks((prev) => (prev.includes(taskId) ? prev.filter((id) => id !== taskId) : [...prev, taskId]));
+  };
+
   /**
    * It makes a GET request to the tasks/get endpoint to retrieve a list of
    * user's tasks.
@@ -54,13 +62,15 @@ const TodoDashboard = () => {
 
   const getTasks = async () => {
     try {
-      const response = await fetch('http://localhost:5000/tasks/get', {
+      const response = await fetch('http://localhost:5000/task/', {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${authToken}`,
         },
       });
       const data = await response.json();
+
+      console.log(data);
       setTasks(data.tasks || []); // if users doesn't have anytasks dont display anything else fill the table with the list of tasks
     } catch (error) {
       console.error(error); //Prints the error occured during fetching the tasks
@@ -75,15 +85,15 @@ const TodoDashboard = () => {
    * @param due_date - The due date of the task(the user has an option not to provide the due date).
    */
 
-  const addTask = async (taskTitle: string, due_date?: string) => {
+  const addTask = async (taskTitle: string, due_date?: string, subTasks?: SubTask[]) => {
     try {
-      const response = await fetch('http://localhost:5000/tasks/add', {
+      const response = await fetch('http://localhost:5000/task/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${authToken}`,
         },
-        body: JSON.stringify({ text: taskTitle, due_date: due_date || null }),
+        body: JSON.stringify({ text: taskTitle, due_date: due_date || null, sub_tasks: subTasks || [] }),
       });
       if (response.ok) {
         //if the response is successful then update else print out the server error
@@ -129,6 +139,22 @@ const TodoDashboard = () => {
     }
   };
 
+  const toggleSubtaskCompletion = (taskId: string, subTaskId: string) => {
+    setTasks((prevTasks) =>
+      prevTasks.map((task) =>
+        task.id === taskId
+          ? {
+              ...task,
+              subTasks: task.subTasks?.map((subTask) =>
+                subTask.id === subTaskId
+                  ? { ...subTask, status: subTask.status === 'Finished' ? 'Todo' : 'Finished' }
+                  : subTask,
+              ),
+            }
+          : task,
+      ),
+    );
+  };
   /**
    * It makes a DELETE request to task/rm to delete user's task.
    * @param id - the unique id of the task
@@ -168,6 +194,7 @@ const TodoDashboard = () => {
           <TableHeader>
             <TableRow>
               <TableHead className="w-10"></TableHead>
+              <TableHead className="w-10"></TableHead>
               <TableHead className="text-left px-4 py-2">Task</TableHead>
               {/* <TableHead className="text-center px-4 py-2">Tag</TableHead> The tag is commented out for now */}
               <TableHead className="text-center px-4 py-2">Due Date</TableHead>
@@ -184,47 +211,72 @@ const TodoDashboard = () => {
               </TableRow>
             ) : (
               tasks.map((task) => (
-                <TableRow key={task.id}>
-                  {/* checkbox section */}
-                  <TableCell className="w-10">
-                    <Checkbox
-                      checked={task.status === 'Finished'}
-                      onCheckedChange={() => toggleCompletionCheckBox(task.id, task.status !== 'Finished')}
-                      aria-label="Select row"
-                    />
-                  </TableCell>
+                <>
+                  <TableRow key={task.id}>
+                    {/* checkbox section */}
+                    <TableCell className="w-10">
+                      <Checkbox
+                        checked={task.status === 'Finished'}
+                        onCheckedChange={() => toggleCompletionCheckBox(task.id, task.status !== 'Finished')}
+                        aria-label="Select row"
+                      />
+                    </TableCell>
+                    {/* Expand/collapse arrow */}
+                    <TableCell className="w-10 cursor-pointer" onClick={() => toggleExpandTask(task.id)}>
+                      {expandedTasks.includes(task.id) ? '▼' : '▶'}
+                    </TableCell>
 
-                  {/* title section */}
-                  <TableCell className="text-left px-4 font-medium">{task.text}</TableCell>
+                    {/* title section */}
+                    <TableCell className="text-left px-4 font-medium">{task.text}</TableCell>
 
-                  {/* <TableCell className="text-center">{task.tag || ''}</TableCell>  commented out the tag section for now*/}
+                    {/* <TableCell className="text-center">{task.tag || ''}</TableCell>  commented out the tag section for now*/}
 
-                  {/* Due date section */}
-                  <TableCell className="text-center font-medium">
-                    {task.due_date ? new Date(task.due_date).toLocaleDateString() : ''}
-                  </TableCell>
+                    {/* Due date section */}
+                    <TableCell className="text-center font-medium">
+                      {task.due_date ? new Date(task.due_date).toLocaleDateString() : ''}
+                    </TableCell>
 
-                  {/* Task completion section */}
-                  <TableCell className="text-center font-medium">
-                    {task.status === 'Finished' ? '100%' : '0%'}
-                  </TableCell>
+                    {/* Task completion section */}
+                    <TableCell className="text-center font-medium">
+                      {task.status === 'Finished' ? '100%' : '0%'}
+                    </TableCell>
 
-                  {/* The dropdown menu section to delete a task */}
-                  <TableCell className="text-right">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <button className="p-2 rounded-full hover:bg-gray-100">
-                          <img src={threeDots} alt="Options" className="h-5 w-5" />
-                        </button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem className="text-red-500" onClick={() => deleteTask(task.id)}>
-                          Delete
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
-                </TableRow>
+                    {/* The dropdown menu section to delete a task */}
+                    <TableCell className="text-right">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <button className="p-2 rounded-full hover:bg-gray-100">
+                            <img src={threeDots} alt="Options" className="h-5 w-5" />
+                          </button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem className="text-red-500" onClick={() => deleteTask(task.id)}>
+                            Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                  {expandedTasks.includes(task.id) &&
+                    task.subTasks?.map((subtask) => (
+                      <TableRow key={subtask.id} className="bg-gray-100 w">
+                        {/* Empty Cell */}
+                        <TableCell></TableCell>
+
+                        {/* Subtask checkbox */}
+                        <TableCell className="w-10">
+                          <Checkbox
+                            checked={subtask.status === 'Finished'}
+                            onCheckedChange={() => toggleSubtaskCompletion(task.id, subtask.id)}
+                            aria-label="Select subtask"
+                          />
+                        </TableCell>
+                        <TableCell colSpan={4} className="text-left pl-8 pr-4 font-medium text-gray-600">
+                          {subtask.title}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                </>
               ))
             )}
           </TableBody>

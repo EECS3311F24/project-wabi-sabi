@@ -15,18 +15,20 @@ import plus from '../assets/plus.svg';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from './ui/table';
+import AddSubTask from './AddSubTask';
 
 // this defines properties of the props of AddTask.tsx
 interface AddTaskProps {
   dialogOpen: boolean; // the state of the pop page
   setDialogOpen: (open: boolean) => void; //function to change the state of the pop up page
-  addTask: (taskTitle: string, dueDate?: string) => void; // function to add a task
+  addTask: (taskTitle: string, dueDate?: string, subTasks?: SubTask[]) => void; // function to add a task
 }
 
 interface SubTask {
+  id: string;
   title: string;
   parentTaskId: string;
-  // Add other properties if needed
+  status: string;
 }
 
 /**
@@ -46,23 +48,11 @@ interface SubTask {
 
 const AddTask: React.FC<AddTaskProps> = ({ dialogOpen, setDialogOpen, addTask }) => {
   const [subTasks, setSubTasks] = useState<SubTask[]>([]); // state to store the lists of tasks(it sets it to an empty list of tasks at first)
-  const [subTaskTitle, setSubTaskTitle] = useState('');
-  const [isSubtaskDialogOpen, setIsSubtaskDialogOpen] = useState(false);
 
-  // Log subtasks after each update
-  useEffect(() => {
-    // console.log('Updated subtasks:', subTasks);
-  }, [subTasks]);
-
-  const handleAddSubtask = () => {
-    if (subTaskTitle.trim()) {
-      setSubTasks((prevSubtasks) => [...prevSubtasks, { title: subTaskTitle, parentTaskId: '' }]);
-      setSubTaskTitle(''); // Clear input after adding
-      setIsSubtaskDialogOpen(false);
-    } else {
-      console.log('No subtask title provided.');
-    }
-  };
+  // // Log subtasks after each update
+  // useEffect(() => {
+  //   // console.log('Updated subtasks:', subTasks);
+  // }, [subTasks]);
 
   //state to manage the task title input. Its empty initially
   const [taskTitle, setTaskTitle] = useState('');
@@ -72,6 +62,10 @@ const AddTask: React.FC<AddTaskProps> = ({ dialogOpen, setDialogOpen, addTask })
   //State to manage the paragraph tag that shows up when user adds task without title.
   //It doesn't show up at first so it's false.
   const [emptyTitleError, setEmptyTitleError] = useState(false);
+
+  const handleSubtasksChange = (updatedSubtasks: SubTask[]) => {
+    setSubTasks(updatedSubtasks);
+  };
 
   /**
    * Handles the user input(task title and optional due date) to add the task. It makes sure
@@ -88,7 +82,8 @@ const AddTask: React.FC<AddTaskProps> = ({ dialogOpen, setDialogOpen, addTask })
       return;
     }
     // Add the ask once the user provides the input
-    addTask(taskTitle, dueDate);
+    addTask(taskTitle, dueDate, subTasks);
+    console.log(subTasks);
     setDialogOpen(false); //close the pop page after adding page
     setTaskTitle(''); // set the task title input to empty after adding task
     setDueDate(''); // set the due date input to empty after adding task
@@ -152,58 +147,7 @@ const AddTask: React.FC<AddTaskProps> = ({ dialogOpen, setDialogOpen, addTask })
             />
           </div>
 
-          {/* SubTask Table*/}
-          {/* TODO: Fix Alignment of Table */}
-          <div className="mb-4 w-4/5 justify-center flex flex-col rounded-lg border border-gray-200 overflow-y-auto h-4/5">
-            {/* <h3 className="font-semibold">Subtasks</h3> */}
-            <Table className="max-w-full mx-auto">
-              <TableHeader className="bg-gray-100">
-                <TableRow>
-                  <TableHead className="text-left px-5 py-2">Subtasks</TableHead>
-                  <TableHead className="text-right px-5 py-2">
-                    {/* Subtask Inner Dialog */}
-                    <Dialog open={isSubtaskDialogOpen} onOpenChange={setIsSubtaskDialogOpen}>
-                      <DialogTrigger asChild>
-                        <button onClick={() => setIsSubtaskDialogOpen(true)} className="m-auto mt-1">
-                          <img src={plus} width="20px" />
-                        </button>
-                      </DialogTrigger>
-
-                      <DialogContent>
-                        <DialogHeader>
-                          <DialogTitle>Add Subtask</DialogTitle>
-                        </DialogHeader>
-                        <Input
-                          value={subTaskTitle}
-                          onChange={(e) => setSubTaskTitle(e.target.value)}
-                          placeholder="Subtask Title"
-                          className="mb-4"
-                        />
-                        <Button onClick={handleAddSubtask}>Add Subtask</Button>
-                      </DialogContent>
-                    </Dialog>
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody className="overflow-x-auto max-w-full">
-                {subTasks.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={5} className="h-12 text-center">
-                      You don't have any task
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  subTasks.map((subtask, index) => (
-                    <TableRow key={index} className="hover:bg-gray-50">
-                      <TableCell className="text-left px-5 font-medium" colSpan={2}>
-                        {subtask.title}
-                      </TableCell>
-                    </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
-          </div>
+          <AddSubTask parentTaskId={taskTitle} onSubtasksChange={handleSubtasksChange} />
 
           <div className="flex justify-end">
             <UnselectedButton content="Add Task" onClick={handleSubmit} />
