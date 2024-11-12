@@ -113,7 +113,7 @@ const AddTask: React.FC<AddTaskProps> = ({ dialogOpen, setDialogOpen, addTask })
 
           <div className="flex flex-col">
             <label className="text-sm font-medium mr-2">Tag Name</label>
-            <TagDropdown className="w-full" onSelectChange={(value) => setSelectedTag(value)} />
+            <TagDropdown className="mt-1 p-2 w-full" onSelectChange={(value) => setSelectedTag(value)} />
           </div>
 
           <div className="flex flex-col mb-4">
