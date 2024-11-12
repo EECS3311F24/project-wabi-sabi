@@ -20,6 +20,13 @@ class SubTask(Document):
     def __str__(self):
         return self.text
 
+    def json_formatted(self):
+        print(f'serializing subtask{self.__str__}')
+        model_json = self.to_mongo().to_dict()
+        model_json["id"] = str(model_json["_id"])
+        del model_json["_id"]
+        return model_json
+
 class Task(Document):
     STATUS_TODO = "Todo"
     STATUS_IN_PROGRESS = "In Progress"
@@ -42,6 +49,15 @@ class Task(Document):
 
     def __str__(self):
         return self.text
+
+    def json_formatted(self):
+        print(f'serializing subtask{self.__str__}')
+        model_json = self.to_mongo().to_dict()
+        model_json["id"] = str(model_json["_id"])
+        model_json["sub_tasks"] = [subtask.json_formatted() for subtask in self.sub_tasks]
+        print(model_json["sub_tasks"])
+        del model_json["_id"]
+        return model_json
 
 
 class Study(Document):
@@ -88,3 +104,11 @@ class User(Document):
 
     def __str__(self):
         return self.username
+
+    def json_formatted(self):
+        print(f'serializing subtask{self.__str__}')
+        model_json = self.to_mongo().to_dict()
+        model_json["id"] = str(model_json["_id"])
+        model_json["tasks"] = [task.json_formatted() for task in self.tasks]
+        del model_json["_id"]
+        return model_json

@@ -7,13 +7,6 @@ from ...models import Task, SubTask
 from datetime import datetime
 
 
-def json_formatted(model):
-    model_json = model.to_mongo().to_dict()
-    model_json["id"] = str(model_json["_id"])
-    del model_json["_id"]
-    return model_json
-
-
 @task.route("/", methods=["POST"])
 @user_required
 def make_task():
@@ -57,7 +50,7 @@ def return_user_tasks():
     try:
         tasks = user.get_tasks()
         print(f"Tasks: {tasks}, Type: {[type(task) for task in tasks]}")
-        tasks_json = [json_formatted(task) for task in tasks if isinstance(task, Task)]
+        tasks_json = [task.json_formatted() for task in tasks if isinstance(task, Task)]
         print(f"Tasks:{tasks_json}")
         return jsonify({"tasks": tasks_json}), 201
     except Exception as e:
