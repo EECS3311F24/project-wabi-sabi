@@ -184,7 +184,7 @@
     - 1 mark  = Somewhat clear criteria used
     - 0 marks = Not completed
 
-    Your mark: 1
+    Your mark: 2
 
   - Meetings (max 2 marks)
     - 2 marks = Meeting plan described clearly
@@ -198,9 +198,9 @@
     - 1 mark  = somewhat clear
     - 0 marks = no description provided
 
-    Your mark: 1
+    Your mark: 2
    
-  process.md Total Mark: 8 / 10
+  process.md Total Mark: 10 / 10
 
 ---
 ## User experience: (max 4 marks)
@@ -222,5 +222,5 @@
    
 ---
 ## Total Mark  
-Sprint 0 Total Mark : 44/ 48
+Sprint 0 Total Mark : 46/ 48
 	
