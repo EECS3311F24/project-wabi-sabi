@@ -13,7 +13,7 @@ interface Task {
   // tag?: string; // tag for each task. (It will be implemented later)
   due_date?: string; // an optional due date for the task
   status: string; // the status of the task(completed or not)
-  subTasks?: SubTask[];
+  subtasks?: string[];
 }
 
 interface SubTask {
@@ -85,7 +85,7 @@ const TodoDashboard = () => {
    * @param due_date - The due date of the task(the user has an option not to provide the due date).
    */
 
-  const addTask = async (taskTitle: string, due_date?: string, subTasks?: SubTask[]) => {
+  const addTask = async (taskTitle: string, due_date?: string, subTasks?: string[]) => {
     try {
       const response = await fetch('http://localhost:5000/task/', {
         method: 'POST',
@@ -93,7 +93,7 @@ const TodoDashboard = () => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${authToken}`,
         },
-        body: JSON.stringify({ text: taskTitle, due_date: due_date || null, sub_tasks: subTasks || [] }),
+        body: JSON.stringify({ text: taskTitle, due_date: due_date || null, subtasks: subTasks ?? [] }),
       });
       if (response.ok) {
         //if the response is successful then update else print out the server error
@@ -139,22 +139,22 @@ const TodoDashboard = () => {
     }
   };
 
-  const toggleSubtaskCompletion = (taskId: string, subTaskId: string) => {
-    setTasks((prevTasks) =>
-      prevTasks.map((task) =>
-        task.id === taskId
-          ? {
-              ...task,
-              subTasks: task.subTasks?.map((subTask) =>
-                subTask.id === subTaskId
-                  ? { ...subTask, status: subTask.status === 'Finished' ? 'Todo' : 'Finished' }
-                  : subTask,
-              ),
-            }
-          : task,
-      ),
-    );
-  };
+  // const toggleSubtaskCompletion = (taskId: string, subTaskId: string) => {
+  //   setTasks((prevTasks) =>
+  //     prevTasks.map((task) =>
+  //       task.id === taskId
+  //         ? {
+  //             ...task,
+  //             subTasks: task.subtasks?.map((subTask) =>
+  //               subTask.id === subTaskId
+  //                 ? { ...subTask, status: subTask.status === 'Finished' ? 'Todo' : 'Finished' }
+  //                 : subTask,
+  //             ),
+  //           }
+  //         : task,
+  //     ),
+  //   );
+  // };
   /**
    * It makes a DELETE request to task/rm to delete user's task.
    * @param id - the unique id of the task
@@ -162,7 +162,7 @@ const TodoDashboard = () => {
 
   const deleteTask = async (id: string) => {
     try {
-      const response = await fetch('http://localhost:5000/tasks/rm', {
+      const response = await fetch('http://localhost:5000/task/', {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -257,25 +257,24 @@ const TodoDashboard = () => {
                       </DropdownMenu>
                     </TableCell>
                   </TableRow>
-                  {expandedTasks.includes(task.id) &&
-                    task.subTasks?.map((subtask) => (
-                      <TableRow key={subtask.id} className="bg-gray-100 w">
-                        {/* Empty Cell */}
-                        <TableCell></TableCell>
+                  {task.subtasks?.map((subtask, index) => (
+                    <TableRow key={index} className="bg-gray-100 w">
+                      {/* Empty Cell */}
+                      <TableCell></TableCell>
 
-                        {/* Subtask checkbox */}
-                        <TableCell className="w-10">
+                      {/* Subtask checkbox */}
+                      {/* <TableCell className="w-10">
                           <Checkbox
                             checked={subtask.status === 'Finished'}
                             onCheckedChange={() => toggleSubtaskCompletion(task.id, subtask.id)}
                             aria-label="Select subtask"
                           />
-                        </TableCell>
-                        <TableCell colSpan={4} className="text-left pl-8 pr-4 font-medium text-gray-600">
-                          {subtask.title}
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                        </TableCell> */}
+                      <TableCell colSpan={4} className="text-left pl-8 pr-4 font-medium text-gray-600">
+                        {subtask}
+                      </TableCell>
+                    </TableRow>
+                  ))}
                 </>
               ))
             )}

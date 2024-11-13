@@ -21,7 +21,7 @@ import AddSubTask from './AddSubTask';
 interface AddTaskProps {
   dialogOpen: boolean; // the state of the pop page
   setDialogOpen: (open: boolean) => void; //function to change the state of the pop up page
-  addTask: (taskTitle: string, dueDate?: string, subTasks?: SubTask[]) => void; // function to add a task
+  addTask: (taskTitle: string, dueDate?: string, subTasks?: string[]) => void; // function to add a task
 }
 
 interface SubTask {
@@ -81,8 +81,12 @@ const AddTask: React.FC<AddTaskProps> = ({ dialogOpen, setDialogOpen, addTask })
       setEmptyTitleError(true);
       return;
     }
+
+    //
+    const subTaskTitles = subTasks.map((subTask) => subTask.title);
+
     // Add the ask once the user provides the input
-    addTask(taskTitle, dueDate, subTasks);
+    addTask(taskTitle, dueDate, subTaskTitles);
     console.log(subTasks);
     setDialogOpen(false); //close the pop page after adding page
     setTaskTitle(''); // set the task title input to empty after adding task
