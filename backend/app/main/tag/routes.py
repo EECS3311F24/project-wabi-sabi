@@ -30,14 +30,13 @@ def make_tag():
 @tag.route("/", methods=["GET"])
 @user_required
 def get_tags():
-    data = request.json
     token = request.headers.get("Authorization")
     payload = get_user_from_token(token)
     user = User.objects(email=payload["email"]).first()
     # get all the params of the study session
     # new session object
     try:
-        tag_json = [json_formatted(session) for session in user.get_tags()]
+        tag_json = [json_formatted(tag) for tag in user.get_tags()]
         return jsonify(tag_json), 201
     except Exception as e:
         return jsonify({"error getting tag": str(e)}), 500

@@ -57,7 +57,7 @@ class User(Document):
         print(task_id)
         return Task.objects(id=ObjectId(task_id)).first()
 
-    def get_tags(self, tag_id):
+    def get_tags(self):
         return self.tags
 
     def get_tag(self, tag_id):
