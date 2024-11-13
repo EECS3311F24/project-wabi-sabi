@@ -68,6 +68,13 @@ class Study(Document):
     def __str__(self):
         return self.text
 
+    def json_formatted(self):
+        print(f'serializing study {self.__str__}')
+        model_json = self.to_mongo().to_dict()
+        model_json["id"] = str(model_json["_id"])
+        del model_json["_id"]
+        return model_json
+
 
 class User(Document):
     email = StringField(required=True)
@@ -106,7 +113,7 @@ class User(Document):
         return self.username
 
     def json_formatted(self):
-        print(f'serializing subtask{self.__str__}')
+        print(f'serializing user {self.__str__}')
         model_json = self.to_mongo().to_dict()
         model_json["id"] = str(model_json["_id"])
         model_json["tasks"] = [task.json_formatted() for task in self.tasks]
