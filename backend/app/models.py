@@ -13,6 +13,7 @@ def json_formatted(model):
 class Tag(Document):
     text = StringField(required=True)
 
+
 class SubTask(Document):
     text = StringField(required=True)
     completed = BooleanField(required=True)
@@ -21,11 +22,12 @@ class SubTask(Document):
         return self.text
 
     def json_formatted(self):
-        print(f'serializing subtask{self.__str__}')
+        print(f"serializing subtask{self.__str__}")
         model_json = self.to_mongo().to_dict()
         model_json["id"] = str(model_json["_id"])
         del model_json["_id"]
         return model_json
+
 
 class Task(Document):
     STATUS_TODO = "Todo"
@@ -41,7 +43,7 @@ class Task(Document):
     def get_subtasks(self):
         return self.sub_tasks
 
-    def get_subtask(self,subtask_id):
+    def get_subtask(self, subtask_id):
         return SubTask.objects(id=ObjectId(subtask_id)).first()
 
     def set_status(self, new_status):
@@ -51,10 +53,12 @@ class Task(Document):
         return self.text
 
     def json_formatted(self):
-        print(f'serializing subtask{self.__str__}')
+        print(f"serializing subtask{self.__str__}")
         model_json = self.to_mongo().to_dict()
         model_json["id"] = str(model_json["_id"])
-        model_json["sub_tasks"] = [subtask.json_formatted() for subtask in self.sub_tasks]
+        model_json["sub_tasks"] = [
+            subtask.json_formatted() for subtask in self.sub_tasks
+        ]
         print(model_json["sub_tasks"])
         del model_json["_id"]
         return model_json
@@ -69,7 +73,7 @@ class Study(Document):
         return self.text
 
     def json_formatted(self):
-        print(f'serializing study {self.__str__}')
+        print(f"serializing study {self.__str__}")
         model_json = self.to_mongo().to_dict()
         model_json["id"] = str(model_json["_id"])
         del model_json["_id"]
@@ -113,7 +117,7 @@ class User(Document):
         return self.username
 
     def json_formatted(self):
-        print(f'serializing user {self.__str__}')
+        print(f"serializing user {self.__str__}")
         model_json = self.to_mongo().to_dict()
         model_json["id"] = str(model_json["_id"])
         model_json["tasks"] = [task.json_formatted() for task in self.tasks]
