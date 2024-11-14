@@ -8,16 +8,22 @@ import skipIcon from '../../assets/skip.svg';
 import pauseIcon from '../../assets/pause.svg';
 import SelectedButton from '@/components/ui/SelectedButton';
 import { useAuth } from '@/components/AuthProviderUtils';
-import { addStudySession } from './utils';
+import { addStudySession, sendCachedData, useSaveDataOnReload } from './utils';
+import { useOutletContext } from 'react-router-dom';
 
 type TimerMode = 'pomodoro' | 'shortBreak' | 'longBreak';
-
+type DashboardContextType = {
+  registerSaveHandler: (handler: () => void) => void;
+};
 const TimerDashboard = () => {
+  const { registerSaveHandler } = useOutletContext<DashboardContextType>(); // gets the register save handler from dashboard container
+
   const { isActive, toggleTimer, resetTimer, setTimer, minutes, seconds } = useCountdown({
     initialMinutes: 0,
     initialSeconds: 5,
-  });
-  const { authToken } = useAuth();
+  }); // contains actual countdown timer
+
+  const { authToken } = useAuth(); // user authentication token
 
   const [timerState, setTimerState] = useState<keyof typeof timerModes>('pomodoro'); // current timer mode
   const [sessionCount, setSessionCount] = useState<number>(1); // number of pomodoro sessions run
@@ -25,6 +31,26 @@ const TimerDashboard = () => {
   const [timeLastStarted, setTimeLastStarted] = useState<Date>(new Date()); // last time timer was started
   const MAX_SHORT_BREAKS = 3; // maximum number of short breaks allowed
 
+  // saves last study session to cache when user reloads
+  useSaveDataOnReload({ timeLastStarted, isActive });
+
+  // save handler for saving last study session data to cache;
+  // passed into registerSaveHandler so the DashboardContainer
+  // can use this function whenever the user navigates outside of /timer page
+  const saveDataToCache = useCallback(() => {
+    if (isActive) {
+      localStorage.setItem('unsavedStart', timeLastStarted.toISOString());
+      localStorage.setItem('unsavedEnd', new Date().toISOString());
+      console.log('Timer data saved to local storage');
+    }
+  }, [isActive, timeLastStarted]);
+
+  // register the save handler with the parent
+  useEffect(() => {
+    registerSaveHandler(saveDataToCache);
+  }, [registerSaveHandler, isActive, timeLastStarted, saveDataToCache]);
+
+  // -- functions called when user selects timer type buttons
   const pomodoroClickHandler = useCallback(() => {
     resetTimer();
     setTimer({
@@ -97,11 +123,38 @@ const TimerDashboard = () => {
 
   // console.log('>> session count | timer state', { sessionCount }, { timerState });
 
+  // calls the appropriate function using mode
   const handleModeChange = (mode: TimerMode) => {
     // console.log('handleModeChange called with mode:', mode); // debugging
     timerModes[mode]();
   };
 
+  // called when reset is click
+  const resetHandler = () => {
+    if (isActive && timerState === 'pomodoro') {
+      addStudySession(timeLastStarted.toISOString(), new Date().toISOString(), authToken);
+    }
+    handleModeChange(timerState);
+  };
+
+  // called when user toggles (play/pauses)
+  const toggleTimerHandler = () => {
+    sendCachedData(authToken ?? '');
+    // set time last started when user clicks play
+    if (!isActive && timerState === 'pomodoro') {
+      setTimeLastStarted(new Date(Date.now()));
+    }
+    // add study session when user pauses
+    if (isActive && timerState === 'pomodoro') {
+      if (!timeLastStarted) {
+        return;
+      }
+      addStudySession(timeLastStarted.toISOString(), new Date().toISOString(), authToken);
+    }
+    toggleTimer();
+  };
+
+  // called when user skips timer
   const skipHandler = () => {
     if (timerState === 'pomodoro') {
       if (breaksCount < MAX_SHORT_BREAKS) {
@@ -122,27 +175,6 @@ const TimerDashboard = () => {
     pomodoroClickHandler();
   };
 
-  const toggleTimerHandler = () => {
-    // set time last started when user clicks play
-    if (!isActive && timerState === 'pomodoro') {
-      setTimeLastStarted(new Date(Date.now()));
-    }
-    // add study session when user pauses
-    if (isActive && timerState === 'pomodoro') {
-      if (!timeLastStarted) {
-        return;
-      }
-      addStudySession(timeLastStarted.toISOString(), new Date().toISOString(), authToken);
-    }
-    toggleTimer();
-  };
-
-  const resetHandler = () => {
-    if (isActive && timerState === 'pomodoro') {
-      addStudySession(timeLastStarted.toISOString(), new Date().toISOString(), authToken);
-    }
-    handleModeChange(timerState);
-  };
   return (
     <>
       <div className="flex flex-col items-center">
