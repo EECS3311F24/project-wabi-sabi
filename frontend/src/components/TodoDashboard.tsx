@@ -202,12 +202,10 @@ const TodoDashboard = () => {
       });
       if (response.ok) {
         await getTasks(); //if request is successful then update the table else printout the error
-        await getTasks(); //if request is successful then update the table else printout the error
       } else {
         console.error(await response.text());
       }
     } catch (error) {
-      console.error('Error:', error);
       console.error('Error:', error);
     }
   };
