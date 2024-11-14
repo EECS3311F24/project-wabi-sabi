@@ -7,6 +7,7 @@ import resetIcon from '../assets/reset-2.svg';
 import skipIcon from '../assets/skip.svg';
 import pauseIcon from '../assets/pause.svg';
 import SelectedButton from '@/components/ui/SelectedButton';
+import TagDropdown from '@/components/SelectTag';
 const TimerDashboard = () => {
   const { isActive, toggleTimer, resetTimer, setTimer, minutes, seconds } = useCountdown({
     initialMinutes: 25,
@@ -15,6 +16,7 @@ const TimerDashboard = () => {
   const [timerState, setTimerState] = useState<keyof typeof timerModes>('pomodoro');
   const [sessionCount, setSessionCount] = useState<number>(1);
   const [breaksCount, setBreaksCount] = useState<number>(0);
+  const [selectedTag, setSelectedTag] = useState<string>('');
   const MAX_SHORT_BREAKS = 4;
 
   useEffect(() => {
@@ -75,6 +77,11 @@ const TimerDashboard = () => {
   const handleModeChange = (mode: keyof typeof timerModes) => {
     console.log('handleModeChange called with mode:', mode); // debugging
     timerModes[mode]();
+  };
+
+  const handleTagChange = (value: string) => {
+    setSelectedTag(value);
+    console.log('Selected Tag', value);
   };
 
   return (
@@ -161,6 +168,10 @@ const TimerDashboard = () => {
               Long Break
             </Button>
           )}
+        </div>
+        <div className="flex flex-row space-x-6 pt-[30px] font-bold text-xl text-wabi-red">Tag</div>
+        <div className="flex flex-row space-x-6 pt-[30px]">
+          <TagDropdown className="w-48 " onSelectChange={handleTagChange} isDisabled={isActive} />
         </div>
       </div>
     </>
