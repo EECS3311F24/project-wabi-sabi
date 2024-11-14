@@ -108,6 +108,7 @@ def add_subtask(task_id):
         return jsonify({"message": "Subtask created successfully"}), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 501
+
 """
 """
 @task.route("/<task_id>/<subtask_id>", methods=["DELETE"])
@@ -118,6 +119,7 @@ def remove_subtask(task_id, subtask_id):
     payload = get_user_from_token(token)
     user = User.objects(email=payload["email"]).first()
     data = request.json
+
     try:
         task = user.get_task(task_id)
         subtask = task.get_subtask(subtask_id)
@@ -127,6 +129,7 @@ def remove_subtask(task_id, subtask_id):
         return jsonify({"message": "Subtask deleted successfully"}), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 501
+
 """
 """
 @task.route("/<task_id>/<subtask_id>", methods=["PATCH"])
@@ -136,6 +139,7 @@ def edit_subtask(task_id, subtask_id):
     payload = get_user_from_token(token)
     user = User.objects(email=payload["email"]).first()
     data = request.json
+
     try:
         task = user.get_task(task_id)
         subtask = task.get_subtask(subtask_id)

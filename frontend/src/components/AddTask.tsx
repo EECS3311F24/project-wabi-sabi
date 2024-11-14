@@ -16,6 +16,7 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from './ui/table';
 import AddSubTask from './AddSubTask';
+import TagDropdown from './SelectTag';
 
 // this defines properties of the props of AddTask.tsx
 interface AddTaskProps {
@@ -64,6 +65,9 @@ const AddTask: React.FC<AddTaskProps> = ({ dialogOpen, setDialogOpen, addTask })
     setSubTasks(updatedSubtasks);
   };
 
+  //Kimia
+  const [selectedTag, setSelectedTag] = useState<string>('');
+
   /**
    * Handles the user input(task title and optional due date) to add the task. It makes sure
    * that the task title is not empty before adding the task.
@@ -87,6 +91,7 @@ const AddTask: React.FC<AddTaskProps> = ({ dialogOpen, setDialogOpen, addTask })
     setDialogOpen(false); //close the pop page after adding page
     setTaskTitle(''); // set the task title input to empty after adding task
     setDueDate(''); // set the due date input to empty after adding task
+    setSelectedTag(''); //kimia
     setEmptyTitleError(false); // change the state of the paragraph once the user enters the title
   };
 
@@ -135,6 +140,11 @@ const AddTask: React.FC<AddTaskProps> = ({ dialogOpen, setDialogOpen, addTask })
             />
             {/* Show the warning if the emptyTitleError state is true*/}
             {emptyTitleError && <p className="text-red-500 text-sm mt-1 ml-2">Please enter a task</p>}
+          </div>
+
+          <div className="flex flex-col">
+            <label className="text-sm font-medium mr-2">Tag Name</label>
+            <TagDropdown className="mt-1 p-2 w-full" onSelectChange={(value) => setSelectedTag(value)} />
           </div>
 
           <div className="flex flex-col mb-4">

@@ -76,8 +76,6 @@ const TodoDashboard = () => {
         },
       });
       const data = await response.json();
-
-      console.log(data);
       setTasks(data.tasks || []); // if users doesn't have anytasks dont display anything else fill the table with the list of tasks
     } catch (error) {
       console.error(error); //Prints the error occured during fetching the tasks
@@ -204,10 +202,12 @@ const TodoDashboard = () => {
       });
       if (response.ok) {
         await getTasks(); //if request is successful then update the table else printout the error
+        await getTasks(); //if request is successful then update the table else printout the error
       } else {
         console.error(await response.text());
       }
     } catch (error) {
+      console.error('Error:', error);
       console.error('Error:', error);
     }
   };
