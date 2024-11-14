@@ -24,11 +24,12 @@ interface AddTaskProps {
   addTask: (taskTitle: string, dueDate?: string, subTasks?: string[]) => void; // function to add a task
 }
 
+// this defines users' subtask property for a Task object for rendering in a table
 interface SubTask {
   id: string;
-  title: string;
+  text: string;
   parentTaskId: string;
-  status: string;
+  completed: boolean;
 }
 
 /**
@@ -49,11 +50,6 @@ interface SubTask {
 const AddTask: React.FC<AddTaskProps> = ({ dialogOpen, setDialogOpen, addTask }) => {
   const [subTasks, setSubTasks] = useState<SubTask[]>([]); // state to store the lists of tasks(it sets it to an empty list of tasks at first)
 
-  // // Log subtasks after each update
-  // useEffect(() => {
-  //   // console.log('Updated subtasks:', subTasks);
-  // }, [subTasks]);
-
   //state to manage the task title input. Its empty initially
   const [taskTitle, setTaskTitle] = useState('');
   //state to manage the due date input. Its empty initially
@@ -63,6 +59,7 @@ const AddTask: React.FC<AddTaskProps> = ({ dialogOpen, setDialogOpen, addTask })
   //It doesn't show up at first so it's false.
   const [emptyTitleError, setEmptyTitleError] = useState(false);
 
+  // updates handleSubtasksChange prop from TodoDashboard.tsx
   const handleSubtasksChange = (updatedSubtasks: SubTask[]) => {
     setSubTasks(updatedSubtasks);
   };
@@ -82,12 +79,11 @@ const AddTask: React.FC<AddTaskProps> = ({ dialogOpen, setDialogOpen, addTask })
       return;
     }
 
-    //
-    const subTaskTitles = subTasks.map((subTask) => subTask.title);
+    // passes an array of string of the subtask's title
+    const subTaskTitles = subTasks.map((subTask) => subTask.text);
 
     // Add the ask once the user provides the input
     addTask(taskTitle, dueDate, subTaskTitles);
-    console.log(subTasks);
     setDialogOpen(false); //close the pop page after adding page
     setTaskTitle(''); // set the task title input to empty after adding task
     setDueDate(''); // set the due date input to empty after adding task
@@ -151,6 +147,7 @@ const AddTask: React.FC<AddTaskProps> = ({ dialogOpen, setDialogOpen, addTask })
             />
           </div>
 
+          {/* Subtask */}
           <AddSubTask parentTaskId={taskTitle} onSubtasksChange={handleSubtasksChange} />
 
           <div className="flex justify-end">

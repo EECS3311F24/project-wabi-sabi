@@ -5,13 +5,15 @@ import { Input } from './ui/input';
 import plus from '../assets/plus.svg';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from './ui/table';
 
+// this defines users' subtask property for a Task object for rendering in a table
 interface SubTask {
   id: string;
-  title: string;
+  text: string;
   parentTaskId: string;
-  status: string;
+  completed: boolean;
 }
 
+// this defines properties of the props of AddSubTask.tsx
 interface SubTasksProps {
   parentTaskId: string;
   onSubtasksChange: (subtasks: SubTask[]) => void;
@@ -30,9 +32,9 @@ const AddSubTask: React.FC<SubTasksProps> = ({ parentTaskId, onSubtasksChange })
     if (subTaskTitle.trim()) {
       const newSubTask = {
         id: Date.now().toString(), // Use a timestamp or UUID library for unique IDs
-        title: subTaskTitle,
+        text: subTaskTitle,
         parentTaskId,
-        status,
+        completed: false,
       };
       setSubTasks((prev) => [...prev, newSubTask]);
       setSubTaskTitle('');
@@ -41,8 +43,8 @@ const AddSubTask: React.FC<SubTasksProps> = ({ parentTaskId, onSubtasksChange })
   };
 
   return (
-    //      {/* SubTask Table*/}
-    //   {/* TODO: Fix Alignment of Table */}
+    // {/* SubTask Table*/}
+    // {/* TODO: Add vertical scrolling */}
     <div className="mb-4 w-4/5 justify-center flex flex-col rounded-lg border border-gray-200 overflow-y-auto h-4/5">
       {/* <h3 className="font-semibold">Subtasks</h3> */}
       <Table className="max-w-full mx-auto">
@@ -85,7 +87,7 @@ const AddSubTask: React.FC<SubTasksProps> = ({ parentTaskId, onSubtasksChange })
             subTasks.map((subtask, index) => (
               <TableRow key={index} className="hover:bg-gray-50">
                 <TableCell className="text-left px-5 font-medium" colSpan={2}>
-                  {subtask.title}
+                  {subtask.text}
                 </TableCell>
               </TableRow>
             ))

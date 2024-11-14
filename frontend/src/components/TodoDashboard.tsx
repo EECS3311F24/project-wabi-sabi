@@ -13,14 +13,15 @@ interface Task {
   // tag?: string; // tag for each task. (It will be implemented later)
   due_date?: string; // an optional due date for the task
   status: string; // the status of the task(completed or not)
-  subtasks?: string[];
+  sub_tasks?: SubTask[]; // list of subtasks
 }
 
+// this defines users' subtask property for a Task object for rendering in a table
 interface SubTask {
-  id: string;
-  title: string;
-  parentTaskId: string;
-  status: string;
+  id: string; // id for the subtask
+  text: string; // title of subtask
+  parentTaskId: string; // parent id (task)
+  completed: boolean; // status of subtask (completed or not)
 }
 
 /**
@@ -49,8 +50,14 @@ const TodoDashboard = () => {
   //it gets and stores the users authentication token
   const { authToken } = useAuth();
 
+  // a state that manages the visibility of tasks
   const [expandedTasks, setExpandedTasks] = useState<string[]>([]);
 
+  /**
+   * Function that toggles the expansion of task
+   *
+   * @param taskId - a string for the task id
+   */
   const toggleExpandTask = (taskId: string) => {
     setExpandedTasks((prev) => (prev.includes(taskId) ? prev.filter((id) => id !== taskId) : [...prev, taskId]));
   };
@@ -115,22 +122,38 @@ const TodoDashboard = () => {
    * @param isCompleted - a boolean for the status of the task. True if its finished and false if it is not.
    */
 
-  const toggleCompletionCheckBox = async (id: string, isCompleted: boolean) => {
+  const toggleCompletionCheckBox = async (taskId: string, isCompleted: boolean) => {
     try {
-      //sets the new status to be updated based on the boolean provided.
-      // newStatus = Finished if isCompleted is true and if false then newStatus = ToDO
+      // Define new status and subtask completion value based on `isCompleted`
       const newStatus = isCompleted ? 'Finished' : 'Todo';
-      const response = await fetch('http://localhost:5000/tasks/edit', {
+      const newSubtaskCompletion = isCompleted; // Set all subtasks to true if task is finished, false otherwise
+
+      // Make the PATCH request to update the task's status on the backend
+      const response = await fetch(`http://localhost:5000/task/${taskId}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${authToken}`,
         },
-        body: JSON.stringify({ task_id: id, status: newStatus }),
+        body: JSON.stringify({ status: newStatus }),
       });
+
       if (response.ok) {
-        //If the request is successful then add the task to the table
-        setTasks((prevTasks) => prevTasks.map((task) => (task.id === id ? { ...task, status: newStatus } : task)));
+        // Update the task's status and subtasks in the frontend state
+        setTasks((prevTasks) =>
+          prevTasks.map((task) =>
+            task.id === taskId
+              ? {
+                  ...task,
+                  status: newStatus,
+                  sub_tasks: task.sub_tasks?.map((subtask) => ({
+                    ...subtask,
+                    completed: newSubtaskCompletion, // Set all subtasks to `true` if the task is marked as finished
+                  })),
+                }
+              : task,
+          ),
+        );
       } else {
         console.error('Error updating task:', await response.text());
       }
@@ -139,22 +162,31 @@ const TodoDashboard = () => {
     }
   };
 
-  // const toggleSubtaskCompletion = (taskId: string, subTaskId: string) => {
-  //   setTasks((prevTasks) =>
-  //     prevTasks.map((task) =>
-  //       task.id === taskId
-  //         ? {
-  //             ...task,
-  //             subTasks: task.subtasks?.map((subTask) =>
-  //               subTask.id === subTaskId
-  //                 ? { ...subTask, status: subTask.status === 'Finished' ? 'Todo' : 'Finished' }
-  //                 : subTask,
-  //             ),
-  //           }
-  //         : task,
-  //     ),
-  //   );
-  // };
+  /**
+   * Updates the subtask's status (completed or not) of the Task
+   *
+   *
+   * @param taskId - a string of the task id
+   * @param subTaskId - a string of the subtask id
+   */
+
+  const toggleSubtaskCompletion = (taskId: string, subTaskId: string) => {
+    setTasks((prevTasks) => {
+      const updatedTasks = prevTasks.map((task) =>
+        task.id === taskId
+          ? {
+              ...task,
+              sub_tasks:
+                task.sub_tasks?.map((subtask) =>
+                  subtask.id === subTaskId ? { ...subtask, completed: !subtask.completed } : subtask,
+                ) ?? [],
+            }
+          : task,
+      );
+      return updatedTasks;
+    });
+  };
+
   /**
    * It makes a DELETE request to task/rm to delete user's task.
    * @param id - the unique id of the task
@@ -162,7 +194,7 @@ const TodoDashboard = () => {
 
   const deleteTask = async (id: string) => {
     try {
-      const response = await fetch('http://localhost:5000/task/', {
+      const response = await fetch(`http://localhost:5000/task/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -257,24 +289,26 @@ const TodoDashboard = () => {
                       </DropdownMenu>
                     </TableCell>
                   </TableRow>
-                  {task.subtasks?.map((subtask, index) => (
-                    <TableRow key={index} className="bg-gray-100 w">
-                      {/* Empty Cell */}
-                      <TableCell></TableCell>
+                  {/* User expands task */}
+                  {expandedTasks.includes(task.id) &&
+                    task.sub_tasks?.map((subtask, index) => (
+                      <TableRow key={index} className="bg-gray-100 w">
+                        {/* Empty Cell */}
+                        <TableCell></TableCell>
 
-                      {/* Subtask checkbox */}
-                      {/* <TableCell className="w-10">
+                        {/* Subtask checkbox */}
+                        <TableCell className="w-10">
                           <Checkbox
-                            checked={subtask.status === 'Finished'}
+                            checked={subtask.completed}
                             onCheckedChange={() => toggleSubtaskCompletion(task.id, subtask.id)}
                             aria-label="Select subtask"
                           />
-                        </TableCell> */}
-                      <TableCell colSpan={4} className="text-left pl-8 pr-4 font-medium text-gray-600">
-                        {subtask}
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                        </TableCell>
+                        <TableCell colSpan={4} className="text-left pl-8 pr-4 font-medium text-gray-600">
+                          {subtask.text}
+                        </TableCell>
+                      </TableRow>
+                    ))}
                 </>
               ))
             )}
