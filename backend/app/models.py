@@ -13,25 +13,51 @@ def json_formatted(model):
 class Tag(Document):
     text = StringField(required=True)
 
+class SubTask(Document):
+    text = StringField(required=True)
+    completed = BooleanField(required=True)
+
+    def __str__(self):
+        return self.text
+
+    def json_formatted(self):
+        print(f'serializing subtask{self.__str__}')
+        model_json = self.to_mongo().to_dict()
+        model_json["id"] = str(model_json["_id"])
+        del model_json["_id"]
+        return model_json
 
 class Task(Document):
     STATUS_TODO = "Todo"
     STATUS_IN_PROGRESS = "In Progress"
     STATUS_FINISHED = "Finished"
-
-    is_sub_task = BooleanField(required=True)
     text = StringField(required=True)
     due_date = DateTimeField()
     tag = ObjectIdField()  # change to reference field once tag object exists
     status = StringField(required=True)
     tag = ReferenceField(Tag)  # change to reference field once tag object exists
-    # sub_tasks = ListField(ReferenceField())
+    sub_tasks = ListField(ReferenceField(SubTask))
+
+    def get_subtasks(self):
+        return self.sub_tasks
+
+    def get_subtask(self,subtask_id):
+        return SubTask.objects(id=ObjectId(subtask_id)).first()
 
     def set_status(self, new_status):
         self.status = new_status
 
     def __str__(self):
         return self.text
+
+    def json_formatted(self):
+        print(f'serializing subtask{self.__str__}')
+        model_json = self.to_mongo().to_dict()
+        model_json["id"] = str(model_json["_id"])
+        model_json["sub_tasks"] = [subtask.json_formatted() for subtask in self.sub_tasks]
+        print(model_json["sub_tasks"])
+        del model_json["_id"]
+        return model_json
 
 
 class Study(Document):
@@ -41,6 +67,13 @@ class Study(Document):
 
     def __str__(self):
         return self.text
+
+    def json_formatted(self):
+        print(f'serializing study {self.__str__}')
+        model_json = self.to_mongo().to_dict()
+        model_json["id"] = str(model_json["_id"])
+        del model_json["_id"]
+        return model_json
 
 
 class User(Document):
@@ -78,3 +111,11 @@ class User(Document):
 
     def __str__(self):
         return self.username
+
+    def json_formatted(self):
+        print(f'serializing user {self.__str__}')
+        model_json = self.to_mongo().to_dict()
+        model_json["id"] = str(model_json["_id"])
+        model_json["tasks"] = [task.json_formatted() for task in self.tasks]
+        del model_json["_id"]
+        return model_json

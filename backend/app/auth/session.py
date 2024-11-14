@@ -44,6 +44,7 @@ def user_required(f):
         try:
             # Decode the token
             data = get_user_from_token(token)
+            print(token)
             email = data["email"]
             # Check if the user is an admin
             user = User.objects(email=email).first()
