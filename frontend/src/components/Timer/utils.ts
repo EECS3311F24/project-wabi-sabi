@@ -2,7 +2,7 @@ import { useCallback, useEffect } from 'react';
 
 // calls backend to save study session
 export const addStudySession = async (startTime: string, endTime: string, authToken: string | null) => {
-  const response = await fetch('http://localhost:5000/study/add', {
+  const response = await fetch('http://localhost:5000/study/', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

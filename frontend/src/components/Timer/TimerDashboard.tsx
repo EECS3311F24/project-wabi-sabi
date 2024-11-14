@@ -10,6 +10,7 @@ import SelectedButton from '@/components/ui/SelectedButton';
 import { useAuth } from '@/components/AuthProviderUtils';
 import { addStudySession, sendCachedData, useSaveDataOnReload } from './utils';
 import { useOutletContext } from 'react-router-dom';
+import TagDropdown from '../SelectTag';
 
 type TimerMode = 'pomodoro' | 'shortBreak' | 'longBreak';
 type DashboardContextType = {
@@ -30,6 +31,7 @@ const TimerDashboard = () => {
   const [breaksCount, setBreaksCount] = useState<number>(0); // number of short breaks used
   const [timeLastStarted, setTimeLastStarted] = useState<Date>(new Date()); // last time timer was started
   const MAX_SHORT_BREAKS = 3; // maximum number of short breaks allowed
+  const [selectedTag, setSelectedTag] = useState<string>('');
 
   // saves last study session to cache when user reloads
   useSaveDataOnReload({ timeLastStarted, isActive });
@@ -175,10 +177,18 @@ const TimerDashboard = () => {
     pomodoroClickHandler();
   };
 
+  const handleTagChange = (value: string) => {
+    setSelectedTag(value);
+    console.log('Selected Tag', value);
+  };
+
   return (
     <>
       <div className="flex flex-col items-center">
-        <div className="pt-40">
+        <div className="pt-20">
+          <div className="flex flex-row items-center mb-10">
+            <h2 className="justify-center">{selectedTag}</h2>
+          </div>
           <p className="font-bold justify-self-center text-wabi-red">#{sessionCount}</p>
           <ClockFace minutes={minutes} seconds={seconds} />
         </div>
@@ -260,6 +270,10 @@ const TimerDashboard = () => {
               Long Break
             </Button>
           )}
+        </div>
+        <div className="flex flex-row space-x-6 pt-[30px] font-bold text-xl text-wabi-red">Tag</div>
+        <div className="flex flex-row space-x-6 pt-[30px]">
+          <TagDropdown className="w-48 " onSelectChange={handleTagChange} isDisabled={isActive} />
         </div>
       </div>
     </>
