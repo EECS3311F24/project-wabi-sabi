@@ -10,7 +10,7 @@ import TagDropdown from './SelectTag';
 interface AddTaskProps {
   dialogOpen: boolean; // the state of the pop page
   setDialogOpen: (open: boolean) => void; //function to change the state of the pop up page
-  addTask: (taskTitle: string, dueDate?: string, subTasks?: string[]) => void; // function to add a task
+  addTask: (taskTitle: string, dueDate?: string, subTasks?: string[], tag?: string) => void; // function to add a task
 }
 
 // this defines users' subtask property for a Task object for rendering in a table
@@ -71,11 +71,11 @@ const AddTask: React.FC<AddTaskProps> = ({ dialogOpen, setDialogOpen, addTask })
       return;
     }
 
-    // passes an array of string of the subtask's title
+    // passes an array of string of the subtask's titles
     const subTaskTitles = subTasks.map((subTask) => subTask.text);
 
     // Add the ask once the user provides the input
-    addTask(taskTitle, dueDate, subTaskTitles);
+    addTask(taskTitle, dueDate, subTaskTitles, selectedTag);
     setDialogOpen(false); //close the pop page after adding page
     setTaskTitle(''); // set the task title input to empty after adding task
     setDueDate(''); // set the due date input to empty after adding task
