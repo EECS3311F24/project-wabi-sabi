@@ -13,6 +13,16 @@ def json_formatted(model):
 class Tag(Document):
     text = StringField(required=True)
 
+    def __str__(self):
+        return self.text
+
+    def json_formatted(self):
+        print(f'serializing tag{self.__str__}')
+        model_json = self.to_mongo().to_dict()
+        model_json["id"] = str(model_json["_id"])
+        del model_json["_id"]
+        return model_json
+
 class SubTask(Document):
     text = StringField(required=True)
     completed = BooleanField(required=True)
@@ -55,6 +65,8 @@ class Task(Document):
         model_json = self.to_mongo().to_dict()
         model_json["id"] = str(model_json["_id"])
         model_json["sub_tasks"] = [subtask.json_formatted() for subtask in self.sub_tasks]
+        if self.tag:
+            model_json["tag"] = str(self.tag)
         print(model_json["sub_tasks"])
         del model_json["_id"]
         return model_json

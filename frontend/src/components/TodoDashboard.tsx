@@ -10,9 +10,18 @@ import { Checkbox } from './ui/checkbox';
 interface Task {
   id: string; // id for the task
   text: string; // the title of the task
-  // tag?: string; // tag for each task. (It will be implemented later)
+  tag?: string; // tag for each task. (It will be implemented later)
   due_date?: string; // an optional due date for the task
   status: string; // the status of the task(completed or not)
+  sub_tasks?: SubTask[]; // list of subtasks
+}
+
+// this defines users' subtask property for a Task object for rendering in a table
+interface SubTask {
+  id: string; // id for the subtask
+  text: string; // title of subtask
+  parentTaskId: string; // parent id (task)
+  completed: boolean; // status of subtask (completed or not)
 }
 
 /**
@@ -41,6 +50,18 @@ const TodoDashboard = () => {
   //it gets and stores the users authentication token
   const { authToken } = useAuth();
 
+  // a state that manages the visibility of tasks
+  const [expandedTasks, setExpandedTasks] = useState<string[]>([]);
+
+  /**
+   * Function that toggles the expansion of task
+   *
+   * @param taskId - a string for the task id
+   */
+  const toggleExpandTask = (taskId: string) => {
+    setExpandedTasks((prev) => (prev.includes(taskId) ? prev.filter((id) => id !== taskId) : [...prev, taskId]));
+  };
+
   /**
    * It makes a GET request to the tasks/get endpoint to retrieve a list of
    * user's tasks.
@@ -48,7 +69,7 @@ const TodoDashboard = () => {
 
   const getTasks = async () => {
     try {
-      const response = await fetch('http://localhost:5000/tasks/get', {
+      const response = await fetch('http://localhost:5000/task/', {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${authToken}`,
@@ -69,15 +90,20 @@ const TodoDashboard = () => {
    * @param due_date - The due date of the task(the user has an option not to provide the due date).
    */
 
-  const addTask = async (taskTitle: string, due_date?: string) => {
+  const addTask = async (taskTitle: string, due_date?: string, subTasks?: string[], tag?: string) => {
     try {
-      const response = await fetch('http://localhost:5000/tasks/add', {
+      const response = await fetch('http://localhost:5000/task/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${authToken}`,
         },
-        body: JSON.stringify({ text: taskTitle, due_date: due_date || null }),
+        body: JSON.stringify({
+          text: taskTitle,
+          due_date: due_date || null,
+          subtasks: subTasks ?? [],
+          tag: tag || null,
+        }),
       });
       if (response.ok) {
         //if the response is successful then update else print out the server error
@@ -99,22 +125,38 @@ const TodoDashboard = () => {
    * @param isCompleted - a boolean for the status of the task. True if its finished and false if it is not.
    */
 
-  const toggleCompletionCheckBox = async (id: string, isCompleted: boolean) => {
+  const toggleCompletionCheckBox = async (taskId: string, isCompleted: boolean) => {
     try {
-      //sets the new status to be updated based on the boolean provided.
-      // newStatus = Finished if isCompleted is true and if false then newStatus = ToDO
+      // Define new status and subtask completion value based on `isCompleted`
       const newStatus = isCompleted ? 'Finished' : 'Todo';
-      const response = await fetch('http://localhost:5000/tasks/edit', {
+      const newSubtaskCompletion = isCompleted; // Set all subtasks to true if task is finished, false otherwise
+
+      // Make the PATCH request to update the task's status on the backend
+      const response = await fetch(`http://localhost:5000/task/${taskId}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${authToken}`,
         },
-        body: JSON.stringify({ task_id: id, status: newStatus }),
+        body: JSON.stringify({ status: newStatus }),
       });
+
       if (response.ok) {
-        //If the request is successful then add the task to the table
-        setTasks((prevTasks) => prevTasks.map((task) => (task.id === id ? { ...task, status: newStatus } : task)));
+        // Update the task's status and subtasks in the frontend state
+        setTasks((prevTasks) =>
+          prevTasks.map((task) =>
+            task.id === taskId
+              ? {
+                  ...task,
+                  status: newStatus,
+                  sub_tasks: task.sub_tasks?.map((subtask) => ({
+                    ...subtask,
+                    completed: newSubtaskCompletion, // Set all subtasks to `true` if the task is marked as finished
+                  })),
+                }
+              : task,
+          ),
+        );
       } else {
         console.error('Error updating task:', await response.text());
       }
@@ -124,13 +166,38 @@ const TodoDashboard = () => {
   };
 
   /**
+   * Updates the subtask's status (completed or not) of the Task
+   *
+   *
+   * @param taskId - a string of the task id
+   * @param subTaskId - a string of the subtask id
+   */
+
+  const toggleSubtaskCompletion = (taskId: string, subTaskId: string) => {
+    setTasks((prevTasks) => {
+      const updatedTasks = prevTasks.map((task) =>
+        task.id === taskId
+          ? {
+              ...task,
+              sub_tasks:
+                task.sub_tasks?.map((subtask) =>
+                  subtask.id === subTaskId ? { ...subtask, completed: !subtask.completed } : subtask,
+                ) ?? [],
+            }
+          : task,
+      );
+      return updatedTasks;
+    });
+  };
+
+  /**
    * It makes a DELETE request to task/rm to delete user's task.
    * @param id - the unique id of the task
    */
 
   const deleteTask = async (id: string) => {
     try {
-      const response = await fetch('http://localhost:5000/tasks/rm', {
+      const response = await fetch(`http://localhost:5000/task/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -162,8 +229,9 @@ const TodoDashboard = () => {
           <TableHeader>
             <TableRow>
               <TableHead className="w-10"></TableHead>
+              <TableHead className="w-10"></TableHead>
               <TableHead className="text-left px-4 py-2">Task</TableHead>
-              {/* <TableHead className="text-center px-4 py-2">Tag</TableHead> The tag is commented out for now */}
+              <TableHead className="text-center px-4 py-2">Tag</TableHead>
               <TableHead className="text-center px-4 py-2">Due Date</TableHead>
               <TableHead className="text-center px-4 py-2">Completion(%)</TableHead>
               <TableHead className="text-right px-4 py-2"></TableHead>
@@ -178,47 +246,73 @@ const TodoDashboard = () => {
               </TableRow>
             ) : (
               tasks.map((task) => (
-                <TableRow key={task.id}>
-                  {/* checkbox section */}
-                  <TableCell className="w-10">
-                    <Checkbox
-                      checked={task.status === 'Finished'}
-                      onCheckedChange={() => toggleCompletionCheckBox(task.id, task.status !== 'Finished')}
-                      aria-label="Select row"
-                    />
-                  </TableCell>
+                <>
+                  <TableRow key={task.id}>
+                    {/* checkbox section */}
+                    <TableCell className="w-10">
+                      <Checkbox
+                        checked={task.status === 'Finished'}
+                        onCheckedChange={() => toggleCompletionCheckBox(task.id, task.status !== 'Finished')}
+                        aria-label="Select row"
+                      />
+                    </TableCell>
+                    {/* Expand/collapse arrow */}
+                    <TableCell className="w-10 cursor-pointer" onClick={() => toggleExpandTask(task.id)}>
+                      {expandedTasks.includes(task.id) ? '▼' : '▶'}
+                    </TableCell>
 
-                  {/* title section */}
-                  <TableCell className="text-left px-4 font-medium">{task.text}</TableCell>
+                    {/* title section */}
+                    <TableCell className="text-left px-4 font-medium">{task.text}</TableCell>
 
-                  {/* <TableCell className="text-center">{task.tag || ''}</TableCell>  commented out the tag section for now*/}
+                    <TableCell className="text-center">{task.tag ?? ''}</TableCell>
 
-                  {/* Due date section */}
-                  <TableCell className="text-center font-medium">
-                    {task.due_date ? new Date(task.due_date).toLocaleDateString() : ''}
-                  </TableCell>
+                    {/* Due date section */}
+                    <TableCell className="text-center font-medium">
+                      {task.due_date ? new Date(task.due_date).toLocaleDateString() : ''}
+                    </TableCell>
 
-                  {/* Task completion section */}
-                  <TableCell className="text-center font-medium">
-                    {task.status === 'Finished' ? '100%' : '0%'}
-                  </TableCell>
+                    {/* Task completion section */}
+                    <TableCell className="text-center font-medium">
+                      {task.status === 'Finished' ? '100%' : '0%'}
+                    </TableCell>
 
-                  {/* The dropdown menu section to delete a task */}
-                  <TableCell className="text-right">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <button className="p-2 rounded-full hover:bg-gray-100">
-                          <img src={threeDots} alt="Options" className="h-5 w-5" />
-                        </button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem className="text-red-500" onClick={() => deleteTask(task.id)}>
-                          Delete
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
-                </TableRow>
+                    {/* The dropdown menu section to delete a task */}
+                    <TableCell className="text-right">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <button className="p-2 rounded-full hover:bg-gray-100">
+                            <img src={threeDots} alt="Options" className="h-5 w-5" />
+                          </button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem className="text-red-500" onClick={() => deleteTask(task.id)}>
+                            Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                  {/* User expands task */}
+                  {expandedTasks.includes(task.id) &&
+                    task.sub_tasks?.map((subtask, index) => (
+                      <TableRow key={index}>
+                        {/* Empty Cell */}
+                        <TableCell></TableCell>
+
+                        {/* Subtask checkbox */}
+                        <TableCell className="w-10">
+                          <Checkbox
+                            checked={subtask.completed}
+                            onCheckedChange={() => toggleSubtaskCompletion(task.id, subtask.id)}
+                            aria-label="Select subtask"
+                          />
+                        </TableCell>
+                        <TableCell colSpan={5} className="text-left pl-8 pr-4 font-medium text-gray-600">
+                          {subtask.text}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                </>
               ))
             )}
           </TableBody>
