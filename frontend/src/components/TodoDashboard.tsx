@@ -10,7 +10,7 @@ import { Checkbox } from './ui/checkbox';
 interface Task {
   id: string; // id for the task
   text: string; // the title of the task
-  // tag?: string; // tag for each task. (It will be implemented later)
+  tag?: string; // tag for each task. (It will be implemented later)
   due_date?: string; // an optional due date for the task
   status: string; // the status of the task(completed or not)
   sub_tasks?: SubTask[]; // list of subtasks
@@ -90,7 +90,7 @@ const TodoDashboard = () => {
    * @param due_date - The due date of the task(the user has an option not to provide the due date).
    */
 
-  const addTask = async (taskTitle: string, due_date?: string, subTasks?: string[]) => {
+  const addTask = async (taskTitle: string, due_date?: string, subTasks?: string[], tag?: string) => {
     try {
       const response = await fetch('http://localhost:5000/task/', {
         method: 'POST',
@@ -98,7 +98,12 @@ const TodoDashboard = () => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${authToken}`,
         },
-        body: JSON.stringify({ text: taskTitle, due_date: due_date || null, subtasks: subTasks ?? [] }),
+        body: JSON.stringify({
+          text: taskTitle,
+          due_date: due_date || null,
+          subtasks: subTasks ?? [],
+          tag: tag || null,
+        }),
       });
       if (response.ok) {
         //if the response is successful then update else print out the server error
@@ -226,7 +231,7 @@ const TodoDashboard = () => {
               <TableHead className="w-10"></TableHead>
               <TableHead className="w-10"></TableHead>
               <TableHead className="text-left px-4 py-2">Task</TableHead>
-              {/* <TableHead className="text-center px-4 py-2">Tag</TableHead> The tag is commented out for now */}
+              <TableHead className="text-center px-4 py-2">Tag</TableHead>
               <TableHead className="text-center px-4 py-2">Due Date</TableHead>
               <TableHead className="text-center px-4 py-2">Completion(%)</TableHead>
               <TableHead className="text-right px-4 py-2"></TableHead>
@@ -259,7 +264,7 @@ const TodoDashboard = () => {
                     {/* title section */}
                     <TableCell className="text-left px-4 font-medium">{task.text}</TableCell>
 
-                    {/* <TableCell className="text-center">{task.tag || ''}</TableCell>  commented out the tag section for now*/}
+                    <TableCell className="text-center">{task.tag ?? ''}</TableCell>
 
                     {/* Due date section */}
                     <TableCell className="text-center font-medium">
@@ -290,7 +295,7 @@ const TodoDashboard = () => {
                   {/* User expands task */}
                   {expandedTasks.includes(task.id) &&
                     task.sub_tasks?.map((subtask, index) => (
-                      <TableRow key={index} className="bg-gray-100 w">
+                      <TableRow key={index}>
                         {/* Empty Cell */}
                         <TableCell></TableCell>
 
@@ -302,7 +307,7 @@ const TodoDashboard = () => {
                             aria-label="Select subtask"
                           />
                         </TableCell>
-                        <TableCell colSpan={4} className="text-left pl-8 pr-4 font-medium text-gray-600">
+                        <TableCell colSpan={5} className="text-left pl-8 pr-4 font-medium text-gray-600">
                           {subtask.text}
                         </TableCell>
                       </TableRow>
