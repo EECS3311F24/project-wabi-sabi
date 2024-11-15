@@ -173,7 +173,7 @@ Tracking on Trello Total Mark: 15 / 15
     - 1 mark = one member is not present
     - 0 marks = more than one member is not present
     
-    Your Mark: 2
+    Your Mark: 0 (Only One member is present at the sprint1 demo)
   
   - Working software (max 6 marks)
     - 6 marks = features presented work flawlessly
@@ -196,12 +196,12 @@ Tracking on Trello Total Mark: 15 / 15
 
    Your Mark: 2
 
-  Your Mark: 12 / 12
+  Your Mark: 10 / 12
 
 ---
 
 
 ## Total Mark
 
-64 / 64
+62 / 64
 
