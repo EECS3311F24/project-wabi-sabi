@@ -29,7 +29,7 @@ def make_task():
         )
         if subtasks:
             for subtask in subtasks:
-                new_subtask = SubTask(text=subtask,completed=False)
+                new_subtask = SubTask(text=subtask, completed=False)
                 new_subtask.save()
                 new_task.sub_tasks.append(new_subtask)
 
@@ -70,6 +70,11 @@ def update_user_task(task_id):
         task = user.get_task(task_id)
         task.set_status(new_status)
         task.save()
+        if task.status == Task.STATUS_FINISHED:
+            for subtask in task.sub_tasks:
+                subtask.completed = True
+                subtask.save()
+
         return jsonify({"message": "Task edited successfully"}), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 501
@@ -90,6 +95,7 @@ def remove_user_task(task_id):
         return jsonify({"message": "Task deleted successfully"}), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 501
+
 
 """
 @task.route("/<task_id>", methods=["POST"])
