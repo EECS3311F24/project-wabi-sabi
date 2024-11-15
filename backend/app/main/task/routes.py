@@ -137,7 +137,7 @@ def remove_subtask(task_id, subtask_id):
         return jsonify({"error": str(e)}), 501
 
 """
-"""
+
 @task.route("/<task_id>/<subtask_id>", methods=["PATCH"])
 @user_required
 def edit_subtask(task_id, subtask_id):
@@ -155,4 +155,4 @@ def edit_subtask(task_id, subtask_id):
         return jsonify({"message": "Subtask edited successfully"}), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 501
-"""
+
