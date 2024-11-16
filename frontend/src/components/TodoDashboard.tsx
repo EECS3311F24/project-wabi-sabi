@@ -5,6 +5,8 @@ import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuIte
 import AddTask from './AddTask';
 import threeDots from '../assets/three-dots.svg';
 import { Checkbox } from './ui/checkbox';
+import rightArrow from '../assets/right-arrow.svg';
+import downArrow from '../assets/down-arrow.svg';
 
 // this defines users' task property for rendering in a table
 interface Task {
@@ -287,7 +289,9 @@ const TodoDashboard = () => {
                     </TableCell>
                     {/* Expand/collapse arrow */}
                     <TableCell className="w-10 cursor-pointer" onClick={() => toggleExpandTask(task.id)}>
-                      {expandedTasks.includes(task.id) ? '▼' : '▶'}
+                      {task.sub_tasks && task.sub_tasks.length > 0 ? 
+                      (<img src={expandedTasks.includes(task.id) ? downArrow : rightArrow} alt="Toggle Subtasks" />) : null
+                    }
                     </TableCell>
 
                     {/* title section */}
