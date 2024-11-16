@@ -3,13 +3,22 @@ import { Dialog, DialogTrigger, DialogOverlay, DialogContent, DialogTitle, Dialo
 import SelectedButton from './ui/SelectedButton';
 import UnselectedButton from './ui/UnselectedButton';
 import plus from '../assets/plus.svg';
+import AddSubTask from './AddSubTask';
 import TagDropdown from './SelectTag';
 
 // this defines properties of the props of AddTask.tsx
 interface AddTaskProps {
   dialogOpen: boolean; // the state of the pop page
   setDialogOpen: (open: boolean) => void; //function to change the state of the pop up page
-  addTask: (taskTitle: string, dueDate?: string) => void; // function to add a task
+  addTask: (taskTitle: string, dueDate?: string, subTasks?: string[], tag?: string) => void; // function to add a task
+}
+
+// this defines users' subtask property for a Task object for rendering in a table
+interface SubTask {
+  id: string;
+  text: string;
+  parentTaskId: string;
+  completed: boolean;
 }
 
 /**
@@ -28,6 +37,8 @@ interface AddTaskProps {
  */
 
 const AddTask: React.FC<AddTaskProps> = ({ dialogOpen, setDialogOpen, addTask }) => {
+  const [subTasks, setSubTasks] = useState<SubTask[]>([]); // state to store the lists of tasks(it sets it to an empty list of tasks at first)
+
   //state to manage the task title input. Its empty initially
   const [taskTitle, setTaskTitle] = useState('');
   //state to manage the due date input. Its empty initially
@@ -36,6 +47,11 @@ const AddTask: React.FC<AddTaskProps> = ({ dialogOpen, setDialogOpen, addTask })
   //State to manage the paragraph tag that shows up when user adds task without title.
   //It doesn't show up at first so it's false.
   const [emptyTitleError, setEmptyTitleError] = useState(false);
+
+  // updates handleSubtasksChange prop from TodoDashboard.tsx
+  const handleSubtasksChange = (updatedSubtasks: SubTask[]) => {
+    setSubTasks(updatedSubtasks);
+  };
 
   //Kimia
   const [selectedTag, setSelectedTag] = useState<string>('');
@@ -55,8 +71,11 @@ const AddTask: React.FC<AddTaskProps> = ({ dialogOpen, setDialogOpen, addTask })
       return;
     }
 
+    // passes an array of string of the subtask's titles
+    const subTaskTitles = subTasks.map((subTask) => subTask.text);
+
     // Add the ask once the user provides the input
-    addTask(taskTitle, dueDate);
+    addTask(taskTitle, dueDate, subTaskTitles, selectedTag);
     setDialogOpen(false); //close the pop page after adding page
     setTaskTitle(''); // set the task title input to empty after adding task
     setDueDate(''); // set the due date input to empty after adding task
@@ -125,6 +144,9 @@ const AddTask: React.FC<AddTaskProps> = ({ dialogOpen, setDialogOpen, addTask })
               className="mt-1 p-2 border border-gray-200 rounded w-full"
             />
           </div>
+
+          {/* Subtask */}
+          <AddSubTask parentTaskId={taskTitle} onSubtasksChange={handleSubtasksChange} />
 
           <div className="flex justify-end">
             <UnselectedButton content="Add Task" onClick={handleSubmit} />

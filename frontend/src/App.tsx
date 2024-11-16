@@ -6,7 +6,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import DashboardContainer from './components/DashboardContainer';
 import Onboarding from './components/Onboarding';
 import TodoDashboard from './components/TodoDashboard';
-import TimerDashboard from './Timer/TimerDashboard';
+import TimerDashboard from './components/Timer/TimerDashboard';
 
 /**
  * This is the main app component that wraps the entire application.

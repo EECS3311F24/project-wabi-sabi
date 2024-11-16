@@ -70,6 +70,11 @@ def update_user_task(task_id):
         task = user.get_task(task_id)
         task.set_status(new_status)
         task.save()
+        if task.status == Task.STATUS_FINISHED:
+            for subtask in task.sub_tasks:
+                subtask.completed = True
+                subtask.save()
+
         return jsonify({"message": "Task edited successfully"}), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 501
