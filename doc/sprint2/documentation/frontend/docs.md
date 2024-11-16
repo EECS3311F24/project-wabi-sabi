@@ -14,6 +14,7 @@
 10. [TimerDashboard Component Documentation](#timerdashboard-component-documentation)
 11. [TodoDashboard Component Documentation](#tododashboard-component-documentation)
 12. [AddTask Component Documentation](#addtask-component-documentation)
+13. [AddSubTask Component Documentation](#addsubtask-component-documentation)
 
 ---
 
@@ -517,7 +518,7 @@ Defines the properties of the prop for `AddTask` component:
 
 - **dialogOpen**: `boolean` - Manages the visibilty of the page(Open or Closed). 
 - **setDialogOpen**: `(open: boolean) => void` - A fucntion that changes the dialog or the pop up page(Open or Closed).
-- **addTask**: `(taskTitle: string, dueDate?: string) => void` - A function that to add a task given a task title and user input.
+- **addTask**: `(taskTitle: string, dueDate?: string, subTasks?: string[]) => void` - A function that to add a task given a task title and user input.
 
 ## Component Structure
 
@@ -525,9 +526,12 @@ Defines the properties of the prop for `AddTask` component:
   - `taskTitle`: Stores the task's title.
   - `dueDate`: Stores the due date of a task. Its empty if the due date is not provided.
   - `emptyTitleError`: Manages the visibility of a warning message if the title is empty.
+  - `subTasks`: Stores the list of subtasks. Initially empty
+
 
 - **Functionality**:
   - `handleSubmit`: Makes sure that the task title is provided by the user. If the task title is provided it adds the task else it returns a warning message below task title input.
+  - `handleSubtasksChange`: updates with the subtasks list passed from `AddSubTask`
 
 ## Functionality
 - **Input Validation**: It makes sure that a task title is provided before adding the task. If the title is missing, a warning message below task title input is displayed.
@@ -540,3 +544,52 @@ Users can use the `AddTask` component within any dashboard or task list componen
 ## Additional Notes
 
 - **Error Feedback**: A warning text is displayed if the user tries to add a task without a task title.
+
+
+<br><br>
+
+# AddSubTask Component Documentation
+
+## Overview
+
+The `AddSubTask` displays a table of subtasks created. Users can add these subtasks using a pop-up form that requires a subtask title.
+
+## Dependencies
+
+This component relies on:
+
+- **Dialog Components**: `Dialog`, `DialogTrigger`, `DialogHeader`, `DialogContent`, and `DialogTitle` for displaying the inner pop up page.
+- **Button Components**: `Button` to open the pop up page.
+- **ShadCN UI Components**: Provides the styling and layout for the pop up page.
+- **Table Components**: `Table`, `TableHeader`, `TableBody`, `TableRow`, `TableHead`, and `TableCell` for displaying the tasks in a table.
+
+## Interfaces
+
+### AddTaskProps
+
+Defines the properties of the prop for `AddTask` component:
+
+- **parentTaskId**: `string` - A string that holds the parent's task id
+- **onSubtasksChange**: `(subtasks: SubTask[]) => void` - A function that updates the list of subtasks
+
+## Component Structure
+
+- **State Management**:
+  - `subTaskTitle`: Stores the subtask's title.
+  - `subTasks`: Stores the list of subtasks. Initially empty
+  - `isSubtaskDialogOpen`: Manages the visibility of the inner subtask dialogue popup.
+
+- **Functionality**:
+  - `handleAddSubtask`: Makes sure that the subtask title is provided by the user. If the subtask title is provided it adds the subtask else it returns a warning message below task title input.
+
+## Functionality
+- **Input Validation**: It makes sure that a task title is provided before adding the subtask. If the title is missing, a warning message below subtask title input is displayed.
+- **Form Submission**: When the form is submitted a `handleAddSubtask` is called to add the subtask into the list.
+
+## Usage
+
+Users can use the `AddSubTask` component within any task list component where users need to add new subtasks to their new tasks. Place it within a button-triggered dialog within the `AddTask` dialog to keep the form accessible yet unobtrusive.
+
+## Additional Notes
+
+- **Error Feedback**: A warning text is displayed if the user tries to add a subtask without a task title.
