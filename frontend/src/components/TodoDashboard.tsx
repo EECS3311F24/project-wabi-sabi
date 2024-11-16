@@ -128,8 +128,7 @@ const TodoDashboard = () => {
   const toggleCompletionCheckBox = async (taskId: string, isCompleted: boolean) => {
     try {
       const newStatus = isCompleted ? 'Finished' : 'Todo';
-      const newSubtaskCompletion = isCompleted; // Set all subtasks to true if task is finished, false otherwise
-
+      
       const response = await fetch(`http://localhost:5000/task/${taskId}`, {
         method: 'PATCH',
         headers: {
@@ -141,20 +140,7 @@ const TodoDashboard = () => {
 
       if (response.ok) {
         // Update the task's status and subtasks in the frontend state
-        setTasks((prevTasks) =>
-          prevTasks.map((task) =>
-            task.id === taskId
-              ? {
-                  ...task,
-                  status: newStatus,
-                  sub_tasks: task.sub_tasks?.map((subtask) => ({
-                    ...subtask,
-                    completed: newSubtaskCompletion, // Set all subtasks to `true` if the task is marked as finished
-                  })), 
-                }
-              : task,
-          ),
-        );
+        getTasks();
       } else {
         console.error('Error updating task:', await response.text());
       }
@@ -196,9 +182,11 @@ const TodoDashboard = () => {
           );
 
           const parentTask = updatedTasks.find((task) => task.id === taskId);
-
-          if (parentTask && calculateCompletionPercentage(parentTask) === 100) {
-          toggleCompletionCheckBox(taskId, true); 
+          const completionPercentage = parentTask ? calculateCompletionPercentage(parentTask) : 0;
+          if (completionPercentage === 100) {
+            toggleCompletionCheckBox(taskId, true); 
+          }else{
+            toggleCompletionCheckBox(taskId, false);
           }
 
           return updatedTasks;
