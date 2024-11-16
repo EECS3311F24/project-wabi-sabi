@@ -36,6 +36,8 @@ def get_tags():
     # get all the params of the study session
     # new session object
     try:
+        if len(user.get_tags()) < 1:
+            return jsonify([]), 201
         tag_json = [json_formatted(tag) for tag in user.get_tags()]
         return jsonify(tag_json), 201
     except Exception as e:
