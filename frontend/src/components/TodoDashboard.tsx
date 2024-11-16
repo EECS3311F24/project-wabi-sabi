@@ -127,11 +127,9 @@ const TodoDashboard = () => {
 
   const toggleCompletionCheckBox = async (taskId: string, isCompleted: boolean) => {
     try {
-      // Define new status and subtask completion value based on `isCompleted`
       const newStatus = isCompleted ? 'Finished' : 'Todo';
       const newSubtaskCompletion = isCompleted; // Set all subtasks to true if task is finished, false otherwise
 
-      // Make the PATCH request to update the task's status on the backend
       const response = await fetch(`http://localhost:5000/task/${taskId}`, {
         method: 'PATCH',
         headers: {
@@ -152,7 +150,7 @@ const TodoDashboard = () => {
                   sub_tasks: task.sub_tasks?.map((subtask) => ({
                     ...subtask,
                     completed: newSubtaskCompletion, // Set all subtasks to `true` if the task is marked as finished
-                  })),
+                  })), 
                 }
               : task,
           ),
@@ -173,36 +171,44 @@ const TodoDashboard = () => {
    * @param subTaskId - a string of the subtask id
    */
 
-  const toggleSubtaskCompletion = async (taskId: string, subTaskId: string,subtaskTitle:string ,isCompleted:boolean) => {
-    try{
+  const toggleSubtaskCompletion = async (taskId: string, subTaskId: string, subtaskTitle: string, isCompleted: boolean) => {
+    try {
       const response = await fetch(`http://localhost:5000/task/${taskId}/${subTaskId}`, {
         method: 'PATCH',
-        headers:{
+        headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${authToken}`,
         },
-        body: JSON.stringify({text:subtaskTitle, completed: isCompleted})
+        body: JSON.stringify({ text: subtaskTitle, completed: isCompleted }),
       });
 
-      if(response.ok){
+      if (response.ok) {
         setTasks((prevTasks) => {
           const updatedTasks = prevTasks.map((task) =>
             task.id === taskId
               ? {
                   ...task,
-                  sub_tasks:
-                    task.sub_tasks?.map((subtask) =>
-                      subtask.id === subTaskId ? { ...subtask, completed: isCompleted } : subtask,
-                    ) ?? [],
+                  sub_tasks: task.sub_tasks?.map((subtask) =>
+                    subtask.id === subTaskId ? { ...subtask, completed: isCompleted } : subtask
+                  ) ?? [],
                 }
               : task,
           );
+
+          const parentTask = updatedTasks.find((task) => task.id === taskId);
+
+          if (parentTask && calculateCompletionPercentage(parentTask) === 100) {
+          toggleCompletionCheckBox(taskId, true); 
+          }
+
           return updatedTasks;
         });
-      }else{
+
+       
+      } else {
         console.error(await response.text());
       }
-    }catch(error){
+    } catch (error) {
       console.error(error);
     }
   };
