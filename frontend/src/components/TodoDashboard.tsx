@@ -232,6 +232,24 @@ const TodoDashboard = () => {
     }
   };
 
+  const calculateCompletionPercentage = (task: Task) => {
+
+    if(!task.sub_tasks || task.sub_tasks.length === 0) return 0;
+
+    let completedSubtasksCount = 0;
+    for (let subtask of task.sub_tasks) {
+      if (subtask.completed) {
+        completedSubtasksCount++; 
+      }
+    }
+
+    const completionPercentage = (completedSubtasksCount / task.sub_tasks.length) * 100; 
+
+    return Math.round(completionPercentage);
+
+  }
+
+
   useEffect(() => {
     // requests the table from backend and renders the table once the page loads
     getTasks();
@@ -290,7 +308,7 @@ const TodoDashboard = () => {
 
                     {/* Task completion section */}
                     <TableCell className="text-center font-medium">
-                      {task.status === 'Finished' ? '100%' : '0%'}
+                      {calculateCompletionPercentage(task)}%
                     </TableCell>
 
                     {/* The dropdown menu section to delete a task */}
