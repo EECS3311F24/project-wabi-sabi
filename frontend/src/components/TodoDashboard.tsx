@@ -117,7 +117,6 @@ const TodoDashboard = () => {
       console.error(error); //Prints the error occured while adding the tasks
     }
   };
-
   /**
    * It makes a PATCH request to tasks/edit endpoint to update the status of the task. If the
    * checkout is toggled then it changes to status to Finished else it will remain TODO.

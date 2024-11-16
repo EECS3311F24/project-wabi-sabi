@@ -69,8 +69,10 @@ class Task(Document):
         model_json["sub_tasks"] = [
             subtask.json_formatted() for subtask in self.sub_tasks
         ]
+
         if self.tag:
             model_json["tag"] = str(self.tag)
+
         print(model_json["sub_tasks"])
         del model_json["_id"]
         return model_json
