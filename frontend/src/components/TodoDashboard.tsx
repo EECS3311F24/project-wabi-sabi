@@ -173,21 +173,38 @@ const TodoDashboard = () => {
    * @param subTaskId - a string of the subtask id
    */
 
-  const toggleSubtaskCompletion = (taskId: string, subTaskId: string) => {
-    setTasks((prevTasks) => {
-      const updatedTasks = prevTasks.map((task) =>
-        task.id === taskId
-          ? {
-              ...task,
-              sub_tasks:
-                task.sub_tasks?.map((subtask) =>
-                  subtask.id === subTaskId ? { ...subtask, completed: !subtask.completed } : subtask,
-                ) ?? [],
-            }
-          : task,
-      );
-      return updatedTasks;
-    });
+  const toggleSubtaskCompletion = async (taskId: string, subTaskId: string,subtaskTitle:string ,isCompleted:boolean) => {
+    try{
+      const response = await fetch(`http://localhost:5000/task/${taskId}/${subTaskId}`, {
+        method: 'PATCH',
+        headers:{
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authToken}`,
+        },
+        body: JSON.stringify({text:subtaskTitle, completed: isCompleted})
+      });
+
+      if(response.ok){
+        setTasks((prevTasks) => {
+          const updatedTasks = prevTasks.map((task) =>
+            task.id === taskId
+              ? {
+                  ...task,
+                  sub_tasks:
+                    task.sub_tasks?.map((subtask) =>
+                      subtask.id === subTaskId ? { ...subtask, completed: isCompleted } : subtask,
+                    ) ?? [],
+                }
+              : task,
+          );
+          return updatedTasks;
+        });
+      }else{
+        console.error(await response.text());
+      }
+    }catch(error){
+      console.error(error);
+    }
   };
 
   /**
@@ -303,7 +320,7 @@ const TodoDashboard = () => {
                         <TableCell className="w-10">
                           <Checkbox
                             checked={subtask.completed}
-                            onCheckedChange={() => toggleSubtaskCompletion(task.id, subtask.id)}
+                            onCheckedChange={() => toggleSubtaskCompletion(task.id, subtask.id, subtask.text, !subtask.completed)}
                             aria-label="Select subtask"
                           />
                         </TableCell>
