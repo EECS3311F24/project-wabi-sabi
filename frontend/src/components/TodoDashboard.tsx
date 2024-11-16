@@ -280,7 +280,7 @@ const TodoDashboard = () => {
           <TableBody>
             {tasks.length === 0 ? ( // If users dont have any tasks then display "you don't have a task"
               <TableRow>
-                <TableCell colSpan={5} className="h-12 text-center">
+                <TableCell colSpan={7} className="h-12 text-center">
                   You don't have any task
                 </TableCell>
               </TableRow>
