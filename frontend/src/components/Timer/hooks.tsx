@@ -17,7 +17,6 @@ const useCountdown = ({ initialMinutes = 0, initialSeconds = 0 }: CountdownProps
     let interval: Timer;
     if (isActive) {
       interval = setInterval(() => {
-        console.log('test');
         const now = Date.now();
         const remainingTime = Math.max(0, Math.floor((endTime - now) / 1000)); // convert duration to seconds
         setDuration(remainingTime);
@@ -26,13 +25,11 @@ const useCountdown = ({ initialMinutes = 0, initialSeconds = 0 }: CountdownProps
           clearInterval(interval);
           setIsActive(false);
         }
-      }, 100); // run every 100ms to SYNC time and prevent drift!!
+      }, 900); // run every 900ms
     }
 
     return () => clearInterval(interval);
   }, [isActive, endTime]);
-
-  console.log(duration);
 
   const toggleTimer = () => {
     if (isActive == false) {
