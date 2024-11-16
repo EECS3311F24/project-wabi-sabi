@@ -64,25 +64,25 @@ const TimerDashboard = () => {
 
   const shortBreakClickHandler: () => void = useCallback(() => {
     if (isActive && timerState === 'pomodoro')
-      addStudySession(timeLastStarted.toISOString(), new Date().toISOString(), authToken);
+      addStudySession(timeLastStarted.toISOString(), new Date().toISOString(), selectedTag, authToken);
     resetTimer();
     setTimer({
       initialMinutes: 0,
       initialSeconds: 5,
     });
     setTimerState('shortBreak');
-  }, [authToken, isActive, resetTimer, setTimer, timeLastStarted, timerState]);
+  }, [authToken, isActive, resetTimer, selectedTag, setTimer, timeLastStarted, timerState]);
 
   const longBreakClickHandler: () => void = useCallback(() => {
     if (isActive && timerState === 'pomodoro')
-      addStudySession(timeLastStarted.toISOString(), new Date().toISOString(), authToken);
+      addStudySession(timeLastStarted.toISOString(), new Date().toISOString(), selectedTag, authToken);
     resetTimer();
     setTimer({
       initialMinutes: 0,
       initialSeconds: 5,
     });
     setTimerState('longBreak');
-  }, [authToken, isActive, resetTimer, setTimer, timeLastStarted, timerState]);
+  }, [authToken, isActive, resetTimer, selectedTag, setTimer, timeLastStarted, timerState]);
 
   // mapping strings to functions
   const timerModes = {
@@ -97,13 +97,13 @@ const TimerDashboard = () => {
     if (minutes === 0 && seconds === 0 && timerState == 'pomodoro' && breaksCount < MAX_SHORT_BREAKS) {
       setBreaksCount(breaksCount + 1);
       // add study session when user goes to break
-      addStudySession(timeLastStarted.toISOString(), new Date().toISOString(), authToken);
+      addStudySession(timeLastStarted.toISOString(), new Date().toISOString(), selectedTag, authToken);
       shortBreakClickHandler(); // go to short break
     }
     if (minutes == 0 && seconds === 0 && timerState == 'pomodoro' && breaksCount >= MAX_SHORT_BREAKS) {
       setBreaksCount(0);
       // add study session when user goes to break
-      addStudySession(timeLastStarted.toISOString(), new Date().toISOString(), authToken);
+      addStudySession(timeLastStarted.toISOString(), new Date().toISOString(), selectedTag, authToken);
       longBreakClickHandler(); // go to long break
     }
     if (minutes == 0 && seconds == 0 && timerState != 'pomodoro') {
@@ -121,6 +121,7 @@ const TimerDashboard = () => {
     pomodoroClickHandler,
     timeLastStarted,
     authToken,
+    selectedTag,
   ]);
 
   // console.log('>> session count | timer state', { sessionCount }, { timerState });
@@ -134,14 +135,14 @@ const TimerDashboard = () => {
   // called when reset is click
   const resetHandler = () => {
     if (isActive && timerState === 'pomodoro') {
-      addStudySession(timeLastStarted.toISOString(), new Date().toISOString(), authToken);
+      addStudySession(timeLastStarted.toISOString(), new Date().toISOString(), selectedTag, authToken);
     }
     handleModeChange(timerState);
   };
 
   // called when user toggles (play/pauses)
   const toggleTimerHandler = () => {
-    sendCachedData(authToken ?? '');
+    sendCachedData(authToken ?? '', selectedTag);
     // set time last started when user clicks play
     if (!isActive && timerState === 'pomodoro') {
       setTimeLastStarted(new Date(Date.now()));
@@ -151,7 +152,7 @@ const TimerDashboard = () => {
       if (!timeLastStarted) {
         return;
       }
-      addStudySession(timeLastStarted.toISOString(), new Date().toISOString(), authToken);
+      addStudySession(timeLastStarted.toISOString(), new Date().toISOString(), selectedTag, authToken);
     }
     toggleTimer();
   };
@@ -185,10 +186,7 @@ const TimerDashboard = () => {
   return (
     <>
       <div className="flex flex-col items-center">
-        <div className="pt-20">
-          <div className="flex flex-row items-center mb-10">
-            <h2 className="justify-center">{selectedTag}</h2>
-          </div>
+        <div className="pt-40">
           <p className="font-bold justify-self-center text-wabi-red">#{sessionCount}</p>
           <ClockFace minutes={minutes} seconds={seconds} />
         </div>

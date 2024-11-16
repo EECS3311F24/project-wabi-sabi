@@ -1,20 +1,20 @@
 import { useCallback, useEffect } from 'react';
 
 // calls backend to save study session
-export const addStudySession = async (startTime: string, endTime: string, authToken: string | null) => {
+export const addStudySession = async (startTime: string, endTime: string, tag: string, authToken: string | null) => {
   const response = await fetch('http://localhost:5000/study/', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       Authorization: authToken ? `Bearer ${authToken}` : '',
     },
-    body: JSON.stringify({ start_time: startTime, end_time: endTime }),
+    body: JSON.stringify({ start_time: startTime, end_time: endTime, tag: tag || null }),
   });
   return response;
 };
 
 // sends cached data to backend
-export const sendCachedData = (authToken: string) => {
+export const sendCachedData = (authToken: string, tag: string) => {
   const CACHE_KEY_START = 'unsavedStart';
   const CACHE_KEY_END = 'unsavedEnd';
 
@@ -22,7 +22,7 @@ export const sendCachedData = (authToken: string) => {
   const cachedEnd = localStorage.getItem(CACHE_KEY_END);
 
   if (cachedStart && cachedEnd) {
-    addStudySession(cachedStart, cachedEnd, authToken).then((success) => {
+    addStudySession(cachedStart, cachedEnd, tag, authToken).then((success) => {
       if (success) {
         console.log('we have done it');
         localStorage.removeItem(CACHE_KEY_START);
