@@ -157,9 +157,12 @@ const TodoDashboard = () => {
    *
    * @param taskId - a string of the task id
    * @param subTaskId - a string of the subtask id
+   * @param subtaskTitle - the title of the subtask
+   * @param isCompleted - the new completion status of the of the subtasks
    */
 
   const toggleSubtaskCompletion = async (taskId: string, subTaskId: string, subtaskTitle: string, isCompleted: boolean) => {
+    // make a PATCH request to update the completion status of the subtask
     try {
       const response = await fetch(`http://localhost:5000/task/${taskId}/${subTaskId}`, {
         method: 'PATCH',
@@ -183,11 +186,11 @@ const TodoDashboard = () => {
               : task,
           );
 
-          const parentTask = updatedTasks.find((task) => task.id === taskId);
-          const completionPercentage = parentTask ? calculateCompletionPercentage(parentTask) : 0;
-          if (completionPercentage === 100) {
+          const parentTask = updatedTasks.find((task) => task.id === taskId); //gets subtask parent task
+          const completionPercentage = parentTask ? calculateCompletionPercentage(parentTask) : 0; // calculate the completion percentage
+          if (completionPercentage === 100) { // if the completion percentage is 100% change the status of the parent task
             toggleCompletionCheckBox(taskId, true); 
-          }else{
+          }else{//if completion percentage is not 100 then the change the status of the 
             toggleCompletionCheckBox(taskId, false);
           }
 
@@ -228,9 +231,15 @@ const TodoDashboard = () => {
     }
   };
 
+  /**
+   * Calculates the completion percentage of a task 
+   * @param task - the task
+   * @returns the completion percentage of a task based on the number of subtasks completed. The number is roudned to the neareast integer.
+   */
+
   const calculateCompletionPercentage = (task: Task) => {
 
-    if(!task.sub_tasks || task.sub_tasks.length === 0) return 0;
+    if(!task.sub_tasks || task.sub_tasks.length === 0) return 0; //if task doesnt have a task then return 0
 
     let completedSubtasksCount = 0;
     for (let subtask of task.sub_tasks) {
