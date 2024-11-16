@@ -26,6 +26,7 @@ def make_study_document():
             end_time=datetime.datetime.fromisoformat(
                 data["end_time"].replace("Z", "+00:00")
             ),
+            tag=data.get("tag"),
         )
 
         new_study_session.save()
