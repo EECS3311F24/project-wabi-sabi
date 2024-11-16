@@ -47,6 +47,8 @@ def get_study_sessions():
     # get all the params of the study session
     # new session object
     try:
+        if len(user.get_study_sessions()) < 1:
+            return jsonify([]), 201
         study_session_json = [
             json_formatted(session) for session in user.get_study_sessions()
         ]

@@ -50,6 +50,8 @@ def return_user_tasks():
     try:
         tasks = user.get_tasks()
         print(f"Tasks: {tasks}, Type: {[type(task) for task in tasks]}")
+        if len(tasks) < 1:
+            return jsonify({"tasks": []}), 201
         tasks_json = [task.json_formatted() for task in tasks if isinstance(task, Task)]
         print(f"Tasks:{tasks_json}")
         return jsonify({"tasks": tasks_json}), 201
