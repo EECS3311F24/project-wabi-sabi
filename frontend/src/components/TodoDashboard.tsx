@@ -231,14 +231,18 @@ const TodoDashboard = () => {
   };
 
   /**
-   * Calculates the completion percentage of a task 
+   * Calculates the completion percentage of a task. If a task have subtasks then the completion percentage will be based on the 
+   * number of completed subtasks else the completion percentage will based on the status of the status(Its returns 0 if task.status
+   * is TODO and 100 is task.status is Finished).
    * @param task - the task
-   * @returns the completion percentage of a task based on the number of subtasks completed. The number is roudned to the neareast integer.
+   * @returns the completion percentage of a task.
    */
 
   const calculateCompletionPercentage = (task: Task) => {
 
-    if(!task.sub_tasks || task.sub_tasks.length === 0) return 0; //if task doesnt have a task then return 0
+    if(!task.sub_tasks || task.sub_tasks.length === 0){ //If a task has a zero subtasks then the completion percentage will be based on the status of the task.
+      return task.status == 'Finished' ? 100 : 0;
+    } 
 
     let completedSubtasksCount = 0;
     for (let subtask of task.sub_tasks) {
