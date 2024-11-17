@@ -21,7 +21,7 @@ const TimerDashboard = () => {
 
   const { isActive, toggleTimer, resetTimer, setTimer, minutes, seconds } = useCountdown({
     initialMinutes: 0,
-    initialSeconds: 5,
+    initialSeconds: 10,
   }); // contains actual countdown timer
 
   const { authToken } = useAuth(); // user authentication token
@@ -34,7 +34,7 @@ const TimerDashboard = () => {
   const [selectedTag, setSelectedTag] = useState<string>('');
 
   // saves last study session to cache when user reloads
-  useSaveDataOnReload({ timeLastStarted, isActive });
+  useSaveDataOnReload({ timeLastStarted, isActive, tagID: selectedTag });
 
   // save handler for saving last study session data to cache;
   // passed into registerSaveHandler so the DashboardContainer
@@ -57,7 +57,7 @@ const TimerDashboard = () => {
     resetTimer();
     setTimer({
       initialMinutes: 0,
-      initialSeconds: 5,
+      initialSeconds: 10,
     });
     setTimerState('pomodoro');
   }, [resetTimer, setTimer]);
@@ -79,7 +79,7 @@ const TimerDashboard = () => {
     resetTimer();
     setTimer({
       initialMinutes: 0,
-      initialSeconds: 5,
+      initialSeconds: 8,
     });
     setTimerState('longBreak');
   }, [authToken, isActive, resetTimer, selectedTag, setTimer, timeLastStarted, timerState]);
@@ -142,7 +142,7 @@ const TimerDashboard = () => {
 
   // called when user toggles (play/pauses)
   const toggleTimerHandler = () => {
-    sendCachedData(authToken ?? '', selectedTag);
+    sendCachedData(authToken ?? '');
     // set time last started when user clicks play
     if (!isActive && timerState === 'pomodoro') {
       setTimeLastStarted(new Date(Date.now()));
@@ -180,6 +180,7 @@ const TimerDashboard = () => {
 
   const handleTagChange = (value: string) => {
     setSelectedTag(value);
+    localStorage.setItem('lastTagSelected', value);
     console.log('Selected Tag', value);
   };
 

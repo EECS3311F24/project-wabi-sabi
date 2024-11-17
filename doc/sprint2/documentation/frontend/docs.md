@@ -15,6 +15,7 @@
 11. [TodoDashboard Component Documentation](#tododashboard-component-documentation)
 12. [AddTask Component Documentation](#addtask-component-documentation)
 13. [AddSubTask Component Documentation](#addsubtask-component-documentation)
+14. [TagDropdown Component Documentation](#tagdropdown-component-documentation)
 
 ---
 
@@ -93,8 +94,8 @@ The `DashboardContainer` should be used as a wrapper for all dashboard-related r
 - **Customization**: Additional elements can be added to the left and right sidebars as needed to enhance the dashboard layout.
 - **Responsive Design**: Ensure that the `.container` and sidebar classes are styled for responsiveness if the layout will be used on different screen sizes.
 - **Routing**: The `Outlet` component allows for flexible routing, enabling dynamic content display based on the current route.
-
-<br><br>
+- **Triggers Save Handler**: The DashboardContainer triggers the `saveDataToCache` function from the TimerDashboard whenever the user navigates away from the Timer.
+  <br><br>
 
 # Login Component Documentation
 
@@ -412,6 +413,7 @@ This component relies on:
 
 - **Custom Hooks**:
   - `useCountdown`: A hook to handle the countdown timer logic, including toggling, resetting, and setting the timer duration.
+  - `useSaveDataOnReload`: A hook that handles saving a study session to the cache when the user reloads the page.
 - **UI Components**:
   - `Button`: Used for various control actions (play, pause, reset, and mode switching).
   - `SelectedButton`: A visually distinct button for indicating the currently active timer mode.
@@ -446,6 +448,7 @@ This component relies on:
   - **Play/Pause Button**: Toggles the countdown timer.
   - **Reset Button**: Resets the current mode’s timer.
   - **Mode Buttons**: Switches the timer mode, with the selected mode visually highlighted.
+- **Automatically Saves Study Session In Background**: The timer automatically saves the user's study session data (duration and tag) when the user pauses, resets, skips the timer, or reloads or navigate away from the page
 
 ## Usage
 
@@ -457,7 +460,7 @@ Place the `TimerDashboard` component within the application where users can inte
 
 ## Overview
 
-The `TodoDashboard` component is a page for displaying the users task in a table and updating the table. Each table row has a checkbox to mark completion, task title, due date(optional) and the three dots icon for deletion. The page uses an button above the table that pops up another page, `AddTask` to add tasks. 
+The `TodoDashboard` component is a page for displaying the users task in a table and updating the table. Each table row has a checkbox to mark completion, task title, due date(optional) and the three dots icon for deletion. The page uses an button above the table that pops up another page, `AddTask` to add tasks.
 
 ## Dependencies
 
@@ -474,7 +477,7 @@ This component relies on:
 - **State Management**:
   - `tasks`: Tracks the currenly add task(including an empty one)
   - `dialogOpen`: Tracks if the pop page is open or not
-.
+    .
 - **Functions**:
   - `getTasks`: Makes a GET request to backend to get the list of tasks.
   - `addTask`: Makes a POST request to add a new task to the list and updates the on the table.
@@ -502,7 +505,7 @@ This component relies on:
 
 ## Overview
 
-The `AddTask` displays a form with two inputs and a button. The first one is for the task title, and the other one is for due date which is optional. It makes sure the user 
+The `AddTask` displays a form with two inputs and a button. The first one is for the task title, and the other one is for due date which is optional. It makes sure the user
 enters the title of the task before making a submission.
 
 ## Dependencies
@@ -519,7 +522,7 @@ This component relies on:
 
 Defines the properties of the prop for `AddTask` component:
 
-- **dialogOpen**: `boolean` - Manages the visibilty of the page(Open or Closed). 
+- **dialogOpen**: `boolean` - Manages the visibilty of the page(Open or Closed).
 - **setDialogOpen**: `(open: boolean) => void` - A fucntion that changes the dialog or the pop up page(Open or Closed).
 - **addTask**: `(taskTitle: string, dueDate?: string, subTasks?: string[]) => void` - A function that to add a task given a task title and user input.
 - **tasks**: `Task[]` - List of task that are in the table.
@@ -527,18 +530,19 @@ Defines the properties of the prop for `AddTask` component:
 ## Component Structure
 
 - **State Management**:
+
   - `taskTitle`: Stores the task's title.
   - `dueDate`: Stores the due date of a task. Its empty if the due date is not provided.
   - `emptyTitleError`: Manages the visibility of a warning message if the title is empty.
   - `subTasks`: Stores the list of subtasks. Initially empty
   - `taskNameError`: Tracks if the task being added is a duplicate.
 
-
 - **Functionality**:
   - `handleSubmit`: Makes sure that the task title is provided by the user. If the task title is provided it adds the task else it returns a warning message below task title input.
   - `handleSubtasksChange`: updates with the subtasks list passed from `AddSubTask`
 
 ## Functionality
+
 - **Input Validation**: It makes sure that a task title is provided before adding the task. If the title is missing, a warning message below task title input is displayed.
     Another warning is also displayed if a user tries to add a task thats already exists.
 - **Form Submission**: When the form is submitted a `addTask` is called to add the task.
@@ -550,7 +554,6 @@ Users can use the `AddTask` component within any dashboard or task list componen
 ## Additional Notes
 
 - **Error Feedback**: A warning text is displayed if the user tries to add a task without a task title. Another warning is also displayed if the user tries to add a duplicate task.
-
 
 <br><br>
 
@@ -581,6 +584,7 @@ Defines the properties of the prop for `AddTask` component:
 ## Component Structure
 
 - **State Management**:
+
   - `subTaskTitle`: Stores the subtask's title.
   - `subTasks`: Stores the list of subtasks. Initially empty
   - `isSubtaskDialogOpen`: Manages the visibility of the inner subtask dialogue popup.
@@ -590,6 +594,7 @@ Defines the properties of the prop for `AddTask` component:
   - `handleAddSubtask`: Makes sure that the subtask title is provided by the user. If the subtask title is provided it adds the subtask else it returns a warning message below subtask title input. It also makes sure the user does not add a duplicate subtask. If user tries to add a duplicate subtask, a warning shows below subtask title input.
 
 ## Functionality
+
 - **Input Validation**: It makes sure that a task title is provided before adding the subtask. If the title is missing, a warning message below subtask title input is displayed.
     If a subtask title is duplicate, a warning message below subtask title input is displayed.
 - **Form Submission**: When the form is submitted a `handleAddSubtask` is called to add the subtask into the list.
@@ -601,4 +606,75 @@ Users can use the `AddSubTask` component within any task list component where us
 
 ## Additional Notes
 
+
 - **Error Feedback**: A warning text is displayed if the user tries to add a subtask without a task title. Another warning shows up if the user tries to add a duplicate subtask.
+
+# TagDropdown Component Documentation
+
+## Overview
+
+The `TagDropdown` component provides a dropdown menu for selecting tags, with the ability to fetch tags from the backend and add new ones. It includes a dialog box that allows users to add new tags if the desired tag is not available in the existing list. The component also checks for duplicate tags before adding a new one.
+
+## Dependencies
+
+This component relies on:
+
+- **State Management**:
+  - `useState` and `useEffect` from React for managing state and fetching data on component mount.
+- **Custom UI Components**:
+  - **Select Components**: `Select`, `SelectTrigger`, `SelectContent`, `SelectValue`, `SelectItem` for the dropdown menu.
+  - **Dialog Components**: `Dialog`, `DialogContent`, `DialogFooter`, `DialogHeader`, `DialogTitle`, `DialogDescription` for the add tag dialog.
+  - **Input**: For entering the new tag name.
+  - **Label**: For form labeling.
+  - **Button**: For confirming tag addition.
+- **Authentication**:
+  - `useAuth` hook to access the `authToken` for authenticated backend requests.
+
+## Props
+
+### TagDropdownProps
+
+- **onSelectChange**: `(value: string) => void` - Callback function triggered when a tag is selected.
+- **className**: `string` (optional) - Additional class names for styling.
+- **isDisabled**: `boolean` (optional) - Determines if the dropdown should be disabled.
+
+## State Variables
+
+- **options**: Stores the list of available tags fetched from the backend.
+- **open**: Controls the visibility of the add tag dialog.
+- **newTag**: Stores the name of the tag being added.
+- **TagNameError**: Indicates if the new tag already exists (used for displaying error messages).
+- **authToken**: Retrieved using `useAuth` to authenticate API requests.
+
+## Interfaces
+
+### Tag
+
+- **id**: `string` - Unique identifier for each tag.
+- **text**: `string` - The name of the tag.
+
+## Component Functionality
+
+### Fetching Tags
+
+- **`fetchTags`**: Fetches the list of tags from the backend using the authenticated token and populates the dropdown options.
+
+### Adding Tags
+
+- **`addTag`**: Sends a POST request to the backend to add a new tag. If successful, it updates the tag list and closes the dialog.
+- **`handleAddTag`**: Validates if the new tag already exists. If it's a duplicate, it shows an error message; otherwise, it calls `addTag`.
+
+### Selecting a Tag
+
+- **`handleSelectChange`**: Triggered when a tag is selected from the dropdown, passing the selected value to the parent component through the `onSelectChange` callback.
+
+### Opening the Add Tag Dialog
+
+- **`handleAddClick`**: Opens the dialog box to add a new tag.
+
+## Usage
+
+### Example
+
+Place the `TagDropdown` component within a form or page where tag selection is required. The component handles fetching and adding tags automatically.
+
