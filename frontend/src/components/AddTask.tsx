@@ -59,7 +59,6 @@ const AddTask: React.FC<AddTaskProps> = ({ dialogOpen, setDialogOpen, addTask, t
   //It doesn't show up at first so it's false.
   const [emptyTitleError, setEmptyTitleError] = useState(false);
 
-
   const [taskNameError, setTaskNameError] = useState(false); // state to track if the task already exists.
 
   // updates handleSubtasksChange prop from TodoDashboard.tsx
@@ -87,7 +86,7 @@ const AddTask: React.FC<AddTaskProps> = ({ dialogOpen, setDialogOpen, addTask, t
 
     const isTaskDuplicate = tasks.some((task) => task.text.toLowerCase() === taskTitle.trim().toLowerCase());
 
-    if(isTaskDuplicate){
+    if (isTaskDuplicate) {
       setTaskNameError(true);
       return;
     }
