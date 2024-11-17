@@ -483,6 +483,7 @@ This component relies on:
   - `addTask`: Makes a POST request to add a new task to the list and updates the on the table.
   - `toggleCompletionCheckBox`: Updates the completion status of a task.
   - `deleteTask`: Deletes a task from the list and updates the table.
+  - `toggleSubtaskCompletion`: Updates the completion status of a subtask.
 
 ## Usage
 
@@ -490,10 +491,13 @@ This component relies on:
 2. **Adding a Task**: Opens the `AddTask` dialog, where the user can add a new task. If a title is provided, it triggers `addTask` to add the task to the backend and update the UI.
 3. **Marking Tasks as Complete**: Toggles the completion status using `toggleCompletionCheckBox`.
 4. **Deleting a Task**: Deletes the task from the list and the backend using `deleteTask`.
+5. **Marking Subtasks as Complete**: Toggles the completion status using `toggleSubtaskCompletion`.
+6. **calculateCompletionPercentage**: Calulates the completion percentage of a task based on the number completed of subtasks. If a task doesn't have subtasks, then the completion percentage of a task will be based on the completion status of the task itself.(whether it's checked or unchecheked)
 
 ## Additional Notes
 
-- **Error Handling**: All errors occured while make a reqeust a backend are logged to the console.
+- **Error Handling**:  All errors that occur while making a reqeust to the backend are logged to the console.
+
 
 <br><br>
 
@@ -521,6 +525,7 @@ Defines the properties of the prop for `AddTask` component:
 - **dialogOpen**: `boolean` - Manages the visibilty of the page(Open or Closed).
 - **setDialogOpen**: `(open: boolean) => void` - A fucntion that changes the dialog or the pop up page(Open or Closed).
 - **addTask**: `(taskTitle: string, dueDate?: string, subTasks?: string[]) => void` - A function that to add a task given a task title and user input.
+- **tasks**: `Task[]` - List of task that are in the table.
 
 ## Component Structure
 
@@ -530,6 +535,7 @@ Defines the properties of the prop for `AddTask` component:
   - `dueDate`: Stores the due date of a task. Its empty if the due date is not provided.
   - `emptyTitleError`: Manages the visibility of a warning message if the title is empty.
   - `subTasks`: Stores the list of subtasks. Initially empty
+  - `taskNameError`: Tracks if the task being added is a duplicate.
 
 - **Functionality**:
   - `handleSubmit`: Makes sure that the task title is provided by the user. If the task title is provided it adds the task else it returns a warning message below task title input.
@@ -538,6 +544,7 @@ Defines the properties of the prop for `AddTask` component:
 ## Functionality
 
 - **Input Validation**: It makes sure that a task title is provided before adding the task. If the title is missing, a warning message below task title input is displayed.
+    Another warning is also displayed if a user tries to add a task thats already exists.
 - **Form Submission**: When the form is submitted a `addTask` is called to add the task.
 
 ## Usage
@@ -546,7 +553,7 @@ Users can use the `AddTask` component within any dashboard or task list componen
 
 ## Additional Notes
 
-- **Error Feedback**: A warning text is displayed if the user tries to add a task without a task title.
+- **Error Feedback**: A warning text is displayed if the user tries to add a task without a task title. Another warning is also displayed if the user tries to add a duplicate task.
 
 <br><br>
 
@@ -581,14 +588,17 @@ Defines the properties of the prop for `AddTask` component:
   - `subTaskTitle`: Stores the subtask's title.
   - `subTasks`: Stores the list of subtasks. Initially empty
   - `isSubtaskDialogOpen`: Manages the visibility of the inner subtask dialogue popup.
+  - `subtaskNameError`: Tracks if the subtask being added is a duplicate.
 
 - **Functionality**:
-  - `handleAddSubtask`: Makes sure that the subtask title is provided by the user. If the subtask title is provided it adds the subtask else it returns a warning message below task title input.
+  - `handleAddSubtask`: Makes sure that the subtask title is provided by the user. If the subtask title is provided it adds the subtask else it returns a warning message below subtask title input. It also makes sure the user does not add a duplicate subtask. If user tries to add a duplicate subtask, a warning shows below subtask title input.
 
 ## Functionality
 
 - **Input Validation**: It makes sure that a task title is provided before adding the subtask. If the title is missing, a warning message below subtask title input is displayed.
+    If a subtask title is duplicate, a warning message below subtask title input is displayed.
 - **Form Submission**: When the form is submitted a `handleAddSubtask` is called to add the subtask into the list.
+- **Subtask Deletion**: A dropdown menu that lets user delete a subtask from the list of the subtask they want to add. (The deletion happens before the form is submitted)
 
 ## Usage
 
@@ -596,7 +606,8 @@ Users can use the `AddSubTask` component within any task list component where us
 
 ## Additional Notes
 
-- **Error Feedback**: A warning text is displayed if the user tries to add a subtask without a task title.
+
+- **Error Feedback**: A warning text is displayed if the user tries to add a subtask without a task title. Another warning shows up if the user tries to add a duplicate subtask.
 
 # TagDropdown Component Documentation
 
@@ -666,3 +677,4 @@ This component relies on:
 ### Example
 
 Place the `TagDropdown` component within a form or page where tag selection is required. The component handles fetching and adding tags automatically.
+
