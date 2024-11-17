@@ -5,6 +5,8 @@ import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuIte
 import AddTask from './AddTask';
 import threeDots from '../assets/three-dots.svg';
 import { Checkbox } from './ui/checkbox';
+import rightArrow from '../assets/right-arrow.svg';
+import downArrow from '../assets/down-arrow.svg';
 
 // this defines users' task property for rendering in a table
 interface Task {
@@ -126,11 +128,8 @@ const TodoDashboard = () => {
 
   const toggleCompletionCheckBox = async (taskId: string, isCompleted: boolean) => {
     try {
-      // Define new status and subtask completion value based on `isCompleted`
       const newStatus = isCompleted ? 'Finished' : 'Todo';
-      const newSubtaskCompletion = isCompleted; // Set all subtasks to true if task is finished, false otherwise
-
-      // Make the PATCH request to update the task's status on the backend
+      
       const response = await fetch(`http://localhost:5000/task/${taskId}`, {
         method: 'PATCH',
         headers: {
@@ -142,20 +141,7 @@ const TodoDashboard = () => {
 
       if (response.ok) {
         // Update the task's status and subtasks in the frontend state
-        setTasks((prevTasks) =>
-          prevTasks.map((task) =>
-            task.id === taskId
-              ? {
-                  ...task,
-                  status: newStatus,
-                  sub_tasks: task.sub_tasks?.map((subtask) => ({
-                    ...subtask,
-                    completed: newSubtaskCompletion, // Set all subtasks to `true` if the task is marked as finished
-                  })),
-                }
-              : task,
-          ),
-        );
+        getTasks();
       } else {
         console.error('Error updating task:', await response.text());
       }
@@ -170,23 +156,53 @@ const TodoDashboard = () => {
    *
    * @param taskId - a string of the task id
    * @param subTaskId - a string of the subtask id
+   * @param subtaskTitle - the title of the subtask
+   * @param isCompleted - the new completion status of the of the subtasks
    */
 
-  const toggleSubtaskCompletion = (taskId: string, subTaskId: string) => {
-    setTasks((prevTasks) => {
-      const updatedTasks = prevTasks.map((task) =>
-        task.id === taskId
-          ? {
-              ...task,
-              sub_tasks:
-                task.sub_tasks?.map((subtask) =>
-                  subtask.id === subTaskId ? { ...subtask, completed: !subtask.completed } : subtask,
-                ) ?? [],
-            }
-          : task,
-      );
-      return updatedTasks;
-    });
+  const toggleSubtaskCompletion = async (taskId: string, subTaskId: string, subtaskTitle: string, isCompleted: boolean) => {
+    // make a PATCH request to update the completion status of the subtask
+    try {
+      const response = await fetch(`http://localhost:5000/task/${taskId}/${subTaskId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authToken}`,
+        },
+        body: JSON.stringify({ text: subtaskTitle, completed: isCompleted }),
+      });
+
+      if (response.ok) {
+        setTasks((prevTasks) => {
+          const updatedTasks = prevTasks.map((task) =>
+            task.id === taskId
+              ? {
+                  ...task,
+                  sub_tasks: task.sub_tasks?.map((subtask) =>
+                    subtask.id === subTaskId ? { ...subtask, completed: isCompleted } : subtask
+                  ) ?? [],
+                }
+              : task,
+          );
+
+          const parentTask = updatedTasks.find((task) => task.id === taskId); //gets subtask parent task
+          const completionPercentage = parentTask ? calculateCompletionPercentage(parentTask) : 0; // calculate the completion percentage
+          if (completionPercentage === 100) { // if the completion percentage is 100% change the status of the parent task
+            toggleCompletionCheckBox(taskId, true); 
+          }else{//if completion percentage is not 100 then the change the status of the 
+            toggleCompletionCheckBox(taskId, false);
+          }
+
+          return updatedTasks;
+        });
+
+       
+      } else {
+        console.error(await response.text());
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   /**
@@ -214,6 +230,34 @@ const TodoDashboard = () => {
     }
   };
 
+  /**
+   * Calculates the completion percentage of a task. If a task have subtasks then the completion percentage will be based on the 
+   * number of completed subtasks else the completion percentage will based on the status of the status(Its returns 0 if task.status
+   * is TODO and 100 is task.status is Finished).
+   * @param task - the task
+   * @returns the completion percentage of a task.
+   */
+
+  const calculateCompletionPercentage = (task: Task) => {
+
+    if(!task.sub_tasks || task.sub_tasks.length === 0){ //If a task has a zero subtasks then the completion percentage will be based on the status of the task.
+      return task.status == 'Finished' ? 100 : 0;
+    } 
+
+    let completedSubtasksCount = 0;
+    for (let subtask of task.sub_tasks) {
+      if (subtask.completed) {
+        completedSubtasksCount++; 
+      }
+    }
+
+    const completionPercentage = (completedSubtasksCount / task.sub_tasks.length) * 100; 
+
+    return Math.round(completionPercentage);
+
+  }
+
+
   useEffect(() => {
     // requests the table from backend and renders the table once the page loads
     getTasks();
@@ -222,7 +266,7 @@ const TodoDashboard = () => {
   return (
     <div className="w-full flex flex-col items-center mt-6">
       <h1 className="text-3xl text-wabi-red font-bold mb-4">To do List</h1>
-      <AddTask dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} addTask={addTask} />
+      <AddTask dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} addTask={addTask} tasks={tasks}/>
       <div className="rounded-md border w-3/4 mx-auto bg-white border-wabi-btn-primary-unselected">
         <Table>
           <TableHeader>
@@ -239,8 +283,8 @@ const TodoDashboard = () => {
           <TableBody>
             {tasks.length === 0 ? ( // If users dont have any tasks then display "you don't have a task"
               <TableRow>
-                <TableCell colSpan={5} className="h-12 text-center">
-                  You don't have any tasks
+                <TableCell colSpan={7} className="h-12 text-center">
+                  You don't have any task
                 </TableCell>
               </TableRow>
             ) : (
@@ -257,7 +301,9 @@ const TodoDashboard = () => {
                     </TableCell>
                     {/* Expand/collapse arrow */}
                     <TableCell className="w-10 cursor-pointer" onClick={() => toggleExpandTask(task.id)}>
-                      {expandedTasks.includes(task.id) ? '▼' : '▶'}
+                      {task.sub_tasks && task.sub_tasks.length > 0 ? 
+                      (<img src={expandedTasks.includes(task.id) ? downArrow : rightArrow} alt="Toggle Subtasks" />) : null
+                    }
                     </TableCell>
 
                     {/* title section */}
@@ -272,7 +318,7 @@ const TodoDashboard = () => {
 
                     {/* Task completion section */}
                     <TableCell className="text-center font-medium">
-                      {task.status === 'Finished' ? '100%' : '0%'}
+                      {calculateCompletionPercentage(task)}%
                     </TableCell>
 
                     {/* The dropdown menu section to delete a task */}
@@ -302,7 +348,7 @@ const TodoDashboard = () => {
                         <TableCell className="w-10">
                           <Checkbox
                             checked={subtask.completed}
-                            onCheckedChange={() => toggleSubtaskCompletion(task.id, subtask.id)}
+                            onCheckedChange={() => toggleSubtaskCompletion(task.id, subtask.id, subtask.text, !subtask.completed)}
                             aria-label="Select subtask"
                           />
                         </TableCell>
