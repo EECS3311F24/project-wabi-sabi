@@ -14,15 +14,17 @@ export const addStudySession = async (startTime: string, endTime: string, tag: s
 };
 
 // sends cached data to backend
-export const sendCachedData = (authToken: string, tag: string) => {
+export const sendCachedData = (authToken: string) => {
   const CACHE_KEY_START = 'unsavedStart';
   const CACHE_KEY_END = 'unsavedEnd';
+  const CACHE_KEY_TAG = 'lastTagSelected';
 
   const cachedStart = localStorage.getItem(CACHE_KEY_START);
   const cachedEnd = localStorage.getItem(CACHE_KEY_END);
+  const cachedTag = localStorage.getItem(CACHE_KEY_TAG);
 
   if (cachedStart && cachedEnd) {
-    addStudySession(cachedStart, cachedEnd, tag, authToken).then((success) => {
+    addStudySession(cachedStart, cachedEnd, cachedTag ?? '', authToken).then((success) => {
       if (success) {
         console.log('we have done it');
         localStorage.removeItem(CACHE_KEY_START);
@@ -35,18 +37,20 @@ export const sendCachedData = (authToken: string, tag: string) => {
 interface UseSaveDataOnReloadProps {
   timeLastStarted: Date;
   isActive: boolean;
+  tagID: string;
 }
 
 // is called when user reloads page, getting last saved study session from cache
-export const useSaveDataOnReload = ({ timeLastStarted, isActive }: UseSaveDataOnReloadProps) => {
+export const useSaveDataOnReload = ({ timeLastStarted, isActive, tagID }: UseSaveDataOnReloadProps) => {
   const CACHE_KEY_START = 'unsavedStart';
   const CACHE_KEY_END = 'unsavedEnd';
-
+  const CACHE_KEY_TAG = 'lastTagSelected';
   // saves last study duration to cache
   const saveDataToCache = useCallback(() => {
     localStorage.setItem(CACHE_KEY_START, timeLastStarted.toISOString());
     localStorage.setItem(CACHE_KEY_END, new Date().toISOString());
-  }, [timeLastStarted]);
+    localStorage.setItem(CACHE_KEY_TAG, tagID);
+  }, [tagID, timeLastStarted]);
 
   // save data before user reloads the page
   useEffect(() => {

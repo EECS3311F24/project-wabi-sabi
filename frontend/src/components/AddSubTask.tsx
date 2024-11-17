@@ -33,11 +33,14 @@ const AddSubTask: React.FC<SubTasksProps> = ({ parentTaskId, onSubtasksChange })
 
   const handleAddSubtask = () => {
     if (subTaskTitle.trim()) {
-      const isSubTaskDuplicate = subTasks.some((subtask) => subtask.text.toLowerCase() === subTaskTitle.trim().toLowerCase());
-      if(isSubTaskDuplicate){ //If the subtask title is a duplicate display the error
-        setSubtaskNameError(true); 
+      const isSubTaskDuplicate = subTasks.some(
+        (subtask) => subtask.text.toLowerCase() === subTaskTitle.trim().toLowerCase(),
+      );
+      if (isSubTaskDuplicate) {
+        //If the subtask title is a duplicate display the error
+        setSubtaskNameError(true);
         return;
-      }else{
+      } else {
         setSubtaskNameError(false);
 
         const newSubTask = {
@@ -50,8 +53,6 @@ const AddSubTask: React.FC<SubTasksProps> = ({ parentTaskId, onSubtasksChange })
         setSubTaskTitle('');
         setIsSubtaskDialogOpen(false);
       }
-
-      
     }
   };
 
@@ -59,13 +60,12 @@ const AddSubTask: React.FC<SubTasksProps> = ({ parentTaskId, onSubtasksChange })
    * deletes the the subtask on the fronted
    * @param subtaskId - the id of the task
    */
-  const handleDeleteSubtask = (subtaskId: String) => {
-
+  const handleDeleteSubtask = (subtaskId: string) => {
     setSubTasks((prev) => {
       const updatedSubtasksList = [];
 
-      for(let i=0; i < prev.length; i++){
-        if(prev[i].id !== subtaskId){
+      for (let i = 0; i < prev.length; i++) {
+        if (prev[i].id !== subtaskId) {
           updatedSubtasksList.push(prev[i]);
         }
       }
@@ -85,13 +85,17 @@ const AddSubTask: React.FC<SubTasksProps> = ({ parentTaskId, onSubtasksChange })
             <TableHead className="text-left px-5 py-2">Subtasks</TableHead>
             <TableHead className="text-right px-5 py-2 flex items-center justify-end">
               {/* Subtask Inner Dialog */}
-              <Dialog open={isSubtaskDialogOpen} onOpenChange={(open) => {
-                setIsSubtaskDialogOpen(open);
-                if(open){//whenever user opens up the popup page set the title input to empty and remove any warning from previous pages
-                  setSubTaskTitle(''); 
-                  setSubtaskNameError(false); 
-                }
-              }}>
+              <Dialog
+                open={isSubtaskDialogOpen}
+                onOpenChange={(open) => {
+                  setIsSubtaskDialogOpen(open);
+                  if (open) {
+                    //whenever user opens up the popup page set the title input to empty and remove any warning from previous pages
+                    setSubTaskTitle('');
+                    setSubtaskNameError(false);
+                  }
+                }}
+              >
                 <DialogTrigger asChild>
                   <button onClick={() => setIsSubtaskDialogOpen(true)} className="m-auto mt-1">
                     <img src={plus} width="20px" />
@@ -104,14 +108,16 @@ const AddSubTask: React.FC<SubTasksProps> = ({ parentTaskId, onSubtasksChange })
                   </DialogHeader>
                   <Input
                     value={subTaskTitle}
-                    onChange={(e) => { 
+                    onChange={(e) => {
                       setSubTaskTitle(e.target.value);
-                      if(subTaskTitle){setSubtaskNameError(false);} // when the user starts typing remove the error warning
+                      if (subTaskTitle) {
+                        setSubtaskNameError(false);
+                      } // when the user starts typing remove the error warning
                     }}
                     placeholder="Subtask Title"
                   />
                   {/* If the subtask title is duplicate display the warning */}
-                  {subtaskNameError && <p className="text-red-500 text-sm ml-1">The subtask already exists</p>} 
+                  {subtaskNameError && <p className="text-red-500 text-sm ml-1">The subtask already exists</p>}
                   <Button onClick={handleAddSubtask}>Add Subtask</Button>
                 </DialogContent>
               </Dialog>
@@ -128,28 +134,22 @@ const AddSubTask: React.FC<SubTasksProps> = ({ parentTaskId, onSubtasksChange })
           ) : (
             subTasks.map((subtask, index) => (
               <TableRow key={index} className="hover:bg-gray-50 flex justify-between items-center">
-                <TableCell className="text-left px-5 font-medium" >
-                  {subtask.text}
-                </TableCell>
+                <TableCell className="text-left px-5 font-medium">{subtask.text}</TableCell>
 
                 {/* A dropdown menu  section to delete the subtasks on the frontend */}
                 <TableCell className="text-right">
                   <DropdownMenu>
-
                     <DropdownMenuTrigger asChild>
-                        <button className="p-2 rounded-full hover:bg-gray-100">
-                          <img src={threeDots} alt="Delete" className="h-5 w-5"/>
-                        </button>
+                      <button className="p-2 rounded-full hover:bg-gray-100">
+                        <img src={threeDots} alt="Delete" className="h-5 w-5" />
+                      </button>
                     </DropdownMenuTrigger>
 
-                   <DropdownMenuContent align="end">
-
-                      <DropdownMenuItem className="text-red-500" onClick={() => handleDeleteSubtask(subtask.id)}> 
-                          Delete
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem className="text-red-500" onClick={() => handleDeleteSubtask(subtask.id)}>
+                        Delete
                       </DropdownMenuItem>
-
-                   </DropdownMenuContent>
-
+                    </DropdownMenuContent>
                   </DropdownMenu>
                 </TableCell>
               </TableRow>
