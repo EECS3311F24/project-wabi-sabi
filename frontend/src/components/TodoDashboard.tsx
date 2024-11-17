@@ -266,7 +266,7 @@ const TodoDashboard = () => {
   return (
     <div className="w-full flex flex-col items-center mt-6">
       <h1 className="text-3xl text-wabi-red font-bold mb-4">To do List</h1>
-      <AddTask dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} addTask={addTask} />
+      <AddTask dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} addTask={addTask} tasks={tasks}/>
       <div className="rounded-md border w-3/4 mx-auto bg-white border-wabi-btn-primary-unselected">
         <Table>
           <TableHeader>
