@@ -608,7 +608,7 @@ Users can use the `AddSubTask` component within any task list component where us
 
 
 - **Error Feedback**: A warning text is displayed if the user tries to add a subtask without a task title. Another warning shows up if the user tries to add a duplicate subtask.
-
+<br><br>
 # TagDropdown Component Documentation
 
 ## Overview
