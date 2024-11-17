@@ -67,17 +67,31 @@
 
 ## Document Parameters
 
-- **is_sub_task**: `boolean`- if the Task is the subtask of another task
 - **text**: `string`- A Tasks text content
 - **tag**: `Tag` - The Tag the Task is labeled with
 - **status**: `string` - the Task's status
-- **sub_tasks**: `Task[]` - subtasks within the task
+- **sub_tasks**: `SubTask[]` - subtasks within the task
 
 ## Methods:
 
 ### set_status(string:new_status)
 
 **PARAM: new_status**: A status string
+
+### to_json()
+
+**RETURN:**: The parameters of a Task object as a json array
+
+# SubTask Documentation
+
+## Overview:
+
+`Task` is a class used to manage task documents in the MongoDB database.
+
+## Document Parameters
+
+- **text**: `string`- A Tasks text content
+- **completed**: `boolean` - if the task has been flagged as completed
 
 ### to_json()
 
@@ -144,7 +158,7 @@ Creates a new user object based on the passed in parameters.
 
 #### **RESPONSES**:
 
-- 400: Invalid sign in, couldn't register user, or user already exists in database.
+- 500: Invalid sign in, couldn't register user, or user already exists in database.
 - 201: User registered successfully
 
 ## Routes:
@@ -181,7 +195,7 @@ Routes related to Task management, handles adding, getting, editing, and removin
 
 ## Routes:
 
-### /tasks/add
+### /task
 
 #### **METHODS**:
 
@@ -199,7 +213,7 @@ Routes related to Task management, handles adding, getting, editing, and removin
 
 #### **RESPONSES**:
 
-400:
+500:
 
 - Error thrown creating Task
 - `returns` error
@@ -212,7 +226,7 @@ Routes related to Task management, handles adding, getting, editing, and removin
 
 - Task created successfully
 
-### /tasks/get
+### /task
 
 #### **METHODS**:
 
@@ -224,7 +238,7 @@ Routes related to Task management, handles adding, getting, editing, and removin
 
 #### **RESPONSES**:
 
-400:
+500:
 
 - Error thrown getting Tasks for user.
 - `returns` error
@@ -238,7 +252,7 @@ Routes related to Task management, handles adding, getting, editing, and removin
 - Task created successfully
 - `returns` json array of tasks
 
-### /tasks/edit
+### /task<task_id>
 
 #### **METHODS**:
 
@@ -255,7 +269,7 @@ Routes related to Task management, handles adding, getting, editing, and removin
 
 #### **RESPONSES**:
 
-400:
+500:
 
 - Error thrown editing task
 - `returns` error
@@ -268,7 +282,7 @@ Routes related to Task management, handles adding, getting, editing, and removin
 
 - Task updated successfully
 
-### /tasks/rm
+### /task/<task_id>
 
 #### **METHODS**:
 
@@ -284,7 +298,36 @@ Routes related to Task management, handles adding, getting, editing, and removin
 
 #### **RESPONSES**:
 
-400:
+500:
+
+- Error thrown removing task
+- `returns` error
+
+401:
+
+- Invalid session token
+
+  201:
+
+- Task removed successfully
+
+### /task/<task_id>/<subtask_id>
+
+#### **METHODS**:
+
+- PATCH
+
+#### **HEADER**:
+
+- jwt token
+
+#### **JSON BODY**:
+
+- completion:boolean (REQUIRED)
+
+#### **RESPONSES**:
+
+500:
 
 - Error thrown removing task
 - `returns` error
@@ -303,7 +346,7 @@ Routes related to Task management, handles adding, getting, editing, and removin
 
 Routes related to study sessions
 
-### /study/add
+### /study
 
 #### **METHODS**:
 
@@ -321,7 +364,7 @@ Routes related to study sessions
 
 #### **RESPONSES**:
 
-400:
+500:
 
 - Error thrown creating study session
 - `returns` error
@@ -334,7 +377,7 @@ Routes related to study sessions
 
 - Study Session created successfully
 
-### /study/get
+### /study
 
 #### **METHODS**:
 
@@ -346,7 +389,7 @@ Routes related to study sessions
 
 #### **RESPONSES**:
 
-400:
+500:
 
 - Error thrown creating study session
 - `returns` error
@@ -366,7 +409,7 @@ Routes related to study sessions
 
 Routes related to Tags
 
-### /tag/add
+### /tag
 
 #### **METHODS**:
 
@@ -382,7 +425,7 @@ Routes related to Tags
 
 #### **RESPONSES**:
 
-400:
+500:
 
 - Error thrown creating Tag
 - `returns` error
@@ -395,7 +438,7 @@ Routes related to Tags
 
 - Tag created successfully
 
-### /tag/edit
+### /tag
 
 #### **METHODS**:
 
@@ -412,7 +455,7 @@ Routes related to Tags
 
 #### **RESPONSES**:
 
-400:
+500:
 
 - Error thrown editing tag
 - `returns` error
