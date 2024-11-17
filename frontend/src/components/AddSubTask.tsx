@@ -23,6 +23,7 @@ const AddSubTask: React.FC<SubTasksProps> = ({ parentTaskId, onSubtasksChange })
   const [subTasks, setSubTasks] = useState<SubTask[]>([]);
   const [subTaskTitle, setSubTaskTitle] = useState('');
   const [isSubtaskDialogOpen, setIsSubtaskDialogOpen] = useState(false);
+  const [subtaskNameError, setSubtaskNameError] = useState(false); // state to track if the subtask already exists.
 
   useEffect(() => {
     onSubtasksChange(subTasks); // Notify parent of subtask changes
@@ -30,15 +31,25 @@ const AddSubTask: React.FC<SubTasksProps> = ({ parentTaskId, onSubtasksChange })
 
   const handleAddSubtask = () => {
     if (subTaskTitle.trim()) {
-      const newSubTask = {
-        id: Date.now().toString(), // Use a timestamp or UUID library for unique IDs
-        text: subTaskTitle,
-        parentTaskId,
-        completed: false,
-      };
-      setSubTasks((prev) => [...prev, newSubTask]);
-      setSubTaskTitle('');
-      setIsSubtaskDialogOpen(false);
+      const isSubTaskDuplicate = subTasks.some((subtask) => subtask.text.toLowerCase() === subTaskTitle.trim().toLowerCase());
+      if(isSubTaskDuplicate){ //If the subtask title is a duplicate display the error
+        setSubtaskNameError(true); 
+        return;
+      }else{
+        setSubtaskNameError(false);
+
+        const newSubTask = {
+          id: Date.now().toString(), // Use a timestamp or UUID library for unique IDs
+          text: subTaskTitle,
+          parentTaskId,
+          completed: false,
+        };
+        setSubTasks((prev) => [...prev, newSubTask]);
+        setSubTaskTitle('');
+        setIsSubtaskDialogOpen(false);
+      }
+
+      
     }
   };
 
@@ -53,7 +64,13 @@ const AddSubTask: React.FC<SubTasksProps> = ({ parentTaskId, onSubtasksChange })
             <TableHead className="text-left px-5 py-2">Subtasks</TableHead>
             <TableHead className="text-right px-5 py-2">
               {/* Subtask Inner Dialog */}
-              <Dialog open={isSubtaskDialogOpen} onOpenChange={setIsSubtaskDialogOpen}>
+              <Dialog open={isSubtaskDialogOpen} onOpenChange={(open) => {
+                setIsSubtaskDialogOpen(open);
+                if(open){//whenever user opens up the popup page set the title input to empty and remove any warning from previous pages
+                  setSubTaskTitle(''); 
+                  setSubtaskNameError(false); 
+                }
+              }}>
                 <DialogTrigger asChild>
                   <button onClick={() => setIsSubtaskDialogOpen(true)} className="m-auto mt-1">
                     <img src={plus} width="20px" />
@@ -66,10 +83,14 @@ const AddSubTask: React.FC<SubTasksProps> = ({ parentTaskId, onSubtasksChange })
                   </DialogHeader>
                   <Input
                     value={subTaskTitle}
-                    onChange={(e) => setSubTaskTitle(e.target.value)}
+                    onChange={(e) => { 
+                      setSubTaskTitle(e.target.value);
+                      if(subTaskTitle){setSubtaskNameError(false);} // when the user starts typing remove the error warning
+                    }}
                     placeholder="Subtask Title"
-                    className="mb-4"
                   />
+                  {/* If the subtask title is duplicate display the warning */}
+                  {subtaskNameError && <p className="text-red-500 text-sm ml-1">The subtask already exists</p>} 
                   <Button onClick={handleAddSubtask}>Add Subtask</Button>
                 </DialogContent>
               </Dialog>
