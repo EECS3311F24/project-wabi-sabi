@@ -49,7 +49,56 @@ paths:
           description: "Successful login, JWT token returned"
         401:
           description: "Invalid email or password"
-  /tasks/add:
+  /task/<task_id>:
+    delete:
+      summary: "Delete task object"
+      description: "Delete a new task object in the task collection, based on the passed in task_id and the data in the JSON body"
+      Authorization: Bearer <token>
+      parameters:
+        - in: "header"
+          name: "Authorization"
+          description: "Bearer token for authentication"
+          required: true
+          schema:
+            type: "string"
+            example: "Bearer "
+      responses:
+        201:
+          description: "Task removed successfully"
+        500:
+          description: "Task not removed successfully (includes error message)"
+        401:
+          description: "Invalid jwt session token"
+  /task/<task_id>:
+    patch:
+      summary: "Edit task object"
+      description: "Edits a task object in the task collection, based on the passed in task_id and the data in the JSON body"
+      Authorization: Bearer <token>
+      parameters:
+        - in: "header"
+          name: "Authorization"
+          description: "Bearer token for authentication"
+          required: true
+          schema:
+            type: "string"
+            example: "Bearer "
+        - in: "body"
+          name: "body"
+          description: "Task data"
+          required: true
+          schema:
+            type: "object"
+            properties:
+              text:
+                type: "string"
+      responses:
+        201:
+          description: "Task created successfully"
+        500:
+          description: "Task not created successfully (includes error message)"
+        401:
+          description: "Invalid jwt session token"
+  /task:
     post:
       summary: "Add task object"
       description: "Adds a new task object to the task collection, as well as adds it to the user who requested"
@@ -74,11 +123,11 @@ paths:
       responses:
         201:
           description: "Task created successfully"
-        400:
+        500:
           description: "Task not created successfully (includes error message)"
         401:
           description: "Invalid jwt session token"
-  /tasks/get:
+  /task:
     get:
       summary: "Get list of a users tasks"
       Authorization: Bearer <token>
@@ -119,11 +168,11 @@ paths:
             status:
               type: "String"
 
-        400:
+        500:
           description: "Error with getting Tasks"
         401:
           description: "Invalid jwt session token"
-  /tasks/edit:
+  /task:
     patch:
       summary: "Edit user task"
       description: "Update the status of a specific task for the authenticated user."
@@ -156,9 +205,9 @@ paths:
           description: "Task edited successfully"
         401:
           description: "Invalid jwt session token"
-        400:
+        500:
           description: "Error occurred during task editing"
-  /tasks/rm:
+  /task:
     delete:
       summary: "Delete user task"
       description: "Delete a specific task for the authenticated user."
@@ -187,9 +236,9 @@ paths:
           description: "Task deleted successfully"
         401:
           description: "Invalid jwt session token"
-        400:
+        500:
           description: "Error occurred during task deletion"
-  /study/add:
+  /study:
     post:
       summary: "Add a study session"
       description: "Creates a new study session record for the authenticated user."
@@ -224,39 +273,120 @@ paths:
           description: "Study session recorded successfully"
         401:
           description: "Invalid jwt session token"
-        400:
+        500:
           description: "Error occurred while adding study session"
-  # /study/get:
-  #   get:
-  #     summary: "Get all study sessions"
-  #     description: "Retrieves all study sessions for the authenticated user."
-  #     parameters:
-  #       - in: "header"
-  #         name: "Authorization"
-  #         description: "Bearer token for authentication"
-  #         required: true
-  #         schema:
-  #           type: "string"
-  #           example: "Bearer "
-  #     responses:
-  #       201:
-  #         description: "List of study sessions retrieved successfully"
-  #         content:
-  #           application/json:
-  #             schema:
-  #               type: "array"
-  #               items:
-  #                 type: "object"
-  #                 properties:
-  #                   start_time:
-  #                     type: "string"
-  #                     description: "Start time of the study session"
-  #                     example: "2024-11-03T10:00:00Z"
-  #                   end_time:
-  #                     type: "string"
-  #                     description: "End time of the study session"
-  #                     example: "2024-11-03T11:00:00Z"
-  #       401:
-  #         description: "Invalid jwt session token"
-  #       400:
-  #         description: "Error occurred while retrieving study sessions"
+   /study:
+     get:
+       summary: "Get all study sessions"
+       description: "Retrieves all study sessions for the authenticated user."
+       parameters:
+         - in: "header"
+           name: "Authorization"
+           description: "Bearer token for authentication"
+           required: true
+           schema:
+             type: "string"
+             example: "Bearer "
+       responses:
+         201:
+           description: "List of study sessions retrieved successfully"
+           content:
+             application/json:
+               schema:
+                 type: "array"
+                 items:
+                   type: "object"
+                   properties:
+                     start_time:
+                       type: "string"
+                       description: "Start time of the study session"
+                       example: "2024-11-03T10:00:00Z"
+                     end_time:
+                       type: "string"
+                       description: "End time of the study session"
+                       example: "2024-11-03T11:00:00Z"
+         401:
+           description: "Invalid jwt session token"
+         500:
+           description: "Error occurred while retrieving study sessions"
+
+  /tag:
+    post:
+      summary: "Add tag object"
+      description: "Adds a new tag object to the tag collection, as well as adds it to the user who requested"
+      Authorization: Bearer <token>
+      parameters:
+        - in: "header"
+          name: "Authorization"
+          description: "Bearer token for authentication"
+          required: true
+          schema:
+            type: "string"
+            example: "Bearer "
+        - in: "body"
+          name: "body"
+          description: "Tag data"
+          required: true
+          schema:
+            type: "object"
+            properties:
+              text:
+                type: "string"
+      responses:
+        201:
+          description: "Tag created successfully"
+        500:
+          description: "Tag not created successfully (includes error message)"
+        401:
+          description: "Invalid jwt session token"
+
+  /tag/<tag_id>:
+    patch:
+      summary: "Edit tag object"
+      description: "Edits a tag object in the tag collection"
+      Authorization: Bearer <token>
+      parameters:
+        - in: "header"
+          name: "Authorization"
+          description: "Bearer token for authentication"
+          required: true
+          schema:
+            type: "string"
+            example: "Bearer "
+        - in: "body"
+          name: "body"
+          description: "Tag data"
+          required: true
+          schema:
+            type: "object"
+            properties:
+              text:
+                type: "string"
+      responses:
+        201:
+          description: "Tag edited successfully"
+        500:
+          description: "Tag not edited successfully (includes error message)"
+        401:
+          description: "Invalid jwt session token"
+
+  /tag/<tag_id>:
+    delete:
+      summary: "Delete tag object"
+      description: "Delete a tag object in the tag collection"
+      Authorization: Bearer <token>
+      parameters:
+        - in: "header"
+          name: "Authorization"
+          description: "Bearer token for authentication"
+          required: true
+          schema:
+            type: "string"
+            example: "Bearer "
+      responses:
+        201:
+          description: "Tag deleted successfully"
+        500:
+          description: "Tag not deleted successfully (includes error message)"
+        401:
+          description: "Invalid jwt session token"
