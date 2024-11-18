@@ -340,6 +340,27 @@ paths:
         401:
           description: "Invalid jwt session token"
 
+  /tag:
+    get:
+      summary: "Add tag object"
+      description: "get all of a user's tags"
+      Authorization: Bearer <token>
+      parameters:
+        - in: "header"
+          name: "Authorization"
+          description: "Bearer token for authentication"
+          required: true
+          schema:
+            type: "string"
+            example: "Bearer "
+      responses:
+        201:
+          description: "Tags returned successfully"
+        500:
+          description: "Tag not returned successfully (includes error message)"
+        401:
+          description: "Invalid jwt session token"
+
   /tag/<tag_id>:
     patch:
       summary: "Edit tag object"
