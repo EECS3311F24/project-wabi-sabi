@@ -57,6 +57,8 @@ const TodoDashboard = () => {
   // a state that manages the visibility of tasks
   const [expandedTasks, setExpandedTasks] = useState<string[]>([]);
 
+  const [taskName, setTaskName] = useState(''); // state to track the search input
+
   /**
    * Function that toggles the expansion of task
    *
