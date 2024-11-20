@@ -280,12 +280,16 @@ const TodoDashboard = () => {
   return (
     <div className="w-full flex flex-col items-center mt-6">
       <h1 className="text-3xl text-wabi-red font-bold mb-4">To do List</h1>
-      <Input
-        placeholder="Type a task name to search"
-        value={taskName}
-        onChange={(e)=>{setTaskName(e.target.value)}}
-        className='w-3/4 bg-white mb-4 h-11'  
-      />
+      {/* Search Bar section*/}
+      <div className="relative w-3/4 h-8 mb-4">
+        <img src={searchIcon} alt="search-icon" className="absolute top-2 left-2 w-5 h-5" />
+        <Input
+          placeholder="Type a task name to search"
+          value={taskName}
+          onChange={(e) => setTaskName(e.target.value)}
+          className="w-full h-full bg-white py-4 pl-8 border-wabi-btn-primary-unselected"
+        />
+      </div>
       <AddTask dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} addTask={addTask} tasks={tasks} />
       <div className="rounded-md border w-3/4 mx-auto bg-white border-wabi-btn-primary-unselected">
         <Table>
