@@ -2,11 +2,13 @@ import { useState, useEffect } from 'react';
 import { useAuth } from './AuthProviderUtils';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from './ui/table';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from './ui/dropdown-menu';
+import { Input } from "./ui/input";
 import AddTask from './AddTask';
 import threeDots from '../assets/three-dots.svg';
 import { Checkbox } from './ui/checkbox';
 import rightArrow from '../assets/right-arrow.svg';
 import downArrow from '../assets/down-arrow.svg';
+
 
 // this defines users' task property for rendering in a table
 interface Task {
