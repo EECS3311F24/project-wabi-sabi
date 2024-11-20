@@ -8,7 +8,7 @@ import threeDots from '../assets/three-dots.svg';
 import { Checkbox } from './ui/checkbox';
 import rightArrow from '../assets/right-arrow.svg';
 import downArrow from '../assets/down-arrow.svg';
-
+import searchIcon from '../assets/search-icon.svg';
 
 // this defines users' task property for rendering in a table
 interface Task {
