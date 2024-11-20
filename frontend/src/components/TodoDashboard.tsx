@@ -265,6 +265,12 @@ const TodoDashboard = () => {
 
     return Math.round(completionPercentage);
   };
+  
+
+  // filters and stores the tasks that matches taskName(whatever is in the search input)
+  const searchedTasks = tasks.filter((task) => 
+    task.text.toLowerCase().includes(taskName.toLowerCase())
+  );
 
   useEffect(() => {
     // requests the table from backend and renders the table once the page loads
