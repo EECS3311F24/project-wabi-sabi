@@ -301,14 +301,21 @@ const TodoDashboard = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {tasks.length === 0 ? ( // If users dont have any tasks then display "you don't have a task"
+            
+            {tasks.length === 0?(// If users dont have any tasks then display "you don't have a task"
               <TableRow>
                 <TableCell colSpan={7} className="h-12 text-center">
                   You don't have any task
                 </TableCell>
               </TableRow>
+            ): searchedTasks.length === 0 ? ( //If the searched task in not in the table then display 'No results.'
+              <TableRow>
+                <TableCell colSpan={7} className="h-12 text-center">
+                  No results.
+                </TableCell>
+              </TableRow>
             ) : (
-              tasks.map((task) => (
+              searchedTasks.map((task) => ( //Displays the searched tasks. If the search input is empty it displays every task from the database.(taskName is empty)
                 <>
                   <TableRow key={task.id}>
                     {/* checkbox section */}
