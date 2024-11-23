@@ -79,7 +79,7 @@ def get_weekly_results():
     payload = get_user_from_token(token)
     user = User.objects(email=payload["email"]).first()
     try:
-        return jsonify(get_week_minutes(user.study_sessions)), 200
+        return jsonify(get_week_data(user.study_sessions)), 200
     except Exception as e:
         return jsonify({"error": f"error returning week results {e}"}), 500
 
@@ -96,12 +96,12 @@ def get_weekly_tag_results(tag_id):
         filtered_sessions = [
             session for session in user.study_sessions if session.tag == tag
         ]
-        return jsonify(get_week_minutes(filtered_sessions)), 200
+        return jsonify(get_week_data(filtered_sessions)), 200
     except Exception as e:
         return jsonify({"error": f"error returning week results {e}"}), 500
 
 
-def get_week_minutes(study_sessions):
+def get_week_data(study_sessions):
     today = datetime.now()
     start_of_week = today - timedelta(days=today.weekday() + 7)  # Start of last week
     end_of_week = start_of_week + timedelta(days=7)  # End of last week
