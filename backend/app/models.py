@@ -83,6 +83,11 @@ class Study(Document):
     end_time = DateTimeField(required=True)
     tag = ReferenceField(Tag)  # change to reference field once tag object exists
 
+    def get_study_minutes(self):
+        elapsed_time = self.end_time - self.start_time
+        total_minutes = elapsed_time.total_seconds() // 60
+        return total_minutes
+
     def __str__(self):
         return self.text
 
