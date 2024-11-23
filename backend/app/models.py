@@ -89,7 +89,7 @@ class Study(Document):
         return total_minutes
 
     def __str__(self):
-        return self.text
+        return str(self.start_time)
 
     def json_formatted(self):
         print(f"serializing study {self.__str__}")
