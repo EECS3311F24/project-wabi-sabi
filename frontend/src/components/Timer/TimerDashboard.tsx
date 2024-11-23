@@ -13,11 +13,13 @@ import { addStudySession, sendCachedData, useSaveDataOnReload } from './utils';
 import { useOutletContext } from 'react-router-dom';
 import TagDropdown from '../SelectTag';
 import { Dialog, DialogContent, DialogDescription, DialogOverlay, DialogTitle, DialogTrigger } from '../ui/dialog';
+import UnselectedButton from '../ui/UnselectedButton';
 
 type TimerMode = 'pomodoro' | 'shortBreak' | 'longBreak';
 type DashboardContextType = {
   registerSaveHandler: (handler: () => void) => void;
 };
+
 const TimerDashboard = () => {
   const { registerSaveHandler } = useOutletContext<DashboardContextType>(); // gets the register save handler from dashboard container
 
@@ -244,7 +246,7 @@ const TimerDashboard = () => {
           <p className="font-bold justify-self-center text-wabi-red">#{sessionCount}</p>
           <ClockFace minutes={minutes} seconds={seconds} />
         </div>
-        <div className="pt-[110px]">
+        <div>
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
               <button
@@ -272,8 +274,7 @@ const TimerDashboard = () => {
                     />
 
                     <label className="text-sm font-medium mr-2"> minutes</label>
-                  </div>
-                  <div>
+
                     <input
                       type="string"
                       value={durations.pomodoro.seconds}
@@ -293,8 +294,7 @@ const TimerDashboard = () => {
                       onChange={(e) => handleDurationChange('shortBreak', 'minutes', e.target.value)}
                     />
                     <label className="text-sm font-medium mr-2"> minutes</label>
-                  </div>
-                  <div>
+
                     <input
                       type="string"
                       value={durations.shortBreak.seconds}
@@ -314,8 +314,7 @@ const TimerDashboard = () => {
                       onChange={(e) => handleDurationChange('longBreak', 'minutes', e.target.value)}
                     />
                     <label className="text-sm font-medium mr-2"> minutes</label>
-                  </div>
-                  <div>
+
                     <input
                       type="string"
                       value={durations.longBreak.seconds}
@@ -334,15 +333,15 @@ const TimerDashboard = () => {
                   durations.longBreak.seconds > 59) && (
                   <div className="text-red-500 mb-2">Value cannot be greater than 59!</div>
                 )}
-                <Button onClick={saveHandler} disabled={isSaveDisabled}>
-                  Save
-                </Button>
+                <div className="flex justify-end">
+                  <UnselectedButton content="Save" onClick={saveHandler} disabled={isSaveDisabled} />
+                </div>
               </div>
             </DialogContent>
           </Dialog>
         </div>
 
-        <div className="flex flex-row space-x-6 pt-[6px]">
+        <div className="flex flex-row space-x-6 pt-[136px]">
           <Button
             className="bg-white border-wabi-btn-primary-unselected border-2 hover:bg-gray-100 rounded-full w-[58px] h-[56px] mt-[6px]"
             onClick={() => resetHandler()}
