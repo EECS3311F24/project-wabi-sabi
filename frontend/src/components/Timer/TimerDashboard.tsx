@@ -6,11 +6,13 @@ import playIcon from '../../assets/play.svg';
 import resetIcon from '../../assets/reset-2.svg';
 import skipIcon from '../../assets/skip.svg';
 import pauseIcon from '../../assets/pause.svg';
+import settingIcon from '../../assets/settings.svg';
 import SelectedButton from '@/components/ui/SelectedButton';
 import { useAuth } from '@/components/AuthProviderUtils';
 import { addStudySession, sendCachedData, useSaveDataOnReload } from './utils';
 import { useOutletContext } from 'react-router-dom';
 import TagDropdown from '../SelectTag';
+import { Dialog, DialogContent, DialogDescription, DialogOverlay, DialogTitle, DialogTrigger } from '../ui/dialog';
 
 type TimerMode = 'pomodoro' | 'shortBreak' | 'longBreak';
 type DashboardContextType = {
@@ -33,6 +35,15 @@ const TimerDashboard = () => {
   const MAX_SHORT_BREAKS = 3; // maximum number of short breaks allowed
   const [selectedTag, setSelectedTag] = useState<string>('');
 
+  // tracks the duration of the three timermodes
+  const [durations, setDurations] = useState({
+    pomodoro: { minutes: minutes, seconds: seconds }, // displays default duration
+    shortBreak: { minutes: 5, seconds: 0 },
+    longBreak: { minutes: 10, seconds: 0 },
+  });
+
+  const [open, setOpen] = useState(false); // State to control dialog visibility
+
   // saves last study session to cache when user reloads
   useSaveDataOnReload({ timeLastStarted, isActive, tagID: selectedTag });
 
@@ -43,21 +54,23 @@ const TimerDashboard = () => {
     if (isActive) {
       localStorage.setItem('unsavedStart', timeLastStarted.toISOString());
       localStorage.setItem('unsavedEnd', new Date().toISOString());
+      // Save durations data (serialize to a string)
+      localStorage.setItem('durations', JSON.stringify(durations));
       console.log('Timer data saved to local storage');
     }
-  }, [isActive, timeLastStarted]);
+  }, [isActive, timeLastStarted, durations]);
 
   // register the save handler with the parent
   useEffect(() => {
     registerSaveHandler(saveDataToCache);
-  }, [registerSaveHandler, isActive, timeLastStarted, saveDataToCache]);
+  }, [registerSaveHandler, isActive, timeLastStarted, durations, saveDataToCache]);
 
   // -- functions called when user selects timer type buttons
   const pomodoroClickHandler = useCallback(() => {
     resetTimer();
     setTimer({
-      initialMinutes: 25,
-      initialSeconds: 0,
+      initialMinutes: durations.pomodoro.minutes,
+      initialSeconds: durations.pomodoro.seconds,
     });
     setTimerState('pomodoro');
   }, [resetTimer, setTimer]);
@@ -67,8 +80,8 @@ const TimerDashboard = () => {
       addStudySession(timeLastStarted.toISOString(), new Date().toISOString(), selectedTag, authToken);
     resetTimer();
     setTimer({
-      initialMinutes: 5,
-      initialSeconds: 0,
+      initialMinutes: durations.shortBreak.minutes,
+      initialSeconds: durations.shortBreak.seconds,
     });
     setTimerState('shortBreak');
   }, [authToken, isActive, resetTimer, selectedTag, setTimer, timeLastStarted, timerState]);
@@ -78,8 +91,8 @@ const TimerDashboard = () => {
       addStudySession(timeLastStarted.toISOString(), new Date().toISOString(), selectedTag, authToken);
     resetTimer();
     setTimer({
-      initialMinutes: 10,
-      initialSeconds: 0,
+      initialMinutes: durations.longBreak.minutes,
+      initialSeconds: durations.longBreak.seconds,
     });
     setTimerState('longBreak');
   }, [authToken, isActive, resetTimer, selectedTag, setTimer, timeLastStarted, timerState]);
@@ -184,6 +197,46 @@ const TimerDashboard = () => {
     console.log('Selected Tag', value);
   };
 
+  // Handling timer duration input
+  const handleDurationChange = (mode: TimerMode, key: 'minutes' | 'seconds', value: string) => {
+    if (value === '') {
+      value = '0'; // Automatically set empty value to 0
+    }
+
+    setDurations((prev) => ({
+      ...prev,
+      [mode]: {
+        ...prev[mode],
+        [key]: value === '' ? '' : Math.max(0, parseInt(value, 10)), // Allow empty string or a valid number
+      },
+    }));
+  };
+
+  // Save new durations and immediately update the timer based on the active mode
+  const saveHandler = () => {
+    if (timerState === 'pomodoro') {
+      setTimer({
+        initialMinutes: durations.pomodoro.minutes,
+        initialSeconds: durations.pomodoro.seconds,
+      });
+    } else if (timerState === 'shortBreak') {
+      setTimer({
+        initialMinutes: durations.shortBreak.minutes,
+        initialSeconds: durations.shortBreak.seconds,
+      });
+    } else if (timerState === 'longBreak') {
+      setTimer({
+        initialMinutes: durations.longBreak.minutes,
+        initialSeconds: durations.longBreak.seconds,
+      });
+    }
+    setOpen(false);
+    console.log(durations);
+  };
+
+  // Check if any value is greater than 59 to disable the Save button
+  const isSaveDisabled = Object.values(durations).some((time) => time.minutes > 59 || time.seconds > 59);
+
   return (
     <>
       <div className="flex flex-col items-center">
@@ -191,8 +244,105 @@ const TimerDashboard = () => {
           <p className="font-bold justify-self-center text-wabi-red">#{sessionCount}</p>
           <ClockFace minutes={minutes} seconds={seconds} />
         </div>
+        <div className="pt-[110px]">
+          <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+              <button
+                className="bg-none border-none p-0 cursor-pointer"
+                aria-label="Settings"
+                onClick={() => setOpen(true)}
+              >
+                <img src={settingIcon} alt="Settings" />
+              </button>
+            </DialogTrigger>
+            <DialogOverlay className="bg-transparent" />
 
-        <div className="flex flex-row space-x-6 pt-[136px]">
+            <DialogContent>
+              <DialogTitle>Change Timer Duration</DialogTitle>
+              <DialogDescription>Input durations in minutes and seconds</DialogDescription>
+              <div className="duration-config">
+                <div className="flex flex-col mb-3">
+                  <label className="text-sm font-medium mr-2">Pomodoro:</label>
+                  <div>
+                    <input
+                      type="string"
+                      value={durations.pomodoro.minutes}
+                      className="w-1/5 border border-black rounded-sm pl-1 my-2"
+                      onChange={(e) => handleDurationChange('pomodoro', 'minutes', e.target.value)}
+                    />
+
+                    <label className="text-sm font-medium mr-2"> minutes</label>
+                  </div>
+                  <div>
+                    <input
+                      type="string"
+                      value={durations.pomodoro.seconds}
+                      className="w-1/5 border border-black rounded-sm pl-1 my-2"
+                      onChange={(e) => handleDurationChange('pomodoro', 'seconds', e.target.value)}
+                    />
+                    <label className="text-sm font-medium mr-2"> seconds</label>
+                  </div>
+                </div>
+                <div className="flex flex-col mb-3">
+                  <label className="text-sm font-medium mr-2">Short Break:</label>
+                  <div>
+                    <input
+                      type="string"
+                      value={durations.shortBreak.minutes}
+                      className="w-1/5 border border-black rounded-sm pl-1 my-2"
+                      onChange={(e) => handleDurationChange('shortBreak', 'minutes', e.target.value)}
+                    />
+                    <label className="text-sm font-medium mr-2"> minutes</label>
+                  </div>
+                  <div>
+                    <input
+                      type="string"
+                      value={durations.shortBreak.seconds}
+                      className="w-1/5 border border-black rounded-sm pl-1 my-2"
+                      onChange={(e) => handleDurationChange('shortBreak', 'seconds', e.target.value)}
+                    />
+                    <label className="text-sm font-medium mr-2"> seconds</label>
+                  </div>
+                </div>
+                <div className="flex flex-col mb-3">
+                  <label className="text-sm font-medium mr-2">Long Break:</label>
+                  <div>
+                    <input
+                      type="string"
+                      value={durations.longBreak.minutes}
+                      className="w-1/5 border border-black rounded-sm pl-1 my-2"
+                      onChange={(e) => handleDurationChange('longBreak', 'minutes', e.target.value)}
+                    />
+                    <label className="text-sm font-medium mr-2"> minutes</label>
+                  </div>
+                  <div>
+                    <input
+                      type="string"
+                      value={durations.longBreak.seconds}
+                      className="w-1/5 border border-black rounded-sm pl-1 my-2"
+                      onChange={(e) => handleDurationChange('longBreak', 'seconds', e.target.value)}
+                    />
+                    <label className="text-sm font-medium mr-2"> seconds</label>
+                  </div>
+                </div>
+                {/* Warning message */}
+                {(durations.pomodoro.minutes > 59 ||
+                  durations.pomodoro.seconds > 59 ||
+                  durations.shortBreak.minutes > 59 ||
+                  durations.shortBreak.seconds > 59 ||
+                  durations.longBreak.minutes > 59 ||
+                  durations.longBreak.seconds > 59) && (
+                  <div className="text-red-500 mb-2">Value cannot be greater than 59!</div>
+                )}
+                <Button onClick={saveHandler} disabled={isSaveDisabled}>
+                  Save
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
+        </div>
+
+        <div className="flex flex-row space-x-6 pt-[6px]">
           <Button
             className="bg-white border-wabi-btn-primary-unselected border-2 hover:bg-gray-100 rounded-full w-[58px] h-[56px] mt-[6px]"
             onClick={() => resetHandler()}
@@ -222,7 +372,6 @@ const TimerDashboard = () => {
             <img src={skipIcon} alt="Skip" className="size-5" />
           </Button>
         </div>
-
         <div className="flex flex-row space-x-6 pt-[30px]">
           {timerState == 'pomodoro' && (
             <SelectedButton
@@ -271,7 +420,7 @@ const TimerDashboard = () => {
           )}
         </div>
         <div className="flex flex-row space-x-6 pt-[30px] font-bold text-xl text-wabi-red">Tag</div>
-        <div className="flex flex-row space-x-6 pt-[30px]">
+        <div className="flex flex-row space-x-6 pt-[10px]">
           <TagDropdown className="w-48 " onSelectChange={handleTagChange} isDisabled={isActive} />
         </div>
       </div>
