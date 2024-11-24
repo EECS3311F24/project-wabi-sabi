@@ -80,12 +80,13 @@ class Task(Document):
 
 class Study(Document):
     start_time = DateTimeField(required=True)
+    minutes = FloatField()
     end_time = DateTimeField(required=True)
     tag = ReferenceField(Tag)  # change to reference field once tag object exists
 
     def get_study_minutes(self):
         elapsed_time = self.end_time - self.start_time
-        total_minutes = elapsed_time.total_seconds() // 60
+        total_minutes = round(elapsed_time.total_seconds() / 60,2)
         return total_minutes
 
     def __str__(self):

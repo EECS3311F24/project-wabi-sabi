@@ -129,6 +129,7 @@ def get_week_data(study_sessions):
         response.append(
             {
                 "date": day.date().isoformat(),
+                "weekday": day.weekday(),
                 "minutes": study_minutes_by_day[day.date().isoformat()],
             }
         )
