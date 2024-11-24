@@ -7,6 +7,7 @@ import DashboardContainer from './components/DashboardContainer';
 import Onboarding from './components/Onboarding';
 import TodoDashboard from './components/TodoDashboard';
 import TimerDashboard from './components/Timer/TimerDashboard';
+import ChartsDashboard from './components/Charts';
 
 /**
  * This is the main app component that wraps the entire application.
@@ -34,6 +35,7 @@ function App() {
               <Route index element={<TimerDashboard />} />
               <Route path="timer" element={<TimerDashboard />} />
               <Route path="todo" element={<TodoDashboard />} />
+              <Route path="charts" element={<ChartsDashboard />} />
             </Route>
           </Routes>
         </AuthProvider>
