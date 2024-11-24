@@ -86,7 +86,7 @@ class Study(Document):
 
     def get_study_minutes(self):
         elapsed_time = self.end_time - self.start_time
-        total_minutes = round(elapsed_time.total_seconds() / 60,2)
+        total_minutes = round(elapsed_time.total_seconds() / 60, 1)
         return total_minutes
 
     def __str__(self):
