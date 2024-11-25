@@ -20,8 +20,8 @@ const TimerDashboard = () => {
   const { registerSaveHandler } = useOutletContext<DashboardContextType>(); // gets the register save handler from dashboard container
 
   const { isActive, toggleTimer, resetTimer, setTimer, minutes, seconds } = useCountdown({
-    initialMinutes: 0,
-    initialSeconds: 10,
+    initialMinutes: 25,
+    initialSeconds: 0,
   }); // contains actual countdown timer
 
   const { authToken } = useAuth(); // user authentication token
@@ -56,8 +56,8 @@ const TimerDashboard = () => {
   const pomodoroClickHandler = useCallback(() => {
     resetTimer();
     setTimer({
-      initialMinutes: 0,
-      initialSeconds: 10,
+      initialMinutes: 25,
+      initialSeconds: 0,
     });
     setTimerState('pomodoro');
   }, [resetTimer, setTimer]);
@@ -67,8 +67,8 @@ const TimerDashboard = () => {
       addStudySession(timeLastStarted.toISOString(), new Date().toISOString(), selectedTag, authToken);
     resetTimer();
     setTimer({
-      initialMinutes: 0,
-      initialSeconds: 5,
+      initialMinutes: 5,
+      initialSeconds: 0,
     });
     setTimerState('shortBreak');
   }, [authToken, isActive, resetTimer, selectedTag, setTimer, timeLastStarted, timerState]);
@@ -78,8 +78,8 @@ const TimerDashboard = () => {
       addStudySession(timeLastStarted.toISOString(), new Date().toISOString(), selectedTag, authToken);
     resetTimer();
     setTimer({
-      initialMinutes: 0,
-      initialSeconds: 8,
+      initialMinutes: 10,
+      initialSeconds: 0,
     });
     setTimerState('longBreak');
   }, [authToken, isActive, resetTimer, selectedTag, setTimer, timeLastStarted, timerState]);
