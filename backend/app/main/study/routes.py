@@ -30,6 +30,8 @@ def make_study_document():
         )
 
         new_study_session.save()
+        new_study_session.minutes = new_study_session.get_study_minutes()
+        new_study_session.save()
         user.study_sessions.append(new_study_session)
         user.save()
         return jsonify({"message": "Study Session Recorded"}), 201
