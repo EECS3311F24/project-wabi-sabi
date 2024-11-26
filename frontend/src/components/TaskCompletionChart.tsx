@@ -4,34 +4,55 @@ import { Bar, BarChart, XAxis, YAxis } from 'recharts';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
-const chartData = [
-  { browser: 'chrome', visitors: 275, fill: 'var(--color-chrome)' },
-  { browser: 'safari', visitors: 250, fill: 'var(--color-safari)' },
-  { browser: 'firefox', visitors: 200, fill: 'var(--color-firefox)' },
-  { browser: 'edge', visitors: 180, fill: 'var(--color-edge)' },
-  { browser: 'opera', visitors: 150, fill: 'var(--color-opera)' },
-  { browser: 'brave', visitors: 140, fill: 'var(--color-brave)' },
-  { browser: 'vivaldi', visitors: 130, fill: 'var(--color-vivaldi)' },
-  { browser: 'duckduckgo', visitors: 120, fill: 'var(--color-duckduckgo)' },
-  { browser: 'maxthon', visitors: 110, fill: 'var(--color-maxthon)' },
-  { browser: 'ucbrowser', visitors: 100, fill: 'var(--color-ucbrowser)' },
-  { browser: 'yandex', visitors: 90, fill: 'var(--color-yandex)' },
-  { browser: 'avant', visitors: 85, fill: 'var(--color-avant)' },
-  { browser: 'seamonkey', visitors: 80, fill: 'var(--color-seamonkey)' },
-  { browser: 'torch', visitors: 75, fill: 'var(--color-torch)' },
-  { browser: 'comodo', visitors: 70, fill: 'var(--color-comodo)' },
-  { browser: 'midori', visitors: 65, fill: 'text-wabi-red' },
-  { browser: 'konqueror', visitors: 60, fill: 'var(--color-konqueror)' },
-  { browser: 'netscape', visitors: 55, fill: 'var(--color-netscape)' },
-  { browser: 'epiphany', visitors: 50, fill: 'var(--color-epiphany)' },
-  { browser: 'lynx', visitors: 45, fill: 'var(--color-lynx)' },
-];
-const chartConfig = chartData.reduce((config, { browser, fill }) => {
-  config[browser] = { label: browser.charAt(0).toUpperCase() + browser.slice(1), color: fill };
-  return config;
-}, {} as ChartConfig);
+import { useEffect, useState } from 'react';
+import { useAuth } from './AuthProviderUtils';
 
+interface TaskCompletionData {
+  tag_text: string;
+  percentage: number;
+}
 const TaskCompletionChart = () => {
+  const { authToken } = useAuth();
+  const [chartData, setChartData] = useState([{ tag: '', percent: 0 }]);
+  const chartConfig = chartData.reduce((config, { tag }) => {
+    config[tag] = { label: tag.charAt(0).toUpperCase() + tag.slice(1), color: '#FF7D59' };
+    return config;
+  }, {} as ChartConfig);
+
+  const getTaskCompletionChart = async () => {
+    const response = await fetch('http://localhost:5000/chart/completion/', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${authToken}`,
+      },
+    });
+
+    const data = await response.json();
+    return data;
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await getTaskCompletionChart();
+
+        const processedData = data.map((item: TaskCompletionData) => ({
+          tag: item.tag_text,
+          percent: item.percentage,
+          fill: '#FF7D59',
+        }));
+
+        setChartData(processedData);
+      } catch (error) {
+        console.error('Error fetching chart data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  console.log(chartData);
   return (
     <Card className="shadow-none border-none">
       <CardHeader>
@@ -46,9 +67,11 @@ const TaskCompletionChart = () => {
             margin={{
               left: 27,
             }}
+            width={600}
+            height={600}
           >
             <YAxis
-              dataKey="browser"
+              dataKey="tag"
               type="category"
               interval={0}
               tickLine={false}
@@ -56,9 +79,9 @@ const TaskCompletionChart = () => {
               axisLine={false}
               tickFormatter={(value) => String(chartConfig[value as keyof typeof chartConfig]?.label || value)}
             />
-            <XAxis dataKey="visitors" type="number" hide />
+            <XAxis dataKey="percent" type="number" />
             <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
-            <Bar dataKey="visitors" layout="vertical" radius={5} />
+            <Bar dataKey="percent" layout="vertical" radius={5} />
           </BarChart>
         </ChartContainer>
       </CardContent>
