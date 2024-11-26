@@ -4,38 +4,37 @@ import { ArrowDown, ArrowUp, ChevronsUpDown} from "lucide-react"
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from './ui/dropdown-menu';
 
 interface SortTableProps {
-  title: string;
-  setTasks: (tasks: any[]) => void;
+  headerName: string;
   tasks: any[];
+  setTasks: (tasks: any[]) => void;
   currColumn: string | null; // Tracks the column thats being used for sorting
   setCurrColumn: (column: string) => void; // Function to update the current column thats being used for sorting
 }
 
-export function TaskTableHeader({ title}: SortTableProps) {
-  const[arrowType, setArrowType] = useState<"asc" | "desc" | null>(null); // state to track the arrow type
+export function ColumnSort({ headerName, tasks, setTasks, currColumn, setCurrColumn}: SortTableProps) {
+  const[sortType, setSortType] = useState<"asc" | "desc" | null>(null); // Tracks the type of sorting the user picked(ascending or descending)
+  
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="sm" className="flex items-center space-x-2">
-          <span>{title}</span>
-            {arrowType === "desc" ? (
-              <ArrowDown />
-            ) : arrowType === "asc" ? (
-              <ArrowUp />
-            ) : (
-              <ChevronsUpDown />
-            )}
+        <Button variant="ghost" size="sm" className="flex items-center">
+          <span>{headerName}</span>
+          {
+            currColumn === headerName 
+              ? (sortType === "asc" ? <ArrowUp /> : <ArrowDown />) 
+              : <ChevronsUpDown />
+          }
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start">
         <DropdownMenuItem
-        onClick={() => setArrowType("asc")}        
+              
         >
         <ArrowUp className="h-3.5 w-3.5 text-muted-foreground/70" />
           Asc
         </DropdownMenuItem>
         <DropdownMenuItem  
-        onClick={() => setArrowType("desc")}        
+         
         >
         <ArrowDown className="h-3.5 w-3.5 text-muted-foreground/70" />
           Desc
