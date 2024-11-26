@@ -5,6 +5,10 @@ import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuIte
 
 interface SortTableProps {
   title: string;
+  setTasks: (tasks: any[]) => void;
+  tasks: any[];
+  currColumn: string | null; // Tracks the column thats being used for sorting
+  setCurrColumn: (column: string) => void; // Function to update the current column thats being used for sorting
 }
 
 export function TaskTableHeader({ title}: SortTableProps) {
