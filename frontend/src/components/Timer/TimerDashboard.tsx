@@ -269,7 +269,7 @@ const TimerDashboard = () => {
                     <input
                       type="string"
                       value={durations.pomodoro.minutes}
-                      className="w-1/5 border border-black rounded-sm pl-1 my-2"
+                      className="w-1/12 border border-black rounded-sm pl-1 my-2"
                       onChange={(e) => handleDurationChange('pomodoro', 'minutes', e.target.value)}
                     />
 
@@ -278,7 +278,7 @@ const TimerDashboard = () => {
                     <input
                       type="string"
                       value={durations.pomodoro.seconds}
-                      className="w-1/5 border border-black rounded-sm pl-1 my-2"
+                      className="w-1/12 border border-black rounded-sm pl-1 my-2 ml-5"
                       onChange={(e) => handleDurationChange('pomodoro', 'seconds', e.target.value)}
                     />
                     <label className="text-sm font-medium mr-2"> seconds</label>
@@ -290,7 +290,7 @@ const TimerDashboard = () => {
                     <input
                       type="string"
                       value={durations.shortBreak.minutes}
-                      className="w-1/5 border border-black rounded-sm pl-1 my-2"
+                      className="w-1/12 border border-black rounded-sm pl-1 my-2"
                       onChange={(e) => handleDurationChange('shortBreak', 'minutes', e.target.value)}
                     />
                     <label className="text-sm font-medium mr-2"> minutes</label>
@@ -298,7 +298,7 @@ const TimerDashboard = () => {
                     <input
                       type="string"
                       value={durations.shortBreak.seconds}
-                      className="w-1/5 border border-black rounded-sm pl-1 my-2"
+                      className="w-1/12 border border-black rounded-sm pl-1 my-2 ml-5"
                       onChange={(e) => handleDurationChange('shortBreak', 'seconds', e.target.value)}
                     />
                     <label className="text-sm font-medium mr-2"> seconds</label>
@@ -310,15 +310,14 @@ const TimerDashboard = () => {
                     <input
                       type="string"
                       value={durations.longBreak.minutes}
-                      className="w-1/5 border border-black rounded-sm pl-1 my-2"
+                      className="w-1/12 border border-black rounded-sm pl-1 my-2"
                       onChange={(e) => handleDurationChange('longBreak', 'minutes', e.target.value)}
                     />
                     <label className="text-sm font-medium mr-2"> minutes</label>
-
                     <input
                       type="string"
                       value={durations.longBreak.seconds}
-                      className="w-1/5 border border-black rounded-sm pl-1 my-2"
+                      className="w-1/12 border border-black rounded-sm pl-1 my-2 ml-5"
                       onChange={(e) => handleDurationChange('longBreak', 'seconds', e.target.value)}
                     />
                     <label className="text-sm font-medium mr-2"> seconds</label>
