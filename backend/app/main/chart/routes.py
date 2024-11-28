@@ -1,8 +1,9 @@
 from flask import render_template, redirect, url_for, request, jsonify
+from collections import defaultdict
 from datetime import datetime, timedelta
 from bson import ObjectId
 from . import chart
-from app.models import User
+from app.models import User, Study
 from app.auth.session import get_user_from_token, user_required
 from ...models import Tag, Task, User, json_formatted
 
@@ -70,6 +71,69 @@ def tag_task_completion_with_subtasks():
         return jsonify(result), 200
     except Exception as e:
         return jsonify({"error calculating completion": str(e)}), 500
+
+
+@chart.route("/weekly", methods=["GET"])
+@user_required
+def get_weekly_results():
+    token = request.headers.get("Authorization")
+    payload = get_user_from_token(token)
+    user = User.objects(email=payload["email"]).first()
+    try:
+        return jsonify({"data": get_week_data(user.study_sessions)}), 200
+    except Exception as e:
+        return jsonify({"error": f"error returning week results {e}"}), 500
+
+
+@chart.route("/weekly/<tag_id>", methods=["GET"])
+@user_required
+def get_weekly_tag_results(tag_id):
+    token = request.headers.get("Authorization")
+    payload = get_user_from_token(token)
+    user = User.objects(email=payload["email"]).first()
+    # get the last week of a user's study sessions
+    tag = Tag.objects(id=tag_id).first()
+    try:
+        filtered_sessions = [
+            session for session in user.study_sessions if session.tag == tag
+        ]
+        return jsonify({"data": get_week_data(filtered_sessions), "tag": tag.text}), 200
+    except Exception as e:
+        return jsonify({"error": f"error returning week results {e}"}), 500
+
+
+def get_week_data(study_sessions):
+    print(study_sessions)
+    today = datetime.now()
+    start_of_week = today - timedelta(days=6)  # Start of last week
+    end_of_week = today
+
+    # Query studies from the previous week
+
+    # Aggregate study minutes by day
+    study_minutes_by_day = defaultdict(int)
+
+    print(end_of_week)
+    for study in study_sessions:
+        print(f"checking study {study}")
+        print(study.start_time >= start_of_week)
+        if start_of_week <= study.start_time:
+            print(f"study {study} is within week")
+            day = study.start_time.date().isoformat()  # Get the date part
+            study_minutes_by_day[day] += study.get_study_minutes()
+            print(study.get_study_minutes())
+
+    response = []
+    for i in range(7):
+        day = start_of_week + timedelta(days=i)
+        response.append(
+            {
+                "date": day.date().isoformat(),
+                "weekday": day.weekday(),
+                "minutes": study_minutes_by_day[day.date().isoformat()],
+            }
+        )
+    return response
 
 
 # @chart.route("/", methods=["GET"])

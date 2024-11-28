@@ -63,6 +63,7 @@ const TagDropdown = ({ onSelectChange, className, isDisabled = false }: TagDropd
   const [newTag, setNewTag] = useState(''); //state to store the new tag that is being added
   const { authToken } = useAuth(); //needed for connecting with backend to authenticate
   const [TagNameError, setTagNameError] = useState(false); //state to track if the inputted tag is a duplicate
+  const [selectedValue, setSelectedValue] = useState<string | undefined>(''); // tracks the selected tag
 
   /**
    * this fetches tags from the backend to populate the dropdown.
@@ -147,11 +148,20 @@ const TagDropdown = ({ onSelectChange, className, isDisabled = false }: TagDropd
    */
   const handleSelectChange = (value: string) => {
     onSelectChange(value);
+    setSelectedValue(value); // Update the selected value
+  };
+
+  /**
+   * Handles removing the selected tag and triggers the callback with an empty string.
+   */
+  const handleRemoveSelection = () => {
+    onSelectChange(''); // Reset selection to an empty string
+    setSelectedValue(''); // Reset selected value
   };
 
   return (
     <div>
-      <Select onValueChange={handleSelectChange} disabled={isDisabled}>
+      <Select onValueChange={handleSelectChange} disabled={isDisabled} value={selectedValue}>
         <SelectTrigger className={`${className} bg-white truncate font-bold`}>
           <SelectValue placeholder="Select a tag" />
         </SelectTrigger>
@@ -170,6 +180,9 @@ const TagDropdown = ({ onSelectChange, className, isDisabled = false }: TagDropd
             onClick={handleAddClick}
           >
             + Add a Tag
+          </div>
+          <div className="px-4 py-2 cursor-pointer text-gray-500 hover:text-gray-800" onClick={handleRemoveSelection}>
+            Remove Selection
           </div>
         </SelectContent>
       </Select>
