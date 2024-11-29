@@ -79,7 +79,7 @@ const TaskCompletionChart = () => {
               axisLine={false}
               tickFormatter={(value) => String(chartConfig[value as keyof typeof chartConfig]?.label || value)}
             />
-            <XAxis dataKey="percent" type="number" />
+            <XAxis dataKey="percent" type="number" domain={[0, 100]} />
             <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
             <Bar dataKey="percent" layout="vertical" radius={5} />
           </BarChart>
