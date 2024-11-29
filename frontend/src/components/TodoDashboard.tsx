@@ -56,6 +56,8 @@ const TodoDashboard = () => {
 
   // a state that manages the visibility of tasks
   const [expandedTasks, setExpandedTasks] = useState<string[]>([]);
+ // a state to manage which column is being used for sorting
+  const [currColumn, setCurrColumn] = useState<string | null>(null);
 
   /**
    * Function that toggles the expansion of task
