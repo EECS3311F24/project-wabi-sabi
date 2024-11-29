@@ -2,7 +2,10 @@ import { useState, useEffect } from 'react';
 import { useAuth } from './AuthProviderUtils';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from './ui/table';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from './ui/dropdown-menu';
+
+import { ColumnSort } from './SortTable';
 import { Input } from "./ui/input";
+
 import AddTask from './AddTask';
 import threeDots from '../assets/three-dots.svg';
 import { Checkbox } from './ui/checkbox';
@@ -18,6 +21,7 @@ interface Task {
   due_date?: string; // an optional due date for the task
   status: string; // the status of the task(completed or not)
   sub_tasks?: SubTask[]; // list of subtasks
+  completion: number; //The completion percentage of a task
 }
 
 // this defines users' subtask property for a Task object for rendering in a table
@@ -56,6 +60,8 @@ const TodoDashboard = () => {
 
   // a state that manages the visibility of tasks
   const [expandedTasks, setExpandedTasks] = useState<string[]>([]);
+ // a state to manage which column is being used for sorting
+  const [currColumn, setCurrColumn] = useState<string | null>(null);
 
   const [taskName, setTaskName] = useState(''); // state to track the search input
 
@@ -82,7 +88,13 @@ const TodoDashboard = () => {
         },
       });
       const data = await response.json();
-      setTasks(data.tasks || []); // if users doesn't have anytasks dont display anything else fill the table with the list of tasks
+      const tasksWithCompletion = data.tasks.map((task: Task) => ({ 
+        ...task,
+        completion: calculateCompletionPercentage(task), // adds a completion percentage for each task
+      }));
+      setTasks(tasksWithCompletion);
+
+      setCurrColumn(null); // resets the sorted sign when any change is made.
     } catch (error) {
       console.error(error); //Prints the error occured during fetching the tasks
     }
@@ -186,12 +198,12 @@ const TodoDashboard = () => {
           const updatedTasks = prevTasks.map((task) =>
             task.id === taskId
               ? {
-                  ...task,
-                  sub_tasks:
-                    task.sub_tasks?.map((subtask) =>
-                      subtask.id === subTaskId ? { ...subtask, completed: isCompleted } : subtask,
-                    ) ?? [],
-                }
+                ...task,
+                sub_tasks:
+                  task.sub_tasks?.map((subtask) =>
+                    subtask.id === subTaskId ? { ...subtask, completed: isCompleted } : subtask,
+                  ) ?? [],
+              }
               : task,
           );
 
@@ -292,16 +304,48 @@ const TodoDashboard = () => {
       </div>
       <AddTask dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} addTask={addTask} tasks={tasks} />
       <div className="rounded-md border w-3/4 mx-auto bg-white border-wabi-btn-primary-unselected">
-        <Table>
+        <Table >
           <TableHeader>
             <TableRow>
-              <TableHead className="w-10"></TableHead>
-              <TableHead className="w-10"></TableHead>
-              <TableHead className="text-left px-4 py-2">Task</TableHead>
-              <TableHead className="text-center px-4 py-2">Tag</TableHead>
-              <TableHead className="text-center px-4 py-2">Due Date</TableHead>
-              <TableHead className="text-center px-4 py-2">Completion(%)</TableHead>
-              <TableHead className="text-right px-4 py-2"></TableHead>
+              <TableHead ></TableHead>
+              <TableHead></TableHead>
+              {/* Title column*/}
+              <TableHead align="left" className="pl-0 py-2">
+                <ColumnSort
+                  headerName='Title'
+                  tasks={tasks}
+                  setTasks={setTasks}
+                  currColumn={currColumn}
+                  setCurrColumn={setCurrColumn} />
+              </TableHead>
+              {/* Tag column*/}
+              <TableHead align="center" className="py-2">
+                <ColumnSort
+                  headerName='Tag'
+                  tasks={tasks}
+                  setTasks={setTasks}
+                  currColumn={currColumn}
+                  setCurrColumn={setCurrColumn} />
+              </TableHead>
+              {/* Due Date column*/}
+              <TableHead align="center" className="py-2">
+                <ColumnSort
+                  headerName='Due Date'
+                  tasks={tasks}
+                  setTasks={setTasks}
+                  currColumn={currColumn}
+                  setCurrColumn={setCurrColumn} />
+              </TableHead>
+              {/* Completion column*/}
+              <TableHead align="center" className="py-2">
+                <ColumnSort
+                  headerName='Completion(%)'
+                  tasks={tasks}
+                  setTasks={setTasks}
+                  currColumn={currColumn}
+                  setCurrColumn={setCurrColumn} />
+              </TableHead>
+              <TableHead className="text-right"></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -323,7 +367,7 @@ const TodoDashboard = () => {
                 <>
                   <TableRow key={task.id}>
                     {/* checkbox section */}
-                    <TableCell className="w-10">
+                    <TableCell align="center">
                       <Checkbox
                         checked={task.status === 'Finished'}
                         onCheckedChange={() => toggleCompletionCheckBox(task.id, task.status !== 'Finished')}
@@ -331,31 +375,33 @@ const TodoDashboard = () => {
                       />
                     </TableCell>
                     {/* Expand/collapse arrow */}
-                    <TableCell className="w-10 cursor-pointer" onClick={() => toggleExpandTask(task.id)}>
+                    <TableCell align="left" className="cursor-pointer px-0" onClick={() => toggleExpandTask(task.id)}>
                       {task.sub_tasks && task.sub_tasks.length > 0 ? (
                         <img src={expandedTasks.includes(task.id) ? downArrow : rightArrow} alt="Toggle Subtasks" />
                       ) : null}
                     </TableCell>
 
                     {/* title section */}
-                    <TableCell className="text-left px-4 font-medium">{task.text}</TableCell>
+                    <TableCell align="left" className="font-medium pl-0">{task.text}</TableCell>
 
-                    <TableCell className="text-center">{task.tag ?? ''}</TableCell>
+                    {/* tag section */}
+
+                    <TableCell align="center" className="font-medium">{task.tag ?? ''}</TableCell>
 
                     {/* Due date section */}
-                    <TableCell className="text-center font-medium">
+                    <TableCell align="center" className="font-medium">
                       {task.due_date ? new Date(task.due_date).toLocaleDateString() : ''}
                     </TableCell>
 
                     {/* Task completion section */}
-                    <TableCell className="text-center font-medium">{calculateCompletionPercentage(task)}%</TableCell>
+                    <TableCell align="center" className="font-medium">{task.completion}%</TableCell>
 
                     {/* The dropdown menu section to delete a task */}
-                    <TableCell className="text-right">
+                    <TableCell className="text-left">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <button className="p-2 rounded-full hover:bg-gray-100">
-                            <img src={threeDots} alt="Options" className="h-5 w-5" />
+                          <button className="rounded-full hover:bg-gray-100">
+                            <img src={threeDots} alt="Options" className="w-4 h-4" />
                           </button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
@@ -374,7 +420,7 @@ const TodoDashboard = () => {
                         <TableCell></TableCell>
 
                         {/* Subtask checkbox */}
-                        <TableCell className="w-10">
+                        <TableCell className="pl-0">
                           <Checkbox
                             checked={subtask.completed}
                             onCheckedChange={() =>
@@ -383,7 +429,7 @@ const TodoDashboard = () => {
                             aria-label="Select subtask"
                           />
                         </TableCell>
-                        <TableCell colSpan={5} className="text-left pl-8 pr-4 font-medium text-gray-600">
+                        <TableCell colSpan={5} className="text-left pl-2 pr-4 font-medium text-gray-600">
                           {subtask.text}
                         </TableCell>
                       </TableRow>
