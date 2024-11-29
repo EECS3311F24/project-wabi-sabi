@@ -10,6 +10,7 @@ interface UnselectedButtonProps {
   content: ReactNode;
   onClick: () => void; //click event handler
   className?: string; //additional class names to get height and width
+  disabled?: boolean;
 }
 
 /**
@@ -19,10 +20,11 @@ interface UnselectedButtonProps {
  * @param {SelectedButtonProps} props - The props for the component.
  * @returns Element that represents the button
  */
-const UnselectedButton = ({ content, onClick, className }: UnselectedButtonProps) => (
+const UnselectedButton = ({ content, onClick, className, disabled }: UnselectedButtonProps) => (
   <Button
     onClick={onClick}
     className={`bg-wabi-btn-primary-unselected border-wabi-btn-primary-unselected border-2 text-white p-2 transition-opacity duration-200 hover:bg-wabi-btn-hover-primary-unselected ${className}`}
+    disabled={disabled}
   >
     {content}
   </Button>

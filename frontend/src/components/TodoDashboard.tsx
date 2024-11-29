@@ -2,12 +2,16 @@ import { useState, useEffect } from 'react';
 import { useAuth } from './AuthProviderUtils';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from './ui/table';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from './ui/dropdown-menu';
+
 import { ColumnSort } from './SortTable';
+import { Input } from "./ui/input";
+
 import AddTask from './AddTask';
 import threeDots from '../assets/three-dots.svg';
 import { Checkbox } from './ui/checkbox';
 import rightArrow from '../assets/right-arrow.svg';
 import downArrow from '../assets/down-arrow.svg';
+import searchIcon from '../assets/search-icon.svg';
 
 // this defines users' task property for rendering in a table
 interface Task {
@@ -58,6 +62,8 @@ const TodoDashboard = () => {
   const [expandedTasks, setExpandedTasks] = useState<string[]>([]);
  // a state to manage which column is being used for sorting
   const [currColumn, setCurrColumn] = useState<string | null>(null);
+
+  const [taskName, setTaskName] = useState(''); // state to track the search input
 
   /**
    * Function that toggles the expansion of task
@@ -271,6 +277,12 @@ const TodoDashboard = () => {
 
     return Math.round(completionPercentage);
   };
+  
+
+  // filters and stores the tasks that matches taskName(whatever is in the search input)
+  const searchedTasks = tasks.filter((task) => 
+    task.text.toLowerCase().includes(taskName.toLowerCase())
+  );
 
   useEffect(() => {
     // requests the table from backend and renders the table once the page loads
@@ -280,6 +292,16 @@ const TodoDashboard = () => {
   return (
     <div className="w-full flex flex-col items-center mt-6">
       <h1 className="text-3xl text-wabi-red font-bold mb-4">To do List</h1>
+      {/* Search Bar section*/}
+      <div className="relative w-3/4 h-8 mb-4">
+        <img src={searchIcon} alt="search-icon" className="absolute top-2 left-2 w-5 h-5" />
+        <Input
+          placeholder="Type a task name to search"
+          value={taskName}
+          onChange={(e) => setTaskName(e.target.value)}
+          className="w-full h-full bg-white py-4 pl-8 border-wabi-btn-primary-unselected"
+        />
+      </div>
       <AddTask dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} addTask={addTask} tasks={tasks} />
       <div className="rounded-md border w-3/4 mx-auto bg-white border-wabi-btn-primary-unselected">
         <Table >
@@ -327,14 +349,21 @@ const TodoDashboard = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {tasks.length === 0 ? ( // If users dont have any tasks then display "you don't have a task"
+            
+            {tasks.length === 0?(// If users dont have any tasks then display "you don't have a task"
               <TableRow>
                 <TableCell colSpan={7} className="h-12 text-center">
                   You don't have any task
                 </TableCell>
               </TableRow>
+            ): searchedTasks.length === 0 ? ( //If the searched task in not in the table then display 'No results.'
+              <TableRow>
+                <TableCell colSpan={7} className="h-12 text-center">
+                  No results.
+                </TableCell>
+              </TableRow>
             ) : (
-              tasks.map((task) => (
+              searchedTasks.map((task) => ( //Displays the searched tasks. If the search input is empty it displays every task from the database.(taskName is empty)
                 <>
                   <TableRow key={task.id}>
                     {/* checkbox section */}

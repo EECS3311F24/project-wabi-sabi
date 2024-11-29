@@ -6,6 +6,8 @@ import ClockOrange from '../assets/clock-orange.svg';
 import ClockWhite from '../assets/clock-white.svg';
 import TodoWhite from '../assets/pencil-white.svg';
 import TodoOrange from '../assets/pencil-orange.svg';
+import ChartWhite from '../assets/white-chart.svg';
+import ChartOrange from '../assets/orange-chart.svg';
 
 /**
  * Navbar component for navigating between different available dashboards
@@ -58,6 +60,20 @@ const Navbar = () => {
           content={<img src={TodoWhite} alt="Todo" width={30} height={30} />}
           className="h-10 w-20"
           onClick={() => handleNavClick('todo')}
+        />
+      )}
+
+      {activePage === 'charts' ? (
+        <SelectedButton
+          content={<img src={ChartOrange} alt="Charts" width={30} height={30} />}
+          className="h-10 w-20"
+          onClick={() => handleNavClick('charts')}
+        />
+      ) : (
+        <UnselectedButton
+          content={<img src={ChartWhite} alt="charts" width={30} height={30} />}
+          className="h-10 w-20"
+          onClick={() => handleNavClick('charts')}
         />
       )}
     </nav>

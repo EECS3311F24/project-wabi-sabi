@@ -80,11 +80,17 @@ class Task(Document):
 
 class Study(Document):
     start_time = DateTimeField(required=True)
+    minutes = FloatField()
     end_time = DateTimeField(required=True)
     tag = ReferenceField(Tag)  # change to reference field once tag object exists
 
+    def get_study_minutes(self):
+        elapsed_time = self.end_time - self.start_time
+        total_minutes = round(elapsed_time.total_seconds() / 60, 1)
+        return total_minutes
+
     def __str__(self):
-        return self.text
+        return str(self.start_time)
 
     def json_formatted(self):
         print(f"serializing study {self.__str__}")
