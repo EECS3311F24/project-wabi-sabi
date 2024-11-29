@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Dialog, DialogTrigger, DialogOverlay, DialogContent, DialogTitle, DialogDescription } from './ui/dialog';
 import SelectedButton from './ui/SelectedButton';
 import UnselectedButton from './ui/UnselectedButton';
+import { Input } from "./ui/input";
 import plus from '../assets/plus.svg';
 import AddSubTask from './AddSubTask';
 import TagDropdown from './SelectTag';
@@ -138,7 +139,7 @@ const AddTask: React.FC<AddTaskProps> = ({ dialogOpen, setDialogOpen, addTask, t
         >
           <div className="flex flex-col">
             <label className="text-sm font-medium mr-2">Task Title</label>
-            <input
+            <Input
               type="text"
               placeholder="Enter task"
               value={taskTitle}
