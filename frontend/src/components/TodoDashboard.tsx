@@ -190,12 +190,12 @@ const TodoDashboard = () => {
           const updatedTasks = prevTasks.map((task) =>
             task.id === taskId
               ? {
-                  ...task,
-                  sub_tasks:
-                    task.sub_tasks?.map((subtask) =>
-                      subtask.id === subTaskId ? { ...subtask, completed: isCompleted } : subtask,
-                    ) ?? [],
-                }
+                ...task,
+                sub_tasks:
+                  task.sub_tasks?.map((subtask) =>
+                    subtask.id === subTaskId ? { ...subtask, completed: isCompleted } : subtask,
+                  ) ?? [],
+              }
               : task,
           );
 
@@ -336,7 +336,7 @@ const TodoDashboard = () => {
                 <>
                   <TableRow key={task.id}>
                     {/* checkbox section */}
-                    <TableCell className="w-10">
+                    <TableCell align="center">
                       <Checkbox
                         checked={task.status === 'Finished'}
                         onCheckedChange={() => toggleCompletionCheckBox(task.id, task.status !== 'Finished')}
@@ -344,31 +344,33 @@ const TodoDashboard = () => {
                       />
                     </TableCell>
                     {/* Expand/collapse arrow */}
-                    <TableCell className="w-10 cursor-pointer" onClick={() => toggleExpandTask(task.id)}>
+                    <TableCell align="left" className="cursor-pointer px-0" onClick={() => toggleExpandTask(task.id)}>
                       {task.sub_tasks && task.sub_tasks.length > 0 ? (
                         <img src={expandedTasks.includes(task.id) ? downArrow : rightArrow} alt="Toggle Subtasks" />
                       ) : null}
                     </TableCell>
 
                     {/* title section */}
-                    <TableCell className="text-left px-4 font-medium">{task.text}</TableCell>
+                    <TableCell align="left" className="font-medium pl-0">{task.text}</TableCell>
 
-                    <TableCell className="text-center">{task.tag ?? ''}</TableCell>
+                    {/* tag section */}
+
+                    <TableCell align="center" className="font-medium">{task.tag ?? ''}</TableCell>
 
                     {/* Due date section */}
-                    <TableCell className="text-center font-medium">
+                    <TableCell align="center" className="font-medium">
                       {task.due_date ? new Date(task.due_date).toLocaleDateString() : ''}
                     </TableCell>
 
                     {/* Task completion section */}
-                    <TableCell className="text-center font-medium">{calculateCompletionPercentage(task)}%</TableCell>
+                    <TableCell align="center" className="font-medium">{task.completion}%</TableCell>
 
                     {/* The dropdown menu section to delete a task */}
-                    <TableCell className="text-right">
+                    <TableCell className="text-left">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <button className="p-2 rounded-full hover:bg-gray-100">
-                            <img src={threeDots} alt="Options" className="h-5 w-5" />
+                          <button className="rounded-full hover:bg-gray-100">
+                            <img src={threeDots} alt="Options" className="w-4 h-4" />
                           </button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
@@ -387,7 +389,7 @@ const TodoDashboard = () => {
                         <TableCell></TableCell>
 
                         {/* Subtask checkbox */}
-                        <TableCell className="w-10">
+                        <TableCell className="pl-0">
                           <Checkbox
                             checked={subtask.completed}
                             onCheckedChange={() =>
@@ -396,7 +398,7 @@ const TodoDashboard = () => {
                             aria-label="Select subtask"
                           />
                         </TableCell>
-                        <TableCell colSpan={5} className="text-left pl-8 pr-4 font-medium text-gray-600">
+                        <TableCell colSpan={5} className="text-left pl-2 pr-4 font-medium text-gray-600">
                           {subtask.text}
                         </TableCell>
                       </TableRow>
