@@ -2,6 +2,7 @@ import FocusTime from './FocusTime';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import TaskCompletionChart from './TaskCompletionChart';
 
+
 const Charts = () => {
   return (
     <div className="w-full flex flex-col items-center mt-6">
@@ -23,6 +24,7 @@ const Charts = () => {
         <CarouselPrevious />
         <CarouselNext />
       </Carousel>
+
     </div>
   );
 };
