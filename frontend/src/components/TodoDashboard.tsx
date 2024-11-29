@@ -82,7 +82,11 @@ const TodoDashboard = () => {
         },
       });
       const data = await response.json();
-      setTasks(data.tasks || []); // if users doesn't have anytasks dont display anything else fill the table with the list of tasks
+      const tasksWithCompletion = data.tasks.map((task: Task) => ({ 
+        ...task,
+        completion: calculateCompletionPercentage(task), // adds a completion percentage for each task
+      }));
+      setTasks(tasksWithCompletion);
     } catch (error) {
       console.error(error); //Prints the error occured during fetching the tasks
     }
