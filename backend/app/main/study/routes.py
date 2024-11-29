@@ -1,6 +1,7 @@
 from flask import render_template, redirect, url_for, request, jsonify
 import datetime
 import jwt
+import pytz
 from . import study
 from app.models import User
 from app.auth.session import get_user_from_token, user_required
@@ -11,6 +12,8 @@ from ...models import Study, User, json_formatted
 @study.route("/", methods=["POST"])
 @user_required
 def make_study_document():
+    utc_zone = pytz.utc
+    est_zone = pytz.timezone("America/New_York")
     data = request.json
     token = request.headers.get("Authorization")
     payload = get_user_from_token(token)
@@ -19,17 +22,21 @@ def make_study_document():
     # new session object
     try:
         print(data["start_time"], data["end_time"])
+        start_time_utc = datetime.datetime.fromisoformat(
+            data["start_time"].replace("Z", "+00:00")
+        )
+        end_time_utc = datetime.datetime.fromisoformat(
+            data["end_time"].replace("Z", "+00:00")
+        )
+
         new_study_session = Study(
-            start_time=datetime.datetime.fromisoformat(
-                data["start_time"].replace("Z", "+00:00")
-            ),
-            end_time=datetime.datetime.fromisoformat(
-                data["end_time"].replace("Z", "+00:00")
-            ),
+            start_time=start_time_utc.astimezone(est_zone),
+            end_time=end_time_utc.astimezone(est_zone),
             tag=data.get("tag"),
         )
 
         new_study_session.save()
+        new_study_session.start_time
         new_study_session.minutes = new_study_session.get_study_minutes()
         new_study_session.save()
         user.study_sessions.append(new_study_session)

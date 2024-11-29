@@ -1,6 +1,7 @@
 from flask import render_template, redirect, url_for, request, jsonify
 from collections import defaultdict
 from datetime import datetime, timedelta
+from pytz import timezone
 from bson import ObjectId
 from . import chart
 from app.models import User, Study
@@ -115,10 +116,7 @@ def get_week_data(study_sessions):
 
     print(end_of_week)
     for study in study_sessions:
-        print(f"checking study {study}")
-        print(study.start_time >= start_of_week)
         if start_of_week <= study.start_time:
-            print(f"study {study} is within week")
             day = study.start_time.date().isoformat()  # Get the date part
             study_minutes_by_day[day] += study.get_study_minutes()
             print(study.get_study_minutes())
