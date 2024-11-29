@@ -17,6 +17,7 @@ interface Task {
   due_date?: string; // an optional due date for the task
   status: string; // the status of the task(completed or not)
   sub_tasks?: SubTask[]; // list of subtasks
+  completion: number; //The completion percentage of a task
 }
 
 // this defines users' subtask property for a Task object for rendering in a table
