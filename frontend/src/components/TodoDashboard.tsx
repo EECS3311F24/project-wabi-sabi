@@ -87,6 +87,8 @@ const TodoDashboard = () => {
         completion: calculateCompletionPercentage(task), // adds a completion percentage for each task
       }));
       setTasks(tasksWithCompletion);
+
+      setCurrColumn(null); // resets the sorted sign when any change is made.
     } catch (error) {
       console.error(error); //Prints the error occured during fetching the tasks
     }
