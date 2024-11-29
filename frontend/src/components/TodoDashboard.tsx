@@ -280,16 +280,48 @@ const TodoDashboard = () => {
       <h1 className="text-3xl text-wabi-red font-bold mb-4">To do List</h1>
       <AddTask dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} addTask={addTask} tasks={tasks} />
       <div className="rounded-md border w-3/4 mx-auto bg-white border-wabi-btn-primary-unselected">
-        <Table>
+        <Table >
           <TableHeader>
             <TableRow>
-              <TableHead className="w-10"></TableHead>
-              <TableHead className="w-10"></TableHead>
-              <TableHead className="text-left px-4 py-2">Task</TableHead>
-              <TableHead className="text-center px-4 py-2">Tag</TableHead>
-              <TableHead className="text-center px-4 py-2">Due Date</TableHead>
-              <TableHead className="text-center px-4 py-2">Completion(%)</TableHead>
-              <TableHead className="text-right px-4 py-2"></TableHead>
+              <TableHead ></TableHead>
+              <TableHead></TableHead>
+              {/* Title column*/}
+              <TableHead align="left" className="pl-0 py-2">
+                <ColumnSort
+                  headerName='Title'
+                  tasks={tasks}
+                  setTasks={setTasks}
+                  currColumn={currColumn}
+                  setCurrColumn={setCurrColumn} />
+              </TableHead>
+              {/* Tag column*/}
+              <TableHead align="center" className="py-2">
+                <ColumnSort
+                  headerName='Tag'
+                  tasks={tasks}
+                  setTasks={setTasks}
+                  currColumn={currColumn}
+                  setCurrColumn={setCurrColumn} />
+              </TableHead>
+              {/* Due Date column*/}
+              <TableHead align="center" className="py-2">
+                <ColumnSort
+                  headerName='Due Date'
+                  tasks={tasks}
+                  setTasks={setTasks}
+                  currColumn={currColumn}
+                  setCurrColumn={setCurrColumn} />
+              </TableHead>
+              {/* Completion column*/}
+              <TableHead align="center" className="py-2">
+                <ColumnSort
+                  headerName='Completion(%)'
+                  tasks={tasks}
+                  setTasks={setTasks}
+                  currColumn={currColumn}
+                  setCurrColumn={setCurrColumn} />
+              </TableHead>
+              <TableHead className="text-right"></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
