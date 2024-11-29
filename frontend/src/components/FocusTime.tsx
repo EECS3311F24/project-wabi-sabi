@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
@@ -78,6 +79,7 @@ const FocusTime = () => {
   useEffect(() => {
     fetchWeeklyData();
   }, [selectedTag]);
+
   return (
     <Card className="shadow-none border-none">
       <CardHeader>
@@ -100,6 +102,7 @@ const FocusTime = () => {
             />
             <YAxis
               label={{
+
                 value: 'Hours Focused',
                 angle: -90,
                 position: 'insideLeft',
