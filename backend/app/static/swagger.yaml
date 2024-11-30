@@ -411,3 +411,36 @@ paths:
           description: "Tag not deleted successfully (includes error message)"
         401:
           description: "Invalid jwt session token"
+
+  /completion/:
+    get:
+      summary: "Get task completion percentage by tags"
+      description: "Retrieve the percentage of completed tasks grouped by tags and tasks without tags for the authenticated user."
+      parameters:
+        - in: "header"
+          name: "Authorization"
+          description: "Bearer token for authentication"
+          required: true
+          type: "string"
+          example: "Bearer <token>"
+      responses:
+        200:
+          description: "Task completion percentages retrieved successfully"
+          schema:
+            type: "array"
+            items:
+              type: "object"
+              properties:
+                tag_text:
+                  type: "string"
+                  description: "The text of the tag or 'No tag'"
+                  example: "No tag"
+                percentage:
+                  type: "number"
+                  format: "float"
+                  description: "Percentage of completed tasks associated with the tag"
+                  example: 75.0
+        401:
+          description: "Invalid or missing JWT session token"
+        500:
+          description: "Error occurred during task completion calculation"
