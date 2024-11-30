@@ -420,8 +420,9 @@ This component relies on:
   - `Button`: Used for various control actions (play, pause, reset, and mode switching).
   - `SelectedButton`: A visually distinct button for indicating the currently active timer mode.
   - `ClockFace`: Displays the remaining minutes and seconds in the timer.
+  - `Dialog`: Displays a pop-up dialog used to modify timer durations
 - **Assets**:
-  - **Icons**: Images for play, pause, reset, and skip icons to represent each button’s function.
+  - **Icons**: Images for play, pause, reset, skip and settings icons to represent each button’s function.
 
 ## Component Structure
 
@@ -437,6 +438,7 @@ This component relies on:
   - **sessionCount**: Tracks the number of completed Pomodoro sessions.
   - **breaksCount**: Tracks the number of short breaks in a cycle.
   - **MAX_SHORT_BREAKS**: Limits the number of short breaks before switching to a long break.
+  - **durations**: Tracks the durations of the three timer modes (minutes & seconds).
 
 - **Effect Hook**: Watches the countdown and automatically switches between timer modes based on `minutes`, `seconds`, and `timerState`.
 
@@ -450,11 +452,12 @@ This component relies on:
   - **Play/Pause Button**: Toggles the countdown timer.
   - **Reset Button**: Resets the current mode’s timer.
   - **Mode Buttons**: Switches the timer mode, with the selected mode visually highlighted.
+  - **Settings Button**: Allows user to manually change the durations of a timer mode.
 - **Automatically Saves Study Session In Background**: The timer automatically saves the user's study session data (duration and tag) when the user pauses, resets, skips the timer, or reloads or navigate away from the page
 
 ## Usage
 
-Place the `TimerDashboard` component within the application where users can interact with the Pomodoro timer. Users can start, pause, reset, and switch between modes as desired.
+Place the `TimerDashboard` component within the application where users can interact with the Pomodoro timer. Users can start, pause, reset, and switch between modes as desired. Additionally, users can modify the timer durations to match their needs.
 
 <br><br>
 
