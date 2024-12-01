@@ -18,7 +18,7 @@
 14. [TagDropdown Component Documentation](#tagdropdown-component-documentation)
 15. [FocusTime Chart Component Documention](#focustime-component-documentation)
 16. [TaskCompletion Chart Component Documentation](#taskcompletionchart-component-documentation)
-
+17. [SortTable Component Documentation](#sorttable-component-documentation)
 ---
 
 <br><br>
@@ -824,6 +824,7 @@ Include the `TaskCompletionChart` component on a dashboard or analytics page to 
 
 
 # SortTable Component Documentation
+
 
 ## Overview
 
