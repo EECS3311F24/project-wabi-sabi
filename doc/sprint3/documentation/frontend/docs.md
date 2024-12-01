@@ -476,12 +476,15 @@ This component relies on:
 - **Dropdown Menu Components**: For task options like deletion.
 - **Checkbox**: For toggling between completed and not completed.
 - **AddTask**: A component that displays a pop page for adding a task.
+- **ColumnSort**: It sorts the table based on the column header selected(Title, Tag, Due date, or Completion percentage).
 
 ## Component Structure
 
 - **State Management**:
   - `tasks`: Tracks the currenly add task(including an empty one)
   - `dialogOpen`: Tracks if the pop page is open or not
+  - `currColumn`: Tracks the column header that is currenlty being used for sorting.
+  - `taskName`: Tracks the search input.
     .
 - **Functions**:
   - `getTasks`: Makes a GET request to backend to get the list of tasks.
@@ -489,6 +492,7 @@ This component relies on:
   - `toggleCompletionCheckBox`: Updates the completion status of a task.
   - `deleteTask`: Deletes a task from the list and updates the table.
   - `toggleSubtaskCompletion`: Updates the completion status of a subtask.
+  - `calculateCompletionPercentage`: Calculates the completion percentage of a task.
 
 ## Usage
 
@@ -817,3 +821,59 @@ Defines the structure of data returned by the API:
 ## Usage
 
 Include the `TaskCompletionChart` component on a dashboard or analytics page to visualize task completion percentages.
+
+
+# SortTable Component Documentation
+
+## Overview
+
+The `SortTable` sorts the task table based on the column header the user selected(Title, Tag, Due date, or Completion percentage) in ascending or descending order.
+
+## Dependencies
+
+This component relies on:
+- **State Management**:
+  - `useState` from React for managing state.
+- **Dropdown Menu Components**: UI components imported from `ui/dropdown-menu` to create a styled and functional dropdown menu:
+  - `DropdownMenu`, `DropdownMenuContent`, `DropdownMenuItem`, and `DropdownMenuTrigger`
+- **Button**: `Button` to open the pop up page and select the sorting order(ascending or descending).
+- **Icons**: To indicate the sorting feature and sorting type.
+  - `ArrowDown`, `ArrowUp`, and `ChevronsUpDown`
+
+## Interfaces
+
+### SortTableProps
+
+Defines the properties of the prop for `AddTask` component:
+
+- **headerName**: `string` - The name of the column header(Title, Tag, Due date, Completion percentage).
+- **tasks**: `Task[]` - List of task that are in the table.
+- **setTasks**: - A function that updates the tasks.
+- **currColumn**:`string` - Tracks the column header that is currently being used for sorting.
+-**setCurrColumn**: A function that updates the currenlty column header that is currently being used for sorting.
+
+
+## Component Structure
+
+- **State Management**:
+
+  - `sortType`: Tracks the sorting order(ascending or descending).
+  
+
+- **Functionality**:
+  - `sortTasks`: sorts the table based on the columng header selected(`headerName`)provided in ascending or descending. 
+
+
+## Functionality
+
+- **Table Update**: After the sorting is done, it updates the table in `TodoDashboard` and tracks the selected`sortType` to indicate that sorting has been applied.
+
+## Usage
+
+Users can use the `SortTable` component with `TodoDashboard` to sort their tasks in in ascending or descending by clicking one of the column headers(Title, Tag, Due date, Completion percentage).
+
+## Additional Notes
+
+- **Handling Tasks without due date or tag**: When sorting tasks(in ascending or descending) by tag or due, the tasks without a tag or due date are left at the bottom of the table.
+
+<br><br>
