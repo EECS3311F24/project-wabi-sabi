@@ -15,6 +15,7 @@
 2. [Task Routes](#task-routes)
 3. [Study Session Routes](#study-session-routes)
 4. [Tag](#tag-documentation)
+5. [Chart]()
 
 # User Documentation
 
@@ -467,3 +468,87 @@ Routes related to Tags
   201:
 
 - Tag edited successfully
+
+# Chart Routes:
+
+## Overview:
+
+Routes pertaining to data display charts in the front-end
+
+### /chart/completion
+
+#### **METHODS**:
+
+- GET
+
+#### **HEADER**:
+
+- jwt token
+
+#### **RESPONSES**:
+
+500:
+
+- Error thrown fetching data
+- `returns` error
+
+401:
+
+- Invalid session token
+
+  201:
+
+- Data returned
+- `return` Json array of each tag's completion percentage
+
+### /chart/weekly
+
+#### **METHODS**:
+
+- GET
+
+#### **HEADER**:
+
+- jwt token
+
+#### **RESPONSES**:
+
+500:
+
+- Error thrown fetching data
+- `returns` error
+
+401:
+
+- Invalid session token
+
+  201:
+
+- Data returned
+- `return` Json array of study minutes from last week
+
+### /chart/weekly/<tag_id>
+
+#### **METHODS**:
+
+- GET
+
+#### **HEADER**:
+
+- jwt token
+
+#### **RESPONSES**:
+
+500:
+
+- Error thrown fetching data
+- `returns` error
+
+401:
+
+- Invalid session token
+
+  201:
+
+- Data returned
+- `return` Json array of study minutes from last week filtered by tag id
