@@ -1,0 +1,26 @@
+services:
+  frontend:
+    container_name: frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "4000:4000"
+  backend:
+    container_name: backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mongo
+  mongo:
+    container_name: mongo
+    volumes:
+      - wabisabi_db:/data/db
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+volumes:
+  wabisabi_db:
